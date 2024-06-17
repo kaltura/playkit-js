@@ -72,6 +72,8 @@ export class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSou
     // (undocumented)
     applyABRRestriction(restrictions: PKABRRestrictionObject): void;
     // (undocumented)
+    applyTextTrackStyles(sheet: CSSStyleSheet, styles: TextStyle, containerId: string, engineClassName?: string): void;
+    // (undocumented)
     attachMediaSource(): void;
     static canPlayType(mimeType: string, preferNative: boolean): boolean;
     get capabilities(): PKMediaSourceCapabilities;
@@ -262,6 +264,7 @@ export const EngineType: {
     readonly CAST: "cast";
     readonly YOUTUBE: "youtube";
     readonly IMAGE: "image";
+    readonly DOCUMENT: "document";
 };
 
 // Warning: (ae-forgotten-export) The symbol "IEnv" needs to be exported by the entry point playkit.d.ts
@@ -271,7 +274,7 @@ export const Env: IEnv;
 
 // @public
 class Error_2 {
-    constructor(severity: number, category: number, code: number, data?: any);
+    constructor(severity: number, category: number, code: number, data?: any, errorDetails?: any);
     // Warning: (ae-forgotten-export) The symbol "CategoryType" needs to be exported by the entry point playkit.d.ts
     static Category: CategoryType;
     // (undocumented)
@@ -282,6 +285,8 @@ class Error_2 {
     code: number;
     // (undocumented)
     data: any;
+    // (undocumented)
+    errorDetails: any;
     // Warning: (ae-forgotten-export) The symbol "SeverityType" needs to be exported by the entry point playkit.d.ts
     static Severity: SeverityType;
     // (undocumented)
@@ -343,6 +348,9 @@ export class FakeEventTarget {
 export function filterTracksByRestriction(videoTracks: VideoTrack[], restriction: PKABRRestrictionObject): VideoTrack[];
 
 // @public (undocumented)
+export type FontAlignmentOptions = 'default' | 'left' | 'center' | 'right';
+
+// @public (undocumented)
 export type FontScaleOptions = -2 | -1 | 0 | 2 | 3 | 4;
 
 // @public (undocumented)
@@ -362,6 +370,9 @@ export function getLogger(name?: string): ILogger;
 
 // @public
 export function getLogLevel(name?: string): ILogLevel;
+
+// @public (undocumented)
+const getSubtitleStyleSheet: (playerId: string) => CSSStyleSheet;
 
 // @public (undocumented)
 export const Html5EventType: {
@@ -500,6 +511,8 @@ export interface IEngine extends FakeEventTarget {
     }>;
     // (undocumented)
     loop: boolean;
+    // (undocumented)
+    mediaSourceAdapter: IMediaSourceAdapter | null;
     // (undocumented)
     muted: boolean;
     // (undocumented)
@@ -750,6 +763,8 @@ export interface IMediaSourceAdapter extends FakeEventTarget {
     // (undocumented)
     applyABRRestriction(restriction: PKABRRestrictionObject): void;
     // (undocumented)
+    applyTextTrackStyles(sheet: CSSStyleSheet, styles: TextStyle, containerId: string, engineClassName?: string): void;
+    // (undocumented)
     attachMediaSource(): void;
     // (undocumented)
     capabilities: PKMediaSourceCapabilities;
@@ -844,14 +859,10 @@ export const LogLevelType: Record<keyof LoggerLevels, keyof LoggerLevels>;
 // @public (undocumented)
 export type MaybeState = State | null;
 
+// Warning: (ae-forgotten-export) The symbol "PKMediaTypes" needs to be exported by the entry point playkit.d.ts
+//
 // @public (undocumented)
-export const MediaType: {
-    readonly VOD: "Vod";
-    readonly LIVE: "Live";
-    readonly AUDIO: "Audio";
-    readonly IMAGE: "Image";
-    readonly UNKNOWN: "Unknown";
-};
+export const MediaType: PKMediaTypes;
 
 // @public (undocumented)
 const MimeType_2: PKMimeTypes;
@@ -1040,8 +1051,8 @@ export type PKPlaybackConfigObject = {
     audioLanguage: string;
     textLanguage: string;
     captionsDisplay: boolean;
-    additionalAudioLanguage: string;
-    additionalTextLanguage: string;
+    additionalAudioLanguage: string | [string];
+    additionalTextLanguage: string | [string];
     volume: number;
     playsinline: boolean;
     crossOrigin: string;
@@ -1060,8 +1071,8 @@ export type PKPlaybackConfigObject = {
 // @public (undocumented)
 export type PKPlaybackOptionsObject = {
     html5: {
-        hls: Object;
-        dash: Object;
+        hls: any;
+        dash: any;
     };
 };
 
@@ -1121,6 +1132,7 @@ export type PKSourcesConfigObject = {
     dash: Array<PKMediaSourceObject>;
     progressive: Array<PKMediaSourceObject>;
     image: Array<PKMediaSourceObject>;
+    document: Array<PKMediaSourceObject>;
     captions?: Array<PKExternalCaptionObject>;
     thumbnails?: PKExternalThumbnailsConfig;
     options: PKMediaSourceOptionsObject;
@@ -1135,6 +1147,7 @@ export type PKSourcesConfigObject = {
     imageSourceOptions?: ImageSourceOptions;
     seekFrom?: number;
     clipTo?: number;
+    mediaEntryType?: PKMediaTypes;
 };
 
 // @public (undocumented)
@@ -1158,7 +1171,7 @@ export type PKStreamPriorityObject = {
 };
 
 // @public (undocumented)
-export type PKStreamTypes = Record<'DASH' | 'HLS' | 'PROGRESSIVE' | 'IMAGE', PlayerStreamTypes>;
+export type PKStreamTypes = Record<'DASH' | 'HLS' | 'PROGRESSIVE' | 'IMAGE' | 'DOCUMENT', PlayerStreamTypes>;
 
 // @public (undocumented)
 export interface PKTextConfigObject {
@@ -1187,6 +1200,7 @@ export interface PKTextConfigObject {
 // @public
 export type PKTextStyleObject = {
     fontSize: FontSizeOptions;
+    textAlign: FontAlignmentOptions;
     fontScale: FontScaleOptions;
     fontFamily: string;
     fontColor: [number, number, number];
@@ -1379,7 +1393,7 @@ export class Player extends FakeEventTarget {
 }
 
 // @public (undocumented)
-export type PlayerStreamTypes = 'dash' | 'hls' | 'progressive' | 'image';
+export type PlayerStreamTypes = 'dash' | 'hls' | 'progressive' | 'image' | 'document';
 
 // Warning: (ae-forgotten-export) The symbol "EngineProvider" needs to be exported by the entry point playkit.d.ts
 //
@@ -1393,6 +1407,9 @@ export const registerMediaSourceAdapter: typeof MediaSourceProvider.register;
 
 // @public (undocumented)
 export const RequestType: PKRequestType;
+
+// @public (undocumented)
+const resetSubtitleStyleSheet: (playerId: string) => void;
 
 // @public
 class ResizeWatcher extends FakeEventTarget {
@@ -1442,6 +1459,7 @@ export const StreamType: {
     readonly HLS: "hls";
     readonly PROGRESSIVE: "progressive";
     readonly IMAGE: "image";
+    readonly DOCUMENT: "document";
 };
 
 // @public (undocumented)
@@ -1458,6 +1476,10 @@ export class TextStyle {
     static EdgeStyles: {
         [edgeStyle: string]: Array<[number, number, number, number, number, number]>;
     };
+    static FontAlignment: {
+        label: string;
+        value: FontAlignmentOptions;
+    }[];
     fontColor: [number, number, number];
     fontEdge: Array<[number, number, number, number, number, number]>;
     static FontFamily: {
@@ -1486,6 +1508,8 @@ export class TextStyle {
     static StandardOpacities: {
         [opacityLevel: string]: number;
     };
+    // (undocumented)
+    textAlign: FontAlignmentOptions;
     toCSS(): string;
     // (undocumented)
     static toJson(text: TextStyle): PKTextStyleObject;
@@ -1582,7 +1606,7 @@ export class Track {
     get label(): string | undefined;
     set label(value: string);
     protected _label: string | undefined;
-    static langComparer(inputLang: string, trackLang: string, additionalLanguage?: string, equal?: boolean): boolean;
+    static langComparer(inputLang: string, trackLang: string, additionalLanguage?: string | string[], equal?: boolean): boolean;
     get language(): string;
 }
 
@@ -1618,7 +1642,9 @@ declare namespace Utils {
         _Generator as Generator,
         _Dom as Dom,
         _Http as Http,
-        _VERSION as VERSION
+        _VERSION as VERSION,
+        getSubtitleStyleSheet,
+        resetSubtitleStyleSheet
     }
 }
 export { Utils }
@@ -1648,8 +1674,8 @@ export * from "js-logger";
 
 // Warnings were encountered during analysis:
 //
-// src/types/sources-config.ts:13:3 - (ae-forgotten-export) The symbol "PKExternalCaptionObject" needs to be exported by the entry point playkit.d.ts
-// src/utils/util.ts:504:4 - (ae-forgotten-export) The symbol "jsonp" needs to be exported by the entry point playkit.d.ts
+// src/types/sources-config.ts:15:3 - (ae-forgotten-export) The symbol "PKExternalCaptionObject" needs to be exported by the entry point playkit.d.ts
+// src/utils/util.ts:503:4 - (ae-forgotten-export) The symbol "jsonp" needs to be exported by the entry point playkit.d.ts
 
 // (No @packageDocumentation comment for this package)
 
