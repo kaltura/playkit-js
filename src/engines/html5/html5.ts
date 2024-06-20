@@ -563,7 +563,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       // Currently it's supported in chrome and in safari. So if we consider checking support before,
       // we can use this flag to distinguish between the two. In the future we might need a different method.
       // Second condition is because flow does not support this API yet
-      if (document.pictureInPictureEnabled && typeof this._el.requestPictureInPicture === 'function') {
+      if (document.pictureInPictureEnabled && typeof this._el.requestPictureInPicture === 'function' && !this._el.disablePictureInPicture) {
         this._el.requestPictureInPicture().catch((error) => {
           this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.ENTER_PICTURE_IN_PICTURE_FAILED, error)));
         });
