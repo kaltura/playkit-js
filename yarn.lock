@@ -4590,6 +4590,11 @@ pkg-dir@^7.0.0:
   dependencies:
     find-up "^6.3.0"
 
+playkit-prettier-config@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/playkit-prettier-config/-/playkit-prettier-config-1.0.0.tgz#40e9cf5fd682630592c51550090e7c93c016d5c3"
+  integrity sha512-agFAmiaclryRyvLqQ5Wn5i7u99fsCNP53baYk2U0ALrWSzBN8iuh5ol2pT2pfZV/HG+DocC3RqFehWHTRgEhgw==
+
 postcss-modules-extract-imports@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/postcss-modules-extract-imports/-/postcss-modules-extract-imports-3.0.0.tgz#cda1f047c0ae80c97dbe28c3e76a43b88025741d"
