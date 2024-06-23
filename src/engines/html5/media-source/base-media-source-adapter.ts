@@ -126,6 +126,9 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     this._handleLiveTimeUpdate();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public setCachedUrls(cachedUrls: string[]): void {}
+
   /**
    * Destroys the media source adapter.
    * @function destroy
@@ -344,6 +347,4 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   public getDrmInfo(): PKDrmDataObject | null {
     return null;
   }
-
-  public setCachedUrls(): void {}
 }
