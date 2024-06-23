@@ -345,5 +345,6 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return null;
   }
 
-  public setCachedUrls(): void {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public setCachedUrls(cachedUrls: string[]): void {}
 }
