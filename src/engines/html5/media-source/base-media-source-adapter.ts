@@ -345,5 +345,5 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return null;
   }
 
-  public setCachedUrls(): void {}
+  public setCachedUrls(cachedUrls: string[]): void {}
 }
