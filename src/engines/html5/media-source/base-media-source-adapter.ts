@@ -230,7 +230,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   }
 
   public isOnLiveEdge(): boolean {
-    if(this.getSegmentDuration()===0){
+    if (this.getSegmentDuration() === 0) {
       //If no segment duration, we cannot estimate live edge
       return true;
     }
@@ -344,4 +344,6 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   public getDrmInfo(): PKDrmDataObject | null {
     return null;
   }
+
+  public setCachedUrls(): void {}
 }

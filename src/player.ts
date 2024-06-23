@@ -2,53 +2,59 @@ import Env from './utils/env';
 import { EventManager } from './event/event-manager';
 import PosterManager from './utils/poster-manager';
 import { FakeEvent } from './event/fake-event';
-import { FakeEventTarget }  from './event/fake-event-target';
+import { FakeEventTarget } from './event/fake-event-target';
 import { IEngine, IEngineStatic, LoggerLevels } from './types';
-import {CustomEventType, EventType, Html5EventType} from './event/event-type';
+import { CustomEventType, EventType, Html5EventType } from './event/event-type';
 import * as Utils from './utils/util';
 import Locale from './utils/locale';
-import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogHandler, setLogLevel} from './utils/logger';
+import getLogger, { getLogLevel, LogLevel, LogLevelType, setLogHandler, setLogLevel } from './utils/logger';
 import StateManager from './state/state-manager';
 import Track from './track/track';
 import VideoTrack from './track/video-track';
 import AudioTrack from './track/audio-track';
-import {PKTextTrack} from './track/text-track';
+import { PKTextTrack } from './track/text-track';
 import TextStyle from './track/text-style';
-import {processCues} from './track/text-track-display';
-import {StateType} from './state/state-type';
-import {TrackType,  TrackTypes} from './track/track-type';
-import {StreamType} from './engines/stream-type';
-import {EngineType} from './engines/engine-type';
-import {MediaType} from './enums/media-type';
-import {AbrMode} from './track/abr-mode-type';
-import {CorsType} from './engines/html5/cors-types';
+import { processCues } from './track/text-track-display';
+import { StateType } from './state/state-type';
+import { TrackType, TrackTypes } from './track/track-type';
+import { StreamType } from './engines/stream-type';
+import { EngineType } from './engines/engine-type';
+import { MediaType } from './enums/media-type';
+import { AbrMode } from './track/abr-mode-type';
+import { CorsType } from './engines/html5/cors-types';
 import PlaybackMiddleware from './middleware/playback-middleware';
-import {DefaultConfig, DefaultSources} from './player-config.js';
+import { DefaultConfig, DefaultSources } from './player-config.js';
 import './assets/style.css';
 import PKError from './error/error';
-import {EngineProvider} from './engines/engine-provider';
-import {ExternalCaptionsHandler} from './track/external-captions-handler';
-import {AdBreakType} from './ads/ad-break-type';
-import {AdTagType} from './ads/ad-tag-type';
-import {ResizeWatcher, getSubtitleStyleSheet, resetSubtitleStyleSheet} from './utils';
-import {FullscreenController} from './fullscreen/fullscreen-controller';
-import {EngineDecorator, EngineDecoratorType} from './engines/engine-decorator';
-import {LabelOptions} from './track/label-options';
-import {AutoPlayType} from './enums/auto-play-type';
+import { EngineProvider } from './engines/engine-provider';
+import { ExternalCaptionsHandler } from './track/external-captions-handler';
+import { AdBreakType } from './ads/ad-break-type';
+import { AdTagType } from './ads/ad-tag-type';
+import { ResizeWatcher, getSubtitleStyleSheet, resetSubtitleStyleSheet } from './utils';
+import { FullscreenController } from './fullscreen/fullscreen-controller';
+import { EngineDecorator, EngineDecoratorType } from './engines/engine-decorator';
+import { LabelOptions } from './track/label-options';
+import { AutoPlayType } from './enums/auto-play-type';
 import ImageTrack from './track/image-track';
-import {ThumbnailInfo} from './thumbnail/thumbnail-info';
-import {EngineDecoratorManager} from './engines/engine-decorator-manager';
-import {filterTracksByRestriction} from './utils/restrictions';
-import {ExternalThumbnailsHandler} from './thumbnail/external-thumbnails-handler';
+import { ThumbnailInfo } from './thumbnail/thumbnail-info';
+import { EngineDecoratorManager } from './engines/engine-decorator-manager';
+import { filterTracksByRestriction } from './utils/restrictions';
+import { ExternalThumbnailsHandler } from './thumbnail/external-thumbnails-handler';
 import {
-  IEngineDecoratorProvider, PKDimensionsConfig, PKDrmDataObject,
-  PKEventTypes, PKMediaSourceObject,
-  PKMetadataConfigObject, PKPlayerDimensions, PKPlayOptionsObject,
-  PKSourcesConfigObject, PKStatsObject,
+  IEngineDecoratorProvider,
+  PKDimensionsConfig,
+  PKDrmDataObject,
+  PKEventTypes,
+  PKMediaSourceObject,
+  PKMetadataConfigObject,
+  PKPlayerDimensions,
+  PKPlayOptionsObject,
+  PKSourcesConfigObject,
+  PKStatsObject,
   PKTextTrackDisplaySettingObject
 } from './types';
-import {ILogger, ILogLevel} from 'js-logger';
-import {IEnv} from './types/ua-parser';
+import { ILogger, ILogLevel } from 'js-logger';
+import { IEnv } from './types/ua-parser';
 
 /**
  * The black cover class name.
@@ -64,11 +70,11 @@ const BLACK_COVER_CLASS_NAME: string = 'playkit-black-cover';
 const CONTAINER_CLASS_NAME: string = 'playkit-container';
 
 /**
- /**
- * The player poster class name.
- * @type {string}
- * @const
- */
+/**
+* The player poster class name.
+* @type {string}
+* @const
+*/
 const POSTER_CLASS_NAME: string = 'playkit-poster';
 
 /**
@@ -134,7 +140,7 @@ export default class Player extends FakeEventTarget {
    */
   public static runCapabilities(): void {
     Player._logger.debug('Running player capabilities');
-    EngineProvider.getEngines().forEach(Engine => Engine.runCapabilities());
+    EngineProvider.getEngines().forEach((Engine) => Engine.runCapabilities());
   }
 
   /**
@@ -144,13 +150,13 @@ export default class Player extends FakeEventTarget {
    * @public
    * @static
    */
-  public static getCapabilities(engineType?: string): Promise<{[name: string]: any}> {
+  public static getCapabilities(engineType?: string): Promise<{ [name: string]: any }> {
     Player._logger.debug('Get player capabilities', engineType);
-    const promises: {[name: string]: any}[] = [];
-    EngineProvider.getEngines().forEach(Engine => promises.push(Engine.getCapabilities()));
-    return Promise.all(promises).then(arrayOfResults => {
+    const promises: { [name: string]: any }[] = [];
+    EngineProvider.getEngines().forEach((Engine) => promises.push(Engine.getCapabilities()));
+    return Promise.all(promises).then((arrayOfResults) => {
       const playerCapabilities = {};
-      arrayOfResults.forEach(res => Object.assign(playerCapabilities, res));
+      arrayOfResults.forEach((res) => Object.assign(playerCapabilities, res));
       return engineType ? playerCapabilities[engineType] : playerCapabilities;
     });
   }
@@ -163,9 +169,9 @@ export default class Player extends FakeEventTarget {
    * @public
    * @static
    */
-  public static setCapabilities(engineType: string, capabilities: {[name: string]: any}): void {
+  public static setCapabilities(engineType: string, capabilities: { [name: string]: any }): void {
     Player._logger.debug('Set player capabilities', engineType, capabilities);
-    const selectedEngine = EngineProvider.getEngines().find(Engine => Engine.id === engineType);
+    const selectedEngine = EngineProvider.getEngines().find((Engine) => Engine.id === engineType);
     if (selectedEngine) {
       selectedEngine.setCapabilities(capabilities);
     }
@@ -321,7 +327,7 @@ export default class Player extends FakeEventTarget {
    * @type {Object}
    * @private
    */
-  private _playbackAttributesState: {[attribute: string]: any} = {
+  private _playbackAttributesState: { [attribute: string]: any } = {
     muted: undefined,
     volume: undefined,
     rate: undefined,
@@ -415,6 +421,8 @@ export default class Player extends FakeEventTarget {
    */
   private _engineDecoratorManager!: EngineDecoratorManager;
 
+  private _cachedUrls: string[] = [];
+
   /**
    * @param {Object} config - The configuration for the player instance.
    * @constructor
@@ -496,7 +504,7 @@ export default class Player extends FakeEventTarget {
       this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
       this._reset = false;
       if (this._selectEngineByPriority()) {
-        this.dispatchEvent(new FakeEvent(CustomEventType.SOURCE_SELECTED, {selectedSource: this._sources[this._streamType]}));
+        this.dispatchEvent(new FakeEvent(CustomEventType.SOURCE_SELECTED, { selectedSource: this._sources[this._streamType] }));
         this._attachMedia();
         this._handlePlaybackOptions();
         this._posterManager.setSrc(this._sources.poster);
@@ -508,15 +516,7 @@ export default class Player extends FakeEventTarget {
       } else {
         Player._logger.warn('No playable engines was found to play the given sources');
         this.dispatchEvent(
-          new FakeEvent(
-            Html5EventType.ERROR,
-            new PKError(
-              PKError.Severity.CRITICAL,
-              PKError.Category.PLAYER,
-              PKError.Code.NO_ENGINE_FOUND_TO_PLAY_THE_SOURCE,
-              'No Engine Found To Play The Source'
-            )
-          )
+          new FakeEvent(Html5EventType.ERROR, new PKError(PKError.Severity.CRITICAL, PKError.Category.PLAYER, PKError.Code.NO_ENGINE_FOUND_TO_PLAY_THE_SOURCE, 'No Engine Found To Play The Source'))
         );
       }
     } else {
@@ -580,12 +580,7 @@ export default class Player extends FakeEventTarget {
       // load media requested but the response is delayed
       this._playbackMiddleware.play(() => this._playAfterAsyncMiddleware());
     } else {
-      this.dispatchEvent(
-        new FakeEvent(
-          Html5EventType.ERROR,
-          new PKError(PKError.Severity.CRITICAL, PKError.Category.PLAYER, PKError.Code.NO_SOURCE_PROVIDED, 'No Source Provided')
-        )
-      );
+      this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, new PKError(PKError.Severity.CRITICAL, PKError.Category.PLAYER, PKError.Code.NO_SOURCE_PROVIDED, 'No Source Provided')));
     }
   }
 
@@ -671,7 +666,7 @@ export default class Player extends FakeEventTarget {
     }
     this.showBlackCover();
     this._reset = true;
-    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET, {isChangeMedia}));
+    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET, { isChangeMedia }));
     this._eventManager.removeAll();
     this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
     this._createReadyPromise();
@@ -946,7 +941,7 @@ export default class Player extends FakeEventTarget {
   public set muted(mute: boolean) {
     if (this._engine) {
       this._engine.muted = mute;
-      this.dispatchEvent(new FakeEvent(CustomEventType.MUTE_CHANGE, {mute: mute}));
+      this.dispatchEvent(new FakeEvent(CustomEventType.MUTE_CHANGE, { mute: mute }));
       if (mute === false) {
         this._fallbackToMutedAutoPlay = mute;
       }
@@ -994,7 +989,7 @@ export default class Player extends FakeEventTarget {
       // @ts-ignore
       targetElement.style.height = null;
     } else {
-      const {height, width} = Utils.Object.mergeDeep(this.dimensions, dimensions);
+      const { height, width } = Utils.Object.mergeDeep(this.dimensions, dimensions);
       targetElement.style.width = typeof width === 'number' ? `${width}px` : width;
       targetElement.style.height = typeof height === 'number' ? `${height}px` : height;
       this._calcRatio(targetElement, dimensions);
@@ -1277,11 +1272,11 @@ export default class Player extends FakeEventTarget {
    * Get an object includes the active video/audio/text tracks
    * @return {{video: VideoTrack, audio: AudioTrack, text: TextTrack}} - The active tracks object
    */
-  public getActiveTracks(): {video: VideoTrack, audio: AudioTrack, text: PKTextTrack} {
+  public getActiveTracks(): { video: VideoTrack; audio: AudioTrack; text: PKTextTrack } {
     return Utils.Object.copyDeep({
-      video: this._getVideoTracks().find(track => track.active),
-      audio: this._getAudioTracks().find(track => track.active),
-      text: this._getTextTracks().find(track => track.active)
+      video: this._getVideoTracks().find((track) => track.active),
+      audio: this._getAudioTracks().find((track) => track.active),
+      text: this._getTextTracks().find((track) => track.active)
     });
   }
 
@@ -1333,15 +1328,15 @@ export default class Player extends FakeEventTarget {
       this._engine.hideTextTrack();
       this._resetTextDisplay();
       const textTracks = this._getTextTracks();
-      const activeTextTrack = textTracks.find(track => track.active === true);
+      const activeTextTrack = textTracks.find((track) => track.active === true);
       if (activeTextTrack && activeTextTrack.external) {
         this._externalCaptionsHandler.hideTextTrack();
       }
-      textTracks.map(track => (track.active = false));
-      const textTrack = textTracks.find(track => track.language === OFF);
+      textTracks.map((track) => (track.active = false));
+      const textTrack = textTracks.find((track) => track.language === OFF);
       if (textTrack) {
         textTrack.active = true;
-        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
+        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, { selectedTextTrack: textTrack }));
       }
       this._playbackAttributesState.captionsDisplay = false;
     }
@@ -1360,7 +1355,7 @@ export default class Player extends FakeEventTarget {
       this._getLanguage<PKTextTrack>(
         textTracks,
         AUTO,
-        textTracks.find(textTrack => textTrack.default)
+        textTracks.find((textTrack) => textTrack.default)
       );
     this._setDefaultTrack<PKTextTrack>(textTracks, prevOrAutoTextLang);
   }
@@ -1428,11 +1423,11 @@ export default class Player extends FakeEventTarget {
    */
   private _applyABRRestriction(config: any): void {
     if (Utils.Object.hasPropertyPath(config, 'abr.restrictions') && this._engine && this._tracks.length) {
-      const {restrictions} = this._config.abr;
-      const videoTracks: VideoTrack[] = <VideoTrack[]>this._tracks.filter(track => track instanceof VideoTrack);
+      const { restrictions } = this._config.abr;
+      const videoTracks: VideoTrack[] = <VideoTrack[]>this._tracks.filter((track) => track instanceof VideoTrack);
       const newVideoTracks = filterTracksByRestriction(videoTracks, restrictions);
       if (newVideoTracks.length) {
-        const currentVideoTracks = this._tracks.filter(track => track instanceof VideoTrack && track.available);
+        const currentVideoTracks = this._tracks.filter((track) => track instanceof VideoTrack && track.available);
         const tracksHasChanged = !(
           currentVideoTracks.length === newVideoTracks.length &&
           currentVideoTracks.every((element: VideoTrack, index: number) => {
@@ -1441,7 +1436,7 @@ export default class Player extends FakeEventTarget {
         );
         if (tracksHasChanged) {
           this._engine.applyABRRestriction(restrictions);
-          this._tracks.forEach(track => {
+          this._tracks.forEach((track) => {
             if (newVideoTracks.includes(<VideoTrack>track) || !(track instanceof VideoTrack)) {
               track.available = true;
             } else {
@@ -1452,7 +1447,7 @@ export default class Player extends FakeEventTarget {
           if (!this.getActiveTracks().video) {
             newVideoTracks[0].active = true;
           }
-          this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks.filter(track => track.available)}));
+          this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, { tracks: this._tracks.filter((track) => track.available) }));
         }
       } else {
         Player._logger.warn('Invalid restriction, Nothing has changed values do not meet the restriction');
@@ -1760,7 +1755,7 @@ export default class Player extends FakeEventTarget {
    */
   private _hasSources(sources: PKSourcesConfigObject): boolean {
     if (sources) {
-      return !!Object.values(StreamType).find(type => sources[type] && sources[type].length > 0);
+      return !!Object.values(StreamType).find((type) => sources[type] && sources[type].length > 0);
     }
     return false;
   }
@@ -1871,7 +1866,7 @@ export default class Player extends FakeEventTarget {
     for (const priority of streamPriority) {
       const engineId = typeof priority.engine === 'string' ? priority.engine.toLowerCase() : '';
       const format = typeof priority.format === 'string' ? priority.format.toLowerCase() : '';
-      const Engine = EngineProvider.getEngines().find(Engine => Engine.id === engineId);
+      const Engine = EngineProvider.getEngines().find((Engine) => Engine.id === engineId);
       if (Engine) {
         const formatSources = sources[format];
         if (formatSources && formatSources.length > 0) {
@@ -1902,7 +1897,7 @@ export default class Player extends FakeEventTarget {
       this._appendEngineEl();
     } else {
       if (this._engine.id === Engine.id) {
-        this._engine.restore(source, {...this._config, sources: this._sources});
+        this._engine.restore(source, { ...this._config, sources: this._sources });
       } else {
         this._engine.destroy();
         this._createEngine(Engine, source);
@@ -1919,8 +1914,13 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   private _createEngine(Engine: IEngineStatic, source: PKMediaSourceObject): void {
-    const engine = Engine.createEngine(source, {...this._config, sources: this._sources}, this._playerId);
-    this._engine = this._engineDecoratorManager ? new EngineDecorator(engine, this._engineDecoratorManager) as EngineDecoratorType : engine;
+    const engine = Engine.createEngine(source, { ...this._config, sources: this._sources }, this._playerId);
+    this._engine = this._engineDecoratorManager ? (new EngineDecorator(engine, this._engineDecoratorManager) as EngineDecoratorType) : engine;
+
+    if (this._cachedUrls.length) {
+      this._engine.setCachedUrls(this._cachedUrls);
+      this._cachedUrls = [];
+    }
   }
 
   /**
@@ -1930,7 +1930,7 @@ export default class Player extends FakeEventTarget {
    */
   private _attachMedia(): void {
     if (this._engine) {
-      Object.keys(Html5EventType).forEach(html5Event => {
+      Object.keys(Html5EventType).forEach((html5Event) => {
         this._eventManager.listen(this._engine, Html5EventType[html5Event], (event: FakeEvent) => {
           return this.dispatchEvent(event);
         });
@@ -1988,9 +1988,7 @@ export default class Player extends FakeEventTarget {
         this.dispatchEvent(event);
       });
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
-      this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) =>
-        this._onTextTrackChanged(event)
-      );
+      this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this._onTextTrackChanged(event));
       this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._externalThumbnailsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       const rootElement = Utils.Dom.getElementBySelector(`#${this.config.targetId}`);
@@ -2002,7 +2000,7 @@ export default class Player extends FakeEventTarget {
             this._hasUserInteracted = true;
             this.dispatchEvent(new FakeEvent(CustomEventType.USER_GESTURE));
           },
-          {capture: true}
+          { capture: true }
         );
       }
     }
@@ -2073,9 +2071,7 @@ export default class Player extends FakeEventTarget {
       this.crossOrigin = this._config.playback.crossOrigin;
     }
     if (Array.isArray(this._config.playback.playbackRates)) {
-      const validPlaybackRates = this._config.playback.playbackRates
-        .filter((number, index, self) => number > 0 && number <= 16 && self.indexOf(number) === index)
-        .sort((a, b) => a - b);
+      const validPlaybackRates = this._config.playback.playbackRates.filter((number, index, self) => number > 0 && number <= 16 && self.indexOf(number) === index).sort((a, b) => a - b);
       if (validPlaybackRates) {
         this._playbackRates = validPlaybackRates;
       }
@@ -2095,7 +2091,7 @@ export default class Player extends FakeEventTarget {
 
   private _autoPlay(): void {
     const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
-    Player.getCapabilities(this.engineType).then(capabilities => {
+    Player.getCapabilities(this.engineType).then((capabilities) => {
       if (capabilities.autoplay) {
         onAutoPlay();
       } else {
@@ -2158,11 +2154,11 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   }
-   * Checks auto play configuration and handles initialization accordingly.
-   * @returns {void}
-   * @private
-   */
+        }
+        * Checks auto play configuration and handles initialization accordingly.
+        * @returns {void}
+        * @private
+        */
   private _handleAutoPlay(): void {
     if (this.isAudio() || this._config.playback.autoplay !== AutoPlayType.TRUE) {
       this._posterManager.show();
@@ -2195,13 +2191,13 @@ export default class Player extends FakeEventTarget {
       const startTime = this._sources.startTime;
       this._engine
         .load(startTime)
-        .then(data => {
+        .then((data) => {
           if (this.isLive() && (startTime === -1 || Number(startTime) >= Number(this.duration))) {
             this._isOnLiveEdge = true;
           }
           this._updateTracks(data.tracks);
-          this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
-          if(this.sources.thumbnails) this._externalThumbnailsHandler.load(this.sources.thumbnails);
+          this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, { tracks: this._tracks }));
+          if (this.sources.thumbnails) this._externalThumbnailsHandler.load(this.sources.thumbnails);
         })
         .finally(() => {
           resetFlags();
@@ -2215,7 +2211,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   private _handleDimensions(): void {
-    const {dimensions} = this.config;
+    const { dimensions } = this.config;
     if (Utils.Object.isObject(dimensions) && !Utils.Object.isEmptyObject(dimensions)) {
       this.dimensions = dimensions;
     }
@@ -2250,10 +2246,13 @@ export default class Player extends FakeEventTarget {
       if (!this._firstPlay) {
         return outOfDvr;
       } else {
-        return !!this.src && !this.isOnLiveEdge()
-            // Live video can be set with explicit start time,(e.g. startOver)
-            // in that case we don't want to move to the liveEdge
-            && this._sources.startTime === undefined;
+        return (
+          !!this.src &&
+          !this.isOnLiveEdge() &&
+          // Live video can be set with explicit start time,(e.g. startOver)
+          // in that case we don't want to move to the liveEdge
+          this._sources.startTime === undefined
+        );
       }
     }
     return false;
@@ -2384,7 +2383,7 @@ export default class Player extends FakeEventTarget {
       this._aspectRatio = dimensions.ratio;
     }
     if (this._aspectRatio) {
-      const [ratioWidth, ratioHeight] = this._aspectRatio.split(':').map(r => Number(r));
+      const [ratioWidth, ratioHeight] = this._aspectRatio.split(':').map((r) => Number(r));
       if (dimensions.width || (!dimensions.width && !dimensions.height)) {
         const height = (ratioHeight / ratioWidth) * targetElement.clientWidth;
         targetElement.style.height = `${height}px`;
@@ -2442,7 +2441,7 @@ export default class Player extends FakeEventTarget {
    * @returns {Array<T>} - The parsed tracks.
    * @private
    */
-  private _getTracksByType<T extends PKTextTrack | AudioTrack | VideoTrack | ImageTrack>(type: { new(...args: any[]): T }): T[] {
+  private _getTracksByType<T extends PKTextTrack | AudioTrack | VideoTrack | ImageTrack>(type: { new (...args: any[]): T }): T[] {
     return this._tracks.reduce((arr: T[], track) => {
       if (track instanceof type && track.available) {
         arr.push(track);
@@ -2599,15 +2598,12 @@ export default class Player extends FakeEventTarget {
    */
   private _setDefaultTracks(): void {
     const activeTracks = this.getActiveTracks();
-    const defaultStreamTrack = this._getTextTracks().find(track => track.default);
+    const defaultStreamTrack = this._getTextTracks().find((track) => track.default);
     const playbackConfig = this.config.playback;
-    const offTextTrack: Track = this._getTextTracks().find(track => PKTextTrack.langComparer(OFF, track.language))! ;
+    const offTextTrack: Track = this._getTextTracks().find((track) => PKTextTrack.langComparer(OFF, track.language))!;
     const defaultLanguage = this._getLanguage<PKTextTrack>(this._getTextTracks(), playbackConfig.textLanguage, defaultStreamTrack);
-    const currentOrConfiguredTextLang =
-      !this._playbackAttributesState.textLanguage || this.config.disableUserCache ? defaultLanguage : this._playbackAttributesState.textLanguage;
-    const currentOrConfiguredAudioLang =
-      this._playbackAttributesState.audioLanguage ||
-      this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio);
+    const currentOrConfiguredTextLang = !this._playbackAttributesState.textLanguage || this.config.disableUserCache ? defaultLanguage : this._playbackAttributesState.textLanguage;
+    const currentOrConfiguredAudioLang = this._playbackAttributesState.audioLanguage || this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio);
     if (!playbackConfig.captionsDisplay) {
       this._playbackAttributesState.textLanguage = defaultLanguage;
       this._setDefaultTrack<PKTextTrack>(this._getTextTracks(), OFF, offTextTrack);
@@ -2619,12 +2615,7 @@ export default class Player extends FakeEventTarget {
       }
     }
     if (currentOrConfiguredAudioLang === playbackConfig.audioLanguage) {
-      this._setDefaultTrack<AudioTrack>(
-        this._getAudioTracks(),
-        currentOrConfiguredAudioLang,
-        activeTracks.audio,
-        playbackConfig.additionalAudioLanguage
-      );
+      this._setDefaultTrack<AudioTrack>(this._getAudioTracks(), currentOrConfiguredAudioLang, activeTracks.audio, playbackConfig.additionalAudioLanguage);
     } else {
       this._setDefaultTrack<AudioTrack>(this._getAudioTracks(), currentOrConfiguredAudioLang, activeTracks.audio);
     }
@@ -2642,7 +2633,7 @@ export default class Player extends FakeEventTarget {
   private _getLanguage<T extends PKTextTrack | AudioTrack>(tracks: T[], configuredLanguage: string, defaultTrack?: T): string {
     let language = configuredLanguage;
     if (language === AUTO) {
-      const localeTrack: T | undefined = tracks.find(track => Track.langComparer(Locale.language, track.language));
+      const localeTrack: T | undefined = tracks.find((track) => Track.langComparer(Locale.language, track.language));
       if (localeTrack) {
         language = localeTrack.language;
       } else if (defaultTrack && defaultTrack.language !== OFF) {
@@ -2664,21 +2655,16 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @private
    */
-  private _setDefaultTrack<T extends PKTextTrack | AudioTrack>(
-    tracks: T[],
-    language: string,
-    defaultTrack?: Track | null,
-    additionalLanguage?: string | string []
-  ): void {
+  private _setDefaultTrack<T extends PKTextTrack | AudioTrack>(tracks: T[], language: string, defaultTrack?: Track | null, additionalLanguage?: string | string[]): void {
     const updateTrack = (track: T): void => {
       this.selectTrack(track);
       this._markActiveTrack(track);
     };
-    const sameTrack: T | undefined = tracks.find(track => Track.langComparer(language, track.language, additionalLanguage, true));
+    const sameTrack: T | undefined = tracks.find((track) => Track.langComparer(language, track.language, additionalLanguage, true));
     if (sameTrack) {
       updateTrack(sameTrack);
     } else {
-      const track: T | undefined = tracks.find(track => Track.langComparer(language, track.language, additionalLanguage, false));
+      const track: T | undefined = tracks.find((track) => Track.langComparer(language, track.language, additionalLanguage, false));
       if (track) {
         updateTrack(track);
       } else if (defaultTrack && !defaultTrack.active) {
@@ -2694,13 +2680,9 @@ export default class Player extends FakeEventTarget {
    */
   private _setDefaultVideoTrack(): void {
     const sortedVideoTracks = this._getVideoTracks().sort((track1: VideoTrack, track2: VideoTrack) => track2.bandwidth - track1.bandwidth);
-    let selectedVideoTrack = sortedVideoTracks.find(
-      (track: VideoTrack) => track.label && track.label === this._playbackAttributesState.videoTrack?.label
-    );
+    let selectedVideoTrack = sortedVideoTracks.find((track: VideoTrack) => track.label && track.label === this._playbackAttributesState.videoTrack?.label);
     if (!selectedVideoTrack) {
-      selectedVideoTrack = sortedVideoTracks.find(
-        (track: VideoTrack) => track.height && track.height === this._playbackAttributesState.videoTrack?.height
-      );
+      selectedVideoTrack = sortedVideoTracks.find((track: VideoTrack) => track.height && track.height === this._playbackAttributesState.videoTrack?.height);
     }
     if (selectedVideoTrack) {
       this.selectTrack(selectedVideoTrack);
@@ -2744,7 +2726,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   private _setTracksCustomLabels<T extends AudioTrack | PKTextTrack | VideoTrack>(tracks: T[], callback: (track: T) => string): void {
-    tracks.forEach(track => {
+    tracks.forEach((track) => {
       const result = callback(Utils.Object.copyDeep(track));
       if (result) {
         track.label = result;
@@ -2865,7 +2847,7 @@ export default class Player extends FakeEventTarget {
    * @returns {PKAdTagTypes} - The ad tag types of the player.
    * @public
    */
-  public get AdTagType(): typeof AdTagType{
+  public get AdTagType(): typeof AdTagType {
     return AdTagType;
   }
 
@@ -2876,5 +2858,14 @@ export default class Player extends FakeEventTarget {
    */
   public get Error(): typeof PKError {
     return PKError;
+  }
+
+  public setCachedUrls(cachedUrls: string[]): void {
+    this._cachedUrls = cachedUrls;
+
+    if (this._engine) {
+      this._engine.setCachedUrls(cachedUrls);
+      this._cachedUrls = [];
+    }
   }
 }
