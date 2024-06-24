@@ -2020,7 +2020,7 @@ export default class Player extends FakeEventTarget {
         title = Utils.Dom.createElement('title');
         head.appendChild(title);
       }
-      title.innerHTML = this._sources.metadata.name;
+      title.innerHTML = this._sources.metadata.name ? this._sources.metadata.name : '';
     }
   }
 
