@@ -1968,6 +1968,7 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.DRM_LICENSE_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.MANIFEST_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => this._handleRecovered());
+      this._eventManager.listen(this, CustomEventType.CHANGE_SOURCE_ENDED, () => this._addTitleOnIframe());
       this._eventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
       this._eventManager.listen(this, Html5EventType.PAUSE, this._onPause.bind(this));
       this._eventManager.listen(this, Html5EventType.PLAYING, this._onPlaying.bind(this));
@@ -2003,6 +2004,23 @@ export default class Player extends FakeEventTarget {
           { capture: true }
         );
       }
+    }
+  }
+
+  /**
+   * In iframe embed add title element with the entry name
+   * @returns {void}
+   * @private
+   */
+  private _addTitleOnIframe(): void {
+    if (window.self !== window.top) {
+      const head = Utils.Dom.getElementBySelector('head');
+      let title = head.querySelector('title');
+      if (!title){
+        title = Utils.Dom.createElement('title');
+        head.appendChild(title);
+      }
+      title.innerHTML = this._sources.metadata.name ? this._sources.metadata.name : '';
     }
   }
 
