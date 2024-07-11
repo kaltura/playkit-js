@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.11 (2024-07-11)
+
+
+### Bug Fixes
+
+* **SUP-42112:** Advanced Caption Settings not working in iOS ([#783](https://github.com/kaltura/playkit-js/issues/783)) ([1463a41](https://github.com/kaltura/playkit-js/commit/1463a414726752aa3b97d54b6d89b49b07d3ea90))
+
 ### 0.84.10 (2024-06-30)
 
 ### 0.84.9 (2024-06-02)
