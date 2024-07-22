@@ -1918,8 +1918,7 @@ export default class Player extends FakeEventTarget {
     this._engine = this._engineDecoratorManager ? (new EngineDecorator(engine, this._engineDecoratorManager) as EngineDecoratorType) : engine;
 
     if (this._cachedUrls.length) {
-      this._engine.setCachedUrls(this._cachedUrls);
-      this._cachedUrls = [];
+      this.setCachedUrls(this._cachedUrls);
     }
   }
 
@@ -2881,7 +2880,7 @@ export default class Player extends FakeEventTarget {
   public setCachedUrls(cachedUrls: string[]): void {
     this._cachedUrls = cachedUrls;
 
-    if (this._engine) {
+    if (this._engine && this._engine.setCachedUrls) {
       this._engine.setCachedUrls(cachedUrls);
       this._cachedUrls = [];
     }
