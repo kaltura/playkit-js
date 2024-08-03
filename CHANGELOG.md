@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.12 (2024-08-03)
+
+
+### Bug Fixes
+
+* **FEC-14058:** Playlist - Loading Youtube and Image entries throws an error ([31130fe](https://github.com/kaltura/playkit-js/commit/31130fec6d9b390ce73023205605b6b84ccfcf2c))
+
 ### 0.84.11 (2024-07-11)
 
 
