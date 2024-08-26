@@ -78,11 +78,10 @@ const CONTAINER_CLASS_NAME: string = 'playkit-container';
 const POSTER_CLASS_NAME: string = 'playkit-poster';
 
 /**
-/**
-* The video filter class name.
-* @type {string}
-* @const
-*/
+ * The video filter class name.
+ * @type {string}
+ * @const
+ */
 const VIDEO_FILTER_CLASS_NAME: string = 'playkit-video-filter';
 
 /**
@@ -1263,16 +1262,16 @@ export default class Player extends FakeEventTarget {
    */
   public getTracks<T extends Track | AudioTrack | PKTextTrack | VideoTrack | ImageTrack>(type?: TrackTypes): T[] {
     switch (type) {
-    case TrackType.VIDEO:
-      return Utils.Object.copyDeep(this._getVideoTracks());
-    case TrackType.AUDIO:
-      return Utils.Object.copyDeep(this._getAudioTracks());
-    case TrackType.TEXT:
-      return Utils.Object.copyDeep(this._getTextTracks());
-    case TrackType.IMAGE:
-      return Utils.Object.copyDeep(this._getImageTracks());
-    default:
-      return Utils.Object.copyDeep(this._tracks);
+      case TrackType.VIDEO:
+        return Utils.Object.copyDeep(this._getVideoTracks());
+      case TrackType.AUDIO:
+        return Utils.Object.copyDeep(this._getAudioTracks());
+      case TrackType.TEXT:
+        return Utils.Object.copyDeep(this._getTextTracks());
+      case TrackType.IMAGE:
+        return Utils.Object.copyDeep(this._getImageTracks());
+      default:
+        return Utils.Object.copyDeep(this._tracks);
     }
   }
 
@@ -2027,7 +2026,7 @@ export default class Player extends FakeEventTarget {
     if (window.self !== window.top) {
       const head = Utils.Dom.getElementBySelector('head');
       let title = head.querySelector('title');
-      if (!title){
+      if (!title) {
         title = Utils.Dom.createElement('title');
         head.appendChild(title);
       }
@@ -2732,15 +2731,15 @@ export default class Player extends FakeEventTarget {
           return;
         }
         switch (callbackType) {
-        case LabelOptions.QUALITIES:
-          this._setTracksCustomLabels(this._getVideoTracks(), customLabels[callbackType]);
-          break;
-        case LabelOptions.AUDIO:
-          this._setTracksCustomLabels(this._getAudioTracks(), customLabels[callbackType]);
-          break;
-        case LabelOptions.CAPTIONS:
-          this._setTracksCustomLabels(this._getTextTracks(), customLabels[callbackType]);
-          break;
+          case LabelOptions.QUALITIES:
+            this._setTracksCustomLabels(this._getVideoTracks(), customLabels[callbackType]);
+            break;
+          case LabelOptions.AUDIO:
+            this._setTracksCustomLabels(this._getAudioTracks(), customLabels[callbackType]);
+            break;
+          case LabelOptions.CAPTIONS:
+            this._setTracksCustomLabels(this._getTextTracks(), customLabels[callbackType]);
+            break;
         }
       }
     }
