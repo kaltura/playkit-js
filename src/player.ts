@@ -2026,7 +2026,7 @@ export default class Player extends FakeEventTarget {
     if (window.self !== window.top) {
       const head = Utils.Dom.getElementBySelector('head');
       let title = head.querySelector('title');
-      if (!title) {
+      if (!title){
         title = Utils.Dom.createElement('title');
         head.appendChild(title);
       }
