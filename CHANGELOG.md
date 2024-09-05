@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.13 (2024-09-05)
+
+
+### Bug Fixes
+
+* **FEC-14080:** Accessibility fix for the top bar and the bottom bar ([84824f4](https://github.com/kaltura/playkit-js/commit/84824f46f5dba05af35143a3fac689b83669a4b8))
+
 ### 0.84.12 (2024-08-03)
 
 
