@@ -78,13 +78,6 @@ const CONTAINER_CLASS_NAME: string = 'playkit-container';
 const POSTER_CLASS_NAME: string = 'playkit-poster';
 
 /**
- * The video filter class name.
- * @type {string}
- * @const
- */
-const VIDEO_FILTER_CLASS_NAME: string = 'playkit-video-filter';
-
-/**
  * The engine class name.
  * @type {string}
  * @const
@@ -1810,10 +1803,6 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   private _appendDomElements(): void {
-    // Append playkit-video-filter
-    const videoFilter = Utils.Dom.createElement('div');
-    Utils.Dom.addClassName(videoFilter, VIDEO_FILTER_CLASS_NAME);
-    Utils.Dom.appendChild(this._el, videoFilter);
     // Append playkit-black-cover
     this._blackCoverEl = Utils.Dom.createElement('div');
     Utils.Dom.addClassName(this._blackCoverEl, BLACK_COVER_CLASS_NAME);
