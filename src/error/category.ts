@@ -41,7 +41,10 @@ const Category: CategoryType = {
   GEO_LOCATION: 13,
 
   /** Media is unavailable error. */
-  MEDIA_UNAVAILABLE: 14
+  MEDIA_UNAVAILABLE: 14,
+
+  /** IP restriction error. */
+  IP_RESTRICTED: 15
 };
 
 export {Category};
