@@ -1869,7 +1869,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   private _selectEngineByPriority(): boolean {
-    const streamPriority = this._config.playback?.streamPriority || [];
+    const streamPriority = this._config.playback.streamPriority;
     const preferNative = this._config.playback.preferNative;
     const sources = this._sources;
     for (const priority of streamPriority) {
