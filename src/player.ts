@@ -1280,6 +1280,15 @@ export default class Player extends FakeEventTarget {
     });
   }
 
+  public changeChildQuality(track: any | string): void{
+    if (track === 'auto') {
+      this.enableAdaptiveBitrate();
+    } else {
+      this.selectTrack(track);
+    }
+    this._markActiveTrack(track);
+  }
+
   /**
    * Select a track
    * @function selectTrack
@@ -1860,7 +1869,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   private _selectEngineByPriority(): boolean {
-    const streamPriority = this._config.playback.streamPriority;
+    const streamPriority = this._config.playback?.streamPriority || [];
     const preferNative = this._config.playback.preferNative;
     const sources = this._sources;
     for (const priority of streamPriority) {
