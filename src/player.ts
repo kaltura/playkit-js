@@ -1281,6 +1281,22 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * change quality in child entries
+   * @function changeChildQuality
+   * @param {?Track} track - the track to change
+   * @returns {void}
+   * @public
+   */
+  public changeChildQuality(track: any | string): void{
+    if (track === 'auto') {
+      this.enableAdaptiveBitrate();
+    } else {
+      this.selectTrack(track);
+    }
+    this._markActiveTrack(track);
+  }
+
+  /**
    * Select a track
    * @function selectTrack
    * @param {?Track} track - the track to select
