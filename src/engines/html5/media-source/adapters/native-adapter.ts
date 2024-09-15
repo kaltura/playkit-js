@@ -220,6 +220,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (Utils.Object.hasPropertyPath(config, 'text.useNativeTextTrack')) {
       adapterConfig.displayTextTrack = Utils.Object.getPropertyPath(config, 'text.useNativeTextTrack');
     }
+    if (adapterConfig.displayTextTrack !== false) {
+      videoElement.classList.add('playkit-native-text');
+    }
     if (Utils.Object.hasPropertyPath(config, 'sources.progressive')) {
       adapterConfig.progressiveSources = Utils.Object.getPropertyPath(config, 'sources.progressive');
     }
