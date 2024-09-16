@@ -24,6 +24,8 @@ const NUDGE_SEEK_AFTER_FOCUS: number = 0.1;
 const SAFARI_BUFFERED_SEGMENTS_COUNT: number = 3;
 const LIVE_DURATION_INTERVAL_MS = 1000;
 
+const NATIVE_TEXT_CLASS = 'playkit-native-text';
+
 /**
  * An illustration of media source extension for progressive download
  * @classdesc
@@ -219,6 +221,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     };
     if (Utils.Object.hasPropertyPath(config, 'text.useNativeTextTrack')) {
       adapterConfig.displayTextTrack = Utils.Object.getPropertyPath(config, 'text.useNativeTextTrack');
+    }
+    if (adapterConfig.displayTextTrack !== false) {
+      videoElement.classList.add(NATIVE_TEXT_CLASS);
     }
     if (Utils.Object.hasPropertyPath(config, 'sources.progressive')) {
       adapterConfig.progressiveSources = Utils.Object.getPropertyPath(config, 'sources.progressive');
@@ -636,6 +641,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._maybeRemoveSourceTag();
       super.destroy().then(
         () => {
+          this._videoElement.classList.remove(NATIVE_TEXT_CLASS);
           this._drmHandler && this._drmHandler.destroy();
           this._waitingEventTriggered = false;
           this._progressiveSources = [];
