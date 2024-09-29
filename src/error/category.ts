@@ -44,7 +44,10 @@ const Category: CategoryType = {
   MEDIA_UNAVAILABLE: 14,
 
   /** IP restriction error. */
-  IP_RESTRICTED: 15
+  IP_RESTRICTED: 15,
+
+  /** Scheduled restriction error. */
+  SCHEDULED_RESTRICTED: 16
 };
 
 export {Category};
