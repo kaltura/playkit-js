@@ -665,8 +665,9 @@ class CueStyleBox extends StyleBox {
     // position of the cue box. The reference edge will be resolved later when
     // the box orientation styles are applied.
     let textPos = 0;
+    let align = cue.positionAlign || cue.align;
     if (useDefaultAlignment) {
-      switch (styleOptions.textAlign) {
+      switch (align) {
         case 'start':
         case 'left':
         case 'line-left':
