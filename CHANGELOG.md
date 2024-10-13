@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.16 (2024-10-13)
+
+
+### Bug Fixes
+
+* **SUP-44939:** [Player] Numeric Position not working on left-positioned captions, AWS ([#796](https://github.com/kaltura/playkit-js/issues/796)) ([1146aba](https://github.com/kaltura/playkit-js/commit/1146abaffbf5633d5ab34f4070ce70e65afaefcc))
+
 ### 0.84.15 (2024-09-19)
 
 
