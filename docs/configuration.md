@@ -54,6 +54,7 @@ var config = {
     autoplay: false,
     loop: false,
     allowMutedAutoPlay: true,
+    updateAudioDescriptionFlavors: true,
     muted: false,
     pictureInPicture: true,
     options: {
@@ -792,6 +793,7 @@ var config = {
 >  loop: boolean,
 >  autopause: boolean,
 >  allowMutedAutoPlay: boolean,
+>  updateAudioDescriptionFlavors: boolean,
 >  muted: boolean,
 >  pictureInPicture: boolean,
 >  options: PKPlaybackOptionsObject,
@@ -818,6 +820,7 @@ var config = {
 >  autoplay: false,
 >  loop: false,
 >  allowMutedAutoPlay: true,
+>  updateAudioDescriptionFlavors: true,
 >  muted: false,
 >  pictureInPicture: true,
 >  playAdsWithMSE: false,
@@ -1075,6 +1078,16 @@ var config = {
 > > ##### Default: `false`
 > >
 > > ##### Description: Indicates whether the video should play in loop
+>
+> ##
+>
+> > ### config.playback.updateAudioDescriptionFlavors
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `true`
+> >
+> > ##### Description: Updates audio flavors that has "audio_description" tag
 >
 > ##
 >

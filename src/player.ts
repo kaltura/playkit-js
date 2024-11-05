@@ -2471,7 +2471,7 @@ export default class Player extends FakeEventTarget {
   public _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
 
-    if (this._sources.metadata?.audioFlavors) {
+    if (this.config.playback.updateAudioDescriptionFlavors && this._sources.metadata?.audioFlavors) {
       let audioTracksIndex = 0;
       // iterate over the audio tracks and set the isAudioDescription flag based on the audioFlavors metadata
       tracks.forEach((track) => {
@@ -2479,8 +2479,7 @@ export default class Player extends FakeEventTarget {
           track.isAudioDescription = Boolean(this._sources.metadata.audioFlavors?.[audioTracksIndex]?.isAudioDescription);
           if (track.isAudioDescription) {
             // set the language to ad-<language> for audio description tracks
-            // track.language = `ad-${track.language}`;
-            track.language = `${track.language}-ad`;
+            track.language = `ad-${track.language}`;
             if (!this._sources.metadata?.audioFlavors?.[audioTracksIndex]?.label) {
               // add "Audio Description" to the label if custom label is not provided
               track.label = `${track.label} - Audio Description`;
