@@ -9,22 +9,16 @@ enum FlavorAssetTags {
  * Audio track representation of the player.
  * @classdesc
  */
-class AudioTrack extends Track {
-  /**
-   * @member - is audio asset has audio description tag
-   * @type {boolean|undefined}
-   */
-  public isAudioDescription?: boolean;
-}
+class AudioTrack extends Track {}
 
 export function audioDescriptionTrackHandler(tracks: AudioTrack[], audioFlavors?: Array<any>): void {
-  if (tracks?.length) {
+  if (tracks?.length && audioFlavors?.length) {
     let audioTracksIndex = 0;
     // iterate over the audio tracks and set the isAudioDescription flag based on the audioFlavors tags
     tracks.forEach((track) => {
       if (track instanceof AudioTrack) {
-        track.isAudioDescription = audioFlavors?.[audioTracksIndex]?.tags?.includes(FlavorAssetTags.AUDIO_DESCRIPTION);
-        if (track.isAudioDescription) {
+        const isAudioDescription = audioFlavors[audioTracksIndex]?.tags?.includes(FlavorAssetTags.AUDIO_DESCRIPTION);
+        if (isAudioDescription) {
           // set the language to ad-<language> for audio description tracks
           track.language = `ad-${track.language}`;
           if (!audioFlavors?.[audioTracksIndex]?.label) {
