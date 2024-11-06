@@ -54,7 +54,7 @@ var config = {
     autoplay: false,
     loop: false,
     allowMutedAutoPlay: true,
-    updateAudioDescriptionFlavors: true,
+    updateAudioDescriptionLabels: true,
     muted: false,
     pictureInPicture: true,
     options: {
@@ -793,7 +793,7 @@ var config = {
 >  loop: boolean,
 >  autopause: boolean,
 >  allowMutedAutoPlay: boolean,
->  updateAudioDescriptionFlavors: boolean,
+>  updateAudioDescriptionLabels: boolean,
 >  muted: boolean,
 >  pictureInPicture: boolean,
 >  options: PKPlaybackOptionsObject,
@@ -820,7 +820,7 @@ var config = {
 >  autoplay: false,
 >  loop: false,
 >  allowMutedAutoPlay: true,
->  updateAudioDescriptionFlavors: true,
+>  updateAudioDescriptionLabels: true,
 >  muted: false,
 >  pictureInPicture: true,
 >  playAdsWithMSE: false,
@@ -1081,7 +1081,7 @@ var config = {
 >
 > ##
 >
-> > ### config.playback.updateAudioDescriptionFlavors
+> > ### config.playback.updateAudioDescriptionLabels
 > >
 > > ##### Type: `boolean`
 > >

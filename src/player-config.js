@@ -23,7 +23,7 @@ const DefaultConfig = {
     loop: false,
     autopause: false,
     allowMutedAutoPlay: true,
-    updateAudioDescriptionFlavors: true,
+    updateAudioDescriptionLabels: true,
     muted: false,
     pictureInPicture: true,
     options: {
