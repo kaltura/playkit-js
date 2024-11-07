@@ -11,6 +11,7 @@ declare type PKPlaybackConfigObject = {
   preload: string,
   autoplay: PKAutoPlayTypes,
   allowMutedAutoPlay: boolean,
+  updateAudioDescriptionLabels: boolean,
   muted: boolean,
   pictureInPicture: boolean,
   streamPriority: Array<PKStreamPriorityObject>,

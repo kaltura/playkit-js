@@ -198,6 +198,15 @@ export default class Track {
   }
 
   /**
+   * Setter for the language of the track.
+   * @public
+   * @param {string} value - The language of the track.
+   */
+  public set language(value: string) {
+    this._language = value;
+  }
+
+  /**
    * @constructor
    * @param {Object} settings - The track settings object.
    */

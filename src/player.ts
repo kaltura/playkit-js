@@ -11,7 +11,7 @@ import getLogger, { getLogLevel, LogLevel, LogLevelType, setLogHandler, setLogLe
 import StateManager from './state/state-manager';
 import Track from './track/track';
 import VideoTrack from './track/video-track';
-import AudioTrack from './track/audio-track';
+import AudioTrack, { audioDescriptionTrackHandler } from './track/audio-track';
 import { PKTextTrack } from './track/text-track';
 import TextStyle from './track/text-style';
 import { processCues } from './track/text-track-display';
@@ -1294,7 +1294,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @public
    */
-  public changeQuality(track: any | string): void{
+  public changeQuality(track: any | string): void {
     if (track === 'auto') {
       this.enableAdaptiveBitrate();
     } else {
@@ -2042,7 +2042,7 @@ export default class Player extends FakeEventTarget {
     if (window.self !== window.top) {
       const head = Utils.Dom.getElementBySelector('head');
       let title = head.querySelector('title');
-      if (!title){
+      if (!title) {
         title = Utils.Dom.createElement('title');
         head.appendChild(title);
       }
@@ -2470,6 +2470,11 @@ export default class Player extends FakeEventTarget {
    */
   public _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
+
+    if (this.config.playback.updateAudioDescriptionLabels) {
+      audioDescriptionTrackHandler(tracks, this._sources.metadata?.audioFlavors);
+    }
+
     this._tracks = tracks?.concat(this._externalCaptionsHandler.getExternalTracks(tracks));
     this._applyABRRestriction(this._config);
     this._addTextTrackOffOption();
