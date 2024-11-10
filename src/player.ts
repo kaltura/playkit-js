@@ -2917,4 +2917,12 @@ export default class Player extends FakeEventTarget {
       this._cachedUrls = [];
     }
   }
+
+  public setCuesTimeRangeStart(cueRangeStart: number): void {
+    this._externalCaptionsHandler?.setCuesTimeRangeStart(cueRangeStart);
+  }
+
+  public setCuesTimeRangeEnd(cueRangeEnd: number): void {
+    this._externalCaptionsHandler?.setCuesTimeRangeEnd(cueRangeEnd);
+  }
 }

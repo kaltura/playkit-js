@@ -85,6 +85,14 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   private _lastTimeUpdate: number = 0;
+  /**
+   * when normalizing cues, this will be the new start time
+   */
+  private _cuesTimeRangeStart = -1;
+  /**
+   * when normalizing cues, this will be the new end time
+   */
+  private _cuesTimeRangeEnd = -1;
 
   /**
    * constructor
@@ -289,6 +297,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {void}
    */
   public reset(): void {
+    this._cuesTimeRangeStart = -1;
+    this._cuesTimeRangeEnd = -1;
     this._resetCurrentTrack();
     this._textTrackModel = {} as VTTCue;
     this._resetExternalNativeTextTrack();
@@ -393,6 +403,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     return new Promise((resolve, reject) => {
       this._getCuesString(textTrack)
         .then(vttString => this._parseCues(vttString))
+        .then((cuesArray) => this._filterAndShiftCues(cuesArray))
         .then(cuesArray => {
           this._textTrackModel[textTrack.language].cues = cuesArray;
           resolve();
@@ -601,6 +612,40 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: this._activeTextCues}));
       this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, () => this._handleCaptionOnTimeUpdate(textTrack));
     }
+  }
+
+  private _filterCuePointsOutOfVideoRange(cuePoints: any[], seekFrom: number, clipTo: number | undefined): any[] {
+    return cuePoints.filter((cp: any) => cp.startTime >= seekFrom && (!clipTo || cp.startTime < clipTo));
+  }
+
+  public setCuesTimeRangeStart(cuesTimeRangeStart: number): void {
+    this._cuesTimeRangeStart = cuesTimeRangeStart;
+  }
+
+  public setCuesTimeRangeEnd(cuesTimeRangeEnd: number): void {
+    this._cuesTimeRangeEnd = cuesTimeRangeEnd;
+  }
+
+  /**
+   * Translate the cues between [cue seek range start, cue seek range end] into a time range that starts from 0.
+   * @param {TextTrack} textTrack - text track to be set
+   * @returns {void}
+   * @private
+   */
+  private _filterAndShiftCues(cuesArray: any[]): any[] {
+    if (!cuesArray || !cuesArray.length) return [];
+    if (this._cuesTimeRangeStart === -1 && this._cuesTimeRangeEnd === -1) return cuesArray;
+
+    const cuesTimeRangeStart = this._cuesTimeRangeStart === -1 ? 0 : this._cuesTimeRangeStart;
+    const cuesTimeRangeEnd = this._cuesTimeRangeEnd === -1 ? undefined : this._cuesTimeRangeEnd;
+
+    const filteredCues = this._filterCuePointsOutOfVideoRange(cuesArray, cuesTimeRangeStart, cuesTimeRangeEnd);
+    filteredCues.forEach((cp: any) => {
+      cp.startTime = cp.startTime - cuesTimeRangeStart;
+      cp.endTime = cp.endTime - cuesTimeRangeStart;
+    });
+
+    return filteredCues;
   }
 }
 
