@@ -2918,11 +2918,11 @@ export default class Player extends FakeEventTarget {
     }
   }
 
-  public setCuesTimeRangeStart(cueRangeStart: number): void {
-    this._externalCaptionsHandler?.setCuesTimeRangeStart(cueRangeStart);
+  public setSeekFrom(seekFrom: number): void {
+    this._externalCaptionsHandler?.setSeekFrom(seekFrom);
   }
 
-  public setCuesTimeRangeEnd(cueRangeEnd: number): void {
-    this._externalCaptionsHandler?.setCuesTimeRangeEnd(cueRangeEnd);
+  public setClipTo(clipTo: number): void {
+    this._externalCaptionsHandler?.setClipTo(clipTo);
   }
 }
