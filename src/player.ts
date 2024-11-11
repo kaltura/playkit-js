@@ -2917,4 +2917,12 @@ export default class Player extends FakeEventTarget {
       this._cachedUrls = [];
     }
   }
+
+  public setSeekFrom(seekFrom: number): void {
+    this._externalCaptionsHandler.seekFrom = seekFrom;
+  }
+
+  public setClipTo(clipTo: number): void {
+    this._externalCaptionsHandler.clipTo = clipTo;
+  }
 }

@@ -85,6 +85,14 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   private _lastTimeUpdate: number = 0;
+  /**
+   * when normalizing cues, this will be the new cue time range start time
+   */
+  private _seekFrom = -1;
+  /**
+   * when normalizing cues, this will be the new cue time range end time
+   */
+  private _clipTo = -1;
 
   /**
    * constructor
@@ -289,6 +297,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {void}
    */
   public reset(): void {
+    this._seekFrom = -1;
+    this._clipTo = -1;
     this._resetCurrentTrack();
     this._textTrackModel = {} as VTTCue;
     this._resetExternalNativeTextTrack();
@@ -393,6 +403,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     return new Promise((resolve, reject) => {
       this._getCuesString(textTrack)
         .then(vttString => this._parseCues(vttString))
+        .then((cuesArray) => this._filterAndShiftCues(cuesArray))
         .then(cuesArray => {
           this._textTrackModel[textTrack.language].cues = cuesArray;
           resolve();
@@ -601,6 +612,40 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: this._activeTextCues}));
       this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, () => this._handleCaptionOnTimeUpdate(textTrack));
     }
+  }
+
+  private _filterCuePointsOutOfVideoRange(cuePoints: any[], seekFrom: number, clipTo: number | undefined): any[] {
+    return cuePoints.filter((cp: any) => cp.startTime >= seekFrom && (!clipTo || cp.startTime < clipTo));
+  }
+
+  public set seekFrom(seekFrom: number) {
+    this._seekFrom = seekFrom;
+  }
+
+  public set clipTo(clipTo: number) {
+    this._clipTo = clipTo;
+  }
+
+  /**
+   * Translate the cues between [seekFrom, clipTo] into a time range that starts from 0.
+   * @param {TextTrack} textTrack - text track to be set
+   * @returns {void}
+   * @private
+   */
+  private _filterAndShiftCues(cuesArray: any[]): any[] {
+    if (!cuesArray || !cuesArray.length) return [];
+    if (this._seekFrom === -1 && this._clipTo === -1) return cuesArray;
+
+    const seekFrom = this._seekFrom === -1 ? 0 : this._seekFrom;
+    const clipTo = this._clipTo === -1 ? undefined : this._clipTo;
+
+    const filteredCues = this._filterCuePointsOutOfVideoRange(cuesArray, seekFrom, clipTo);
+    filteredCues.forEach((cp: any) => {
+      cp.startTime = cp.startTime - seekFrom;
+      cp.endTime = cp.endTime - seekFrom;
+    });
+
+    return filteredCues;
   }
 }
 
