@@ -2919,10 +2919,10 @@ export default class Player extends FakeEventTarget {
   }
 
   public setSeekFrom(seekFrom: number): void {
-    this._externalCaptionsHandler?.setSeekFrom(seekFrom);
+    this._externalCaptionsHandler.seekFrom = seekFrom;
   }
 
   public setClipTo(clipTo: number): void {
-    this._externalCaptionsHandler?.setClipTo(clipTo);
+    this._externalCaptionsHandler.clipTo = clipTo;
   }
 }

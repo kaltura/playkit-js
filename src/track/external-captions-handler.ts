@@ -618,11 +618,11 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     return cuePoints.filter((cp: any) => cp.startTime >= seekFrom && (!clipTo || cp.startTime < clipTo));
   }
 
-  public setSeekFrom(seekFrom: number): void {
+  public set seekFrom(seekFrom: number) {
     this._seekFrom = seekFrom;
   }
 
-  public setClipTo(clipTo: number): void {
+  public set clipTo(clipTo: number) {
     this._clipTo = clipTo;
   }
 
