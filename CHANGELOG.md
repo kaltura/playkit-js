@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.17 (2024-11-14)
+
+
+### Bug Fixes
+
+* **SUP-37490:** Align captions with clipTo/SeekFrom Values in PlayManifest ([8f24f03](https://github.com/kaltura/playkit-js/commit/8f24f033e6c8809b180df1334a24d345fe0595bc))
+
 ### 0.84.16 (2024-10-13)
 
 
