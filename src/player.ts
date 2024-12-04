@@ -2491,7 +2491,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   private _getTracksByType<T extends PKTextTrack | AudioTrack | VideoTrack | ImageTrack>(type: { new (...args: any[]): T }): T[] {
-    return this._tracks.reduce((arr: T[], track) => {
+    return this._tracks?.reduce((arr: T[], track) => {
       if (track instanceof type && track.available) {
         arr.push(track);
       }
