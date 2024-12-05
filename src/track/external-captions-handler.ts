@@ -502,7 +502,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   private _maybeSetExternalCueIndex(): boolean {
-    const textTrack = this._player._getTextTracks().find(track => track.active && track.external);
+    const textTrack = this._player._getTextTracks()?.find(track => track.active && track.external);
     if (textTrack && textTrack.external) {
       const cues = this._textTrackModel[textTrack.language] ? this._textTrackModel[textTrack.language].cues : [];
       let i = 0;
