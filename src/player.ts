@@ -1445,7 +1445,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   private _applyABRRestriction(config: any): void {
-    if (Utils.Object.hasPropertyPath(config, 'abr.restrictions') && this._engine && this._tracks.length) {
+    if (Utils.Object.hasPropertyPath(config, 'abr.restrictions') && this._engine && this._tracks?.length) {
       const { restrictions } = this._config.abr;
       const videoTracks: VideoTrack[] = <VideoTrack[]>this._tracks.filter((track) => track instanceof VideoTrack);
       const newVideoTracks = filterTracksByRestriction(videoTracks, restrictions);
