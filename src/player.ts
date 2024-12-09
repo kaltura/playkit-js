@@ -2469,6 +2469,9 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   public _updateTracks(tracks: Array<Track>): void {
+    if(!tracks) {
+        return;
+    }
     Player._logger.debug('Tracks changed', tracks);
 
     if (this.config.playback.updateAudioDescriptionLabels) {
