@@ -2470,7 +2470,7 @@ export default class Player extends FakeEventTarget {
    */
   public _updateTracks(tracks: Array<Track>): void {
     if(!tracks) {
-        return;
+      return;
     }
     Player._logger.debug('Tracks changed', tracks);
 
