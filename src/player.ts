@@ -1808,6 +1808,7 @@ export default class Player extends FakeEventTarget {
       const classNameWithId = `${ENGINE_CLASS_NAME}-${this._engine.id}`;
       Utils.Dom.addClassName(engineEl, classNameWithId);
       Utils.Dom.prependTo(engineEl, this._el);
+      Utils.Dom.setAttribute(engineEl, 'tabindex', '-1');
       if (this._engine.id === 'youtube') {
         this._el.style.zIndex = '1';
       } else if (this._el.style.zIndex) {
