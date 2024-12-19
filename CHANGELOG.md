@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.18 (2024-12-19)
+
+
+### Bug Fixes
+
+* **ADA-1778:** [ORS] - Firefox playerkit - Focusable but hidden/unlabeled elements in tabbing order ([#804](https://github.com/kaltura/playkit-js/issues/804)) ([f050ffc](https://github.com/kaltura/playkit-js/commit/f050ffcae760b70fea041f02e2f96dad31eaaa1c))
+
 ### 0.84.17 (2024-11-14)
 
 
