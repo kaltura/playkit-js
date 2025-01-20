@@ -2616,10 +2616,10 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   private _updateTextDisplay(cues: Array<VTTCue>): void {
-    if (this._config.text.useShakaTextTrackDisplay) {
+    if (this._config.text.useShakaTextTrackDisplay && !(this._config.text.useNativeTextTrack || this._config.text.enableCEA708Captions)) {
       this._applyCustomSubtitleStyles();
     }
-    if (!this._config.text.useNativeTextTrack && !this._config.text.useShakaTextTrackDisplay) {
+    if (!this._config.text.useNativeTextTrack && !this._config.text.useShakaTextTrackDisplay && !this._config.text.enableCEA708Captions) {
       processCues(window, cues, this._textDisplayEl, this._textStyle);
     }
   }
