@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.21 (2025-01-23)
+
+
+### Bug Fixes
+
+* **FEC-14257:** Fix duplicating captions on Safari ([#806](https://github.com/kaltura/playkit-js/issues/806)) ([2bf8729](https://github.com/kaltura/playkit-js/commit/2bf8729104f41299f7f0247edcd4055757c9bac4))
+
 ### 0.84.20 (2025-01-09)
 
 
