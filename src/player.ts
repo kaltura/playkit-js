@@ -1486,8 +1486,9 @@ export default class Player extends FakeEventTarget {
    */
   private _applyTextTrackConfig(): void {
     const textTrackDisplaySetting = Utils.Object.getPropertyPath(this._config, 'text.textTrackDisplaySetting');
+    const useNativeTextTrack = Utils.Object.getPropertyPath(this._config, 'text.useNativeTextTrack');
     const textStyle = Utils.Object.getPropertyPath(this._config, 'text.textStyle');
-    if (textTrackDisplaySetting) {
+    if (textTrackDisplaySetting && !useNativeTextTrack) {
       const textDisplaySettings: any = Utils.Object.mergeDeep({}, textTrackDisplaySetting, {
         // align - backward compatibility || new caption alignment API || default value
         align: textTrackDisplaySetting?.align || textStyle?.textAlign || 'center'
