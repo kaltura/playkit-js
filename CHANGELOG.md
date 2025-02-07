@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.22 (2025-02-07)
+
+
+### Bug Fixes
+
+* **FEC-14361:** Fix for not showing captions ([#808](https://github.com/kaltura/playkit-js/issues/808)) ([5051487](https://github.com/kaltura/playkit-js/commit/505148757a6b3f7ff53563fb16755ed27641ff8a))
+
 ### 0.84.21 (2025-01-23)
 
 
