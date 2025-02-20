@@ -519,6 +519,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {?Promise<*>} - play promise
    */
   public play(): Promise<void> {
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    if (isSafari) {
+      if (this._el.currentTime >= this._el.duration - 0.1 || this._el.ended) {
+        this._el.pause();
+        this._el.currentTime = 0;
+      }
+    }
+
     const playPromise = this._el.play();
     if (playPromise) {
       playPromise.catch((err) => this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_FAILED, { error: err })));
