@@ -520,7 +520,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   public play(): Promise<void> {
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    if (isSafari) {
+    if (isSafari && this.isInPictureInPicture) {
       if (this._el.currentTime >= this._el.duration - 0.1 || this._el.ended) {
         this._el.pause();
         this._el.currentTime = 0;
