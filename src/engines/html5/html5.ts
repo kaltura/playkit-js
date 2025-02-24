@@ -19,6 +19,7 @@ import { CapabilityResult, ICapability } from '../../types';
 import { PKABRRestrictionObject, PKDrmConfigObject, PKDrmDataObject, PKMediaSourceObject, PKVideoElementStore } from '../../types';
 import { IEngine } from '../../types';
 import Track from '../../track/track';
+import { Env } from '../../../src/playkit';
 
 const SHORT_BUFFERING_TIMEOUT: number = 200;
 
@@ -519,8 +520,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {?Promise<*>} - play promise
    */
   public play(): Promise<void> {
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    if (isSafari && this.isInPictureInPicture) {
+    if (Env.isSafari && this.isInPictureInPicture && !this.isLive()) {
       if (this._el.currentTime >= this._el.duration - 0.1 || this._el.ended) {
         this._el.pause();
         this._el.currentTime = 0;
