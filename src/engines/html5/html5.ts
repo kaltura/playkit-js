@@ -19,6 +19,7 @@ import { CapabilityResult, ICapability } from '../../types';
 import { PKABRRestrictionObject, PKDrmConfigObject, PKDrmDataObject, PKMediaSourceObject, PKVideoElementStore } from '../../types';
 import { IEngine } from '../../types';
 import Track from '../../track/track';
+import Env from '../../../src/utils/env';
 
 const SHORT_BUFFERING_TIMEOUT: number = 200;
 
@@ -514,11 +515,31 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Checks if the video playback has ended and resets it if necessary.
+   * Specifically handles Safari in Picture-in-Picture mode for non-live streams.
+   *
+   * @private
+   * @returns {void}
+   */
+  private resetIfPlaybackEnded(): void {
+    const currentTimeMs = Math.round(this._el.currentTime * 1000);
+    const durationMs = Math.round(this._el.duration * 1000);
+
+    if (currentTimeMs >= durationMs || this._el.ended) {
+      this._el.currentTime = 0;
+    }
+  }
+
+  /**
    * Start/resume playback.
    * @public
    * @returns {?Promise<*>} - play promise
    */
   public play(): Promise<void> {
+    if (Env.isSafari && this.isInPictureInPicture && !this.isLive()) {
+      this.resetIfPlaybackEnded();
+    }
+
     const playPromise = this._el.play();
     if (playPromise) {
       playPromise.catch((err) => this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_FAILED, { error: err })));
