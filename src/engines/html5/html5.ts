@@ -515,16 +515,30 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Checks if the video playback has ended and resets it if necessary.
+   * Specifically handles Safari in Picture-in-Picture mode for non-live streams.
+   *
+   * @private
+   * @returns {void}
+   */
+  private resetIfPlaybackEnded(): void {
+    const currentTimeMs = Math.round(this._el.currentTime * 1000);
+    const durationMs = Math.round(this._el.duration * 1000);
+
+    if (currentTimeMs >= durationMs || this._el.ended) {
+      this._el.pause();
+      this._el.currentTime = 0;
+    }
+  }
+
+  /**
    * Start/resume playback.
    * @public
    * @returns {?Promise<*>} - play promise
    */
   public play(): Promise<void> {
     if (Env.isSafari && this.isInPictureInPicture && !this.isLive()) {
-      if (this._el.currentTime >= this._el.duration - 0.1 || this._el.ended) {
-        this._el.pause();
-        this._el.currentTime = 0;
-      }
+      this.resetIfPlaybackEnded();
     }
 
     const playPromise = this._el.play();
