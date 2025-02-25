@@ -19,7 +19,7 @@ import { CapabilityResult, ICapability } from '../../types';
 import { PKABRRestrictionObject, PKDrmConfigObject, PKDrmDataObject, PKMediaSourceObject, PKVideoElementStore } from '../../types';
 import { IEngine } from '../../types';
 import Track from '../../track/track';
-import { Env } from '../../../src/playkit';
+import Env from '../../../src/utils/env';
 
 const SHORT_BUFFERING_TIMEOUT: number = 200;
 
@@ -526,7 +526,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     const durationMs = Math.round(this._el.duration * 1000);
 
     if (currentTimeMs >= durationMs || this._el.ended) {
-      this._el.pause();
       this._el.currentTime = 0;
     }
   }
