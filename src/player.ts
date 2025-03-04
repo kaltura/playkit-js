@@ -1262,16 +1262,16 @@ export default class Player extends FakeEventTarget {
    */
   public getTracks<T extends Track | AudioTrack | PKTextTrack | VideoTrack | ImageTrack>(type?: TrackTypes): T[] {
     switch (type) {
-    case TrackType.VIDEO:
-      return Utils.Object.copyDeep(this._getVideoTracks());
-    case TrackType.AUDIO:
-      return Utils.Object.copyDeep(this._getAudioTracks());
-    case TrackType.TEXT:
-      return Utils.Object.copyDeep(this._getTextTracks());
-    case TrackType.IMAGE:
-      return Utils.Object.copyDeep(this._getImageTracks());
-    default:
-      return Utils.Object.copyDeep(this._tracks);
+      case TrackType.VIDEO:
+        return Utils.Object.copyDeep(this._getVideoTracks());
+      case TrackType.AUDIO:
+        return Utils.Object.copyDeep(this._getAudioTracks());
+      case TrackType.TEXT:
+        return Utils.Object.copyDeep(this._getTextTracks());
+      case TrackType.IMAGE:
+        return Utils.Object.copyDeep(this._getImageTracks());
+      default:
+        return Utils.Object.copyDeep(this._tracks);
     }
   }
 
@@ -2471,7 +2471,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   public _updateTracks(tracks: Array<Track>): void {
-    if(!tracks) {
+    if (!tracks) {
       return;
     }
     Player._logger.debug('Tracks changed', tracks);
@@ -2620,7 +2620,8 @@ export default class Player extends FakeEventTarget {
     if (this._config.text.useShakaTextTrackDisplay) {
       this._applyCustomSubtitleStyles();
     }
-    if (!this._config.text.useNativeTextTrack && !this._config.text.useShakaTextTrackDisplay) {
+
+    if ((!this._config.text.useNativeTextTrack || this.isAudio()) && !this._config.text.useShakaTextTrackDisplay) {
       processCues(window, cues, this._textDisplayEl, this._textStyle);
     }
   }
@@ -2757,15 +2758,15 @@ export default class Player extends FakeEventTarget {
           return;
         }
         switch (callbackType) {
-        case LabelOptions.QUALITIES:
-          this._setTracksCustomLabels(this._getVideoTracks(), customLabels[callbackType]);
-          break;
-        case LabelOptions.AUDIO:
-          this._setTracksCustomLabels(this._getAudioTracks(), customLabels[callbackType]);
-          break;
-        case LabelOptions.CAPTIONS:
-          this._setTracksCustomLabels(this._getTextTracks(), customLabels[callbackType]);
-          break;
+          case LabelOptions.QUALITIES:
+            this._setTracksCustomLabels(this._getVideoTracks(), customLabels[callbackType]);
+            break;
+          case LabelOptions.AUDIO:
+            this._setTracksCustomLabels(this._getAudioTracks(), customLabels[callbackType]);
+            break;
+          case LabelOptions.CAPTIONS:
+            this._setTracksCustomLabels(this._getTextTracks(), customLabels[callbackType]);
+            break;
         }
       }
     }
