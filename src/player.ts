@@ -2620,7 +2620,7 @@ export default class Player extends FakeEventTarget {
     if (this._config.text.useShakaTextTrackDisplay) {
       this._applyCustomSubtitleStyles();
     }
-    if (!this._config.text.useNativeTextTrack && !this._config.text.useShakaTextTrackDisplay) {
+    if ((!this._config.text.useNativeTextTrack || this.isAudio() )&& !this._config.text.useShakaTextTrackDisplay) {
       processCues(window, cues, this._textDisplayEl, this._textStyle);
     }
   }
