@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.23 (2025-03-06)
+
+
+### Bug Fixes
+
+* **SUP-45555:** Missing Captions in SafariMac and iOS ([#811](https://github.com/kaltura/playkit-js/issues/811)) ([b43a1c2](https://github.com/kaltura/playkit-js/commit/b43a1c21325727af1bcb283331be8cea9fb6c3cd))
+
 ### 0.84.22 (2025-02-07)
 
 
