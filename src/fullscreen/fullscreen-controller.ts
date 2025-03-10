@@ -33,6 +33,10 @@ class FullscreenController {
   // Flag to overcome browsers which supports more than one fullscreenchange event
   private _isFullscreenEventDispatched: boolean = false;
 
+  private _inBrowseIframWidth = '';
+  private _inBrowseIframPosition = '';
+  private _inBrowseIframHeight = '';
+
   /**
    * after component mounted, set up event listeners to window fullscreen state change
    * @param {Player} player - element to enter fullscreen
@@ -264,11 +268,25 @@ class FullscreenController {
     if (this._player.isInPictureInPicture()) {
       this._player.exitPictureInPicture();
     }
+    this._setIframeStyleToEnterFullScreen();
     // add class for fullscreen
     Utils.Dom.addClassName(fullScreenElement, IN_BROWSER_FULLSCREEN);
     this._isInBrowserFullscreen = true;
     this._fullscreenEnterHandler();
     this._player.dispatchEvent(new FakeEvent(this._player.Event.RESIZE));
+  }
+
+  private _setIframeStyleToEnterFullScreen(): void {
+    const iframeElem: Element | null = window.frameElement;
+    if (!iframeElem) return; //no iframe
+    this._inBrowseIframWidth = window.getComputedStyle(iframeElem).width;
+    this._inBrowseIframPosition = window.getComputedStyle(iframeElem).position;
+    this._inBrowseIframHeight = window.getComputedStyle(iframeElem).height;
+
+    const iframeHtmlElem = iframeElem as HTMLElement;
+    iframeHtmlElem.style.position = 'absolute';
+    iframeHtmlElem.style.width = '100%';
+    iframeHtmlElem.style.height = '100%';
   }
 
   /**
@@ -279,6 +297,7 @@ class FullscreenController {
   private _exitInBrowserFullscreen(): void {
     //get the element with relevant css, otherwise keep the flow of exit manually
     const fullScreenElement = Utils.Dom.getElementBySelector('.' + IN_BROWSER_FULLSCREEN);
+    this._setIframeStyleToExitFullScreen();
     if (fullScreenElement) {
       Utils.Dom.removeClassName(fullScreenElement, IN_BROWSER_FULLSCREEN);
     }
@@ -287,6 +306,15 @@ class FullscreenController {
     this._player.dispatchEvent(new FakeEvent(this._player.Event.RESIZE));
   }
 
+  private _setIframeStyleToExitFullScreen(): void {
+    const iframeElem: Element | null = window.frameElement;
+    if (!iframeElem) return; //no iframe
+    const iframeHtmlElem = iframeElem as HTMLElement;
+
+    iframeHtmlElem.style.position = this._inBrowseIframPosition;
+    iframeHtmlElem.style.width = this._inBrowseIframWidth;
+    iframeHtmlElem.style.height = this._inBrowseIframHeight;
+  }
   /**
    * set up event listeners to window fullscreen state change
    * @memberof FullScreenController
