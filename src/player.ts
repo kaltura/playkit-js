@@ -2688,10 +2688,10 @@ export default class Player extends FakeEventTarget {
     let language = configuredLanguage;
     if (language === AUTO) {
       const localeTrack: T | undefined = tracks.find((track) => Track.langComparer(Locale.language, track.language));
-      if (localeTrack) {
-        language = localeTrack.language;
-      } else if (defaultTrack && defaultTrack.language !== OFF) {
+      if (defaultTrack && defaultTrack.language !== OFF) {
         language = defaultTrack.language;
+      } else if (localeTrack) {
+        language = localeTrack.language;
       } else if (tracks && tracks.length > 0) {
         language = tracks[0].language;
       }
