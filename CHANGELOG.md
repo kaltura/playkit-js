@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.25 (2025-04-02)
+
+
+### Bug Fixes
+
+* **SUP-47317:** [Saxion] inquiry about correct work of default captions ([#813](https://github.com/kaltura/playkit-js/issues/813)) ([7342358](https://github.com/kaltura/playkit-js/commit/73423589cdd742c6f93f5a02ed7400b18e6b5723))
+
 ### 0.84.24 (2025-03-10)
 
 
