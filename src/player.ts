@@ -2389,16 +2389,18 @@ export default class Player extends FakeEventTarget {
    */
   private _checkEndTime(): void {
     const endTime = this._sources.endTime;
-    if (endTime && endTime > 0 && this._engine) {
-      const currentTime = this._engine.currentTime;
-
-      if (currentTime && currentTime >= endTime) {
+    let hasPausedAtEndTime = false;
+    const onTimeUpdate = (): void => {
+      if (Math.floor(this.currentTime!) === endTime! && !hasPausedAtEndTime) {
         this.pause();
-      } else if (!this._engine.paused) {
-        this._eventManager.listenOnce(this._engine, Html5EventType.TIME_UPDATE, () => {
-          this._checkEndTime();
-        });
+        this._eventManager.unlisten(this._engine, Html5EventType.TIME_UPDATE, onTimeUpdate);
+        hasPausedAtEndTime = true;
       }
+    };
+    if (endTime && typeof this.currentTime === 'number' && this.currentTime < endTime) {
+      this._eventManager.listen(this._engine, Html5EventType.TIME_UPDATE, () => {
+        onTimeUpdate();
+      });
     }
   }
 
