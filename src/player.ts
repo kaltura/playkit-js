@@ -2388,10 +2388,11 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   private _checkEndTime(): void {
-    if (this._config.playback.endTime > 0 && this._engine) {
+    const endTime = this._sources.endTime;
+    if (endTime && endTime > 0 && this._engine) {
       const currentTime = this._engine.currentTime;
 
-      if (currentTime && currentTime >= this._config.playback.endTime && !this._playbackAttributesState.endTimeReached) {
+      if (currentTime && currentTime >= endTime && !this._playbackAttributesState.endTimeReached) {
         this.pause();
         this._playbackAttributesState.endTimeReached = true;
         this.dispatchEvent(new FakeEvent(CustomEventType.END_TIME_REACHED));

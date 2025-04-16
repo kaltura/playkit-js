@@ -26,7 +26,6 @@ const DefaultConfig = {
     updateAudioDescriptionLabels: true,
     muted: false,
     pictureInPicture: true,
-    endTime: -1,
     options: {
       html5: {
         hls: {},

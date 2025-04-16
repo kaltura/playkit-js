@@ -22,6 +22,7 @@ export type PKSourcesConfigObject = {
   poster?: string,
   duration?: number,
   startTime?: number,
+  endTime?: number,
   vr?: any,
   imageSourceOptions?: ImageSourceOptions,
   seekFrom?: number,
