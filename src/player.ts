@@ -2378,6 +2378,29 @@ export default class Player extends FakeEventTarget {
       this._engine.selectVideoTrack(this._pendingSelectedVideoTrack);
       this._pendingSelectedVideoTrack = undefined;
     }
+    this._checkEndTime();
+  }
+
+  /**
+   * Checks if the video has reached the configured endTime and pauses if necessary.
+   * Pauses only once and allows the user to continue playing afterward.
+   * @private
+   * @returns {void}
+   */
+  private _checkEndTime(): void {
+    if (this._config.playback.endTime > 0 && this._engine) {
+      const currentTime = this._engine.currentTime;
+
+      if (currentTime && currentTime >= this._config.playback.endTime && !this._playbackAttributesState.endTimeReached) {
+        this.pause();
+        this._playbackAttributesState.endTimeReached = true;
+        this.dispatchEvent(new FakeEvent(CustomEventType.END_TIME_REACHED));
+      } else if (!this._engine.paused) {
+        this._eventManager.listenOnce(this._engine, Html5EventType.TIME_UPDATE, () => {
+          this._checkEndTime();
+        });
+      }
+    }
   }
 
   /**
