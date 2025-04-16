@@ -2355,6 +2355,7 @@ export default class Player extends FakeEventTarget {
       this._firstPlay = false;
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAY));
       this.hideBlackCover();
+      this._checkEndTime();
       if (typeof this._playbackAttributesState.rate === 'number') {
         this.playbackRate = this._playbackAttributesState.rate;
       }
@@ -2378,7 +2379,6 @@ export default class Player extends FakeEventTarget {
       this._engine.selectVideoTrack(this._pendingSelectedVideoTrack);
       this._pendingSelectedVideoTrack = undefined;
     }
-    this._checkEndTime();
   }
 
   /**
@@ -2392,10 +2392,8 @@ export default class Player extends FakeEventTarget {
     if (endTime && endTime > 0 && this._engine) {
       const currentTime = this._engine.currentTime;
 
-      if (currentTime && currentTime >= endTime && !this._playbackAttributesState.endTimeReached) {
+      if (currentTime && currentTime >= endTime) {
         this.pause();
-        this._playbackAttributesState.endTimeReached = true;
-        this.dispatchEvent(new FakeEvent(CustomEventType.END_TIME_REACHED));
       } else if (!this._engine.paused) {
         this._eventManager.listenOnce(this._engine, Html5EventType.TIME_UPDATE, () => {
           this._checkEndTime();

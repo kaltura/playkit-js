@@ -266,11 +266,7 @@ const CustomEventType = {
   /**
    * Fired when the source url switched
    */
-  SOURCE_URL_SWITCHED: 'sourceurlswitched',
-  /**
-   * Fires when the video reaches the configured endTime.
-   */
-  END_TIME_REACHED: 'endtimereached'
+  SOURCE_URL_SWITCHED: 'sourceurlswitched'
 } as const;
 
 const EventType: PKEventTypes = { ...Html5EventType, ...CustomEventType, ...AdEventType};
