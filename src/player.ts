@@ -2355,6 +2355,7 @@ export default class Player extends FakeEventTarget {
       this._firstPlay = false;
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAY));
       this.hideBlackCover();
+      this._checkEndTime();
       if (typeof this._playbackAttributesState.rate === 'number') {
         this.playbackRate = this._playbackAttributesState.rate;
       }
@@ -2377,6 +2378,25 @@ export default class Player extends FakeEventTarget {
     if (this._engine && this._pendingSelectedVideoTrack) {
       this._engine.selectVideoTrack(this._pendingSelectedVideoTrack);
       this._pendingSelectedVideoTrack = undefined;
+    }
+  }
+
+  /**
+   * Checks if the video has reached the configured endTime and pauses if necessary.
+   * Pauses only once and allows the user to continue playing afterward.
+   * @private
+   * @returns {void}
+   */
+  private _checkEndTime(): void {
+    const endTime = this._sources.endTime;
+    if (endTime && typeof this.currentTime === 'number' && this.currentTime < endTime) {
+      const onTimeUpdate = (): void => {
+        if (Math.floor(this.currentTime!) === endTime!) {
+          this.pause();
+          this._eventManager.unlisten(this._engine, Html5EventType.TIME_UPDATE, onTimeUpdate);
+        }
+      };
+      this._eventManager.listen(this._engine, Html5EventType.TIME_UPDATE, onTimeUpdate);
     }
   }
 
