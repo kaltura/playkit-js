@@ -59,7 +59,7 @@ function createTextTrackCue(timedMetadata: TimedMetadata): PKTextTrackCue | null
  */
 function createTimedMetadata(cue: TextTrackCue): TimedMetadata | null {
   if (cue) {
-    const {startTime, endTime, id} = cue;
+    const {startTime, endTime, id} = cue; 
     const typeAndMetadata = _getTypeAndMetadata(cue);
     if (typeAndMetadata) {
       // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
@@ -82,17 +82,19 @@ function _getTypeAndMetadata(cue: TextTrackCue | PKTextTrackCue): { metadata: an
       const {type, value, track} = cue;
       const {key, data} = value;
       const isId3 = type === 'org.id3' || (track && track.label) === 'id3';
+      const isEmsg = (track && track.label === 'emsg')
       let timedMetadataType = Object.values(TimedMetadata.TYPE).find(type => type === key);
       if (!timedMetadataType) {
-        timedMetadataType = isId3 ? TimedMetadata.TYPE.ID3 : TimedMetadata.TYPE.CUSTOM;
+        timedMetadataType = isId3 ? TimedMetadata.TYPE.ID3 : (isEmsg ? TimedMetadata.TYPE.EMSG : TimedMetadata.TYPE.CUSTOM);
       }
       return {
         type: timedMetadataType,
-        metadata: isId3 || !data ? value : data
+        metadata: isId3 || isEmsg || !data ? value : data
       };
     }
   }
   return null;
 }
+
 
 export {TimedMetadata, createTextTrackCue, createTimedMetadata};
