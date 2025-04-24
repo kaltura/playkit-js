@@ -53,16 +53,16 @@ class AudioTrack extends Track {
 
 export function audioDescriptionTrackHandler(tracks: Track[], audioFlavors?: Array<any>): void {
   if (tracks?.length) {
-    const isAudioFlavors = audioFlavors && audioFlavors.length > 0;
+    const hasAudioFlavors = audioFlavors && audioFlavors.length > 0;
     let audioTracksIndex = 0;
     // iterate over the audio tracks and set the isAudioDescription flag based on the audioFlavors tags
     tracks.forEach((track) => {
       if (track instanceof AudioTrack) {
-        const isAudioDescription = (isAudioFlavors && audioFlavors[audioTracksIndex]?.tags?.includes(FlavorAssetTags.AUDIO_DESCRIPTION)) || track.kind.includes(AudioTrackKind.DESCRIPTION);
+        const isAudioDescription = (hasAudioFlavors && audioFlavors[audioTracksIndex]?.tags?.includes(FlavorAssetTags.AUDIO_DESCRIPTION)) || track.kind.includes(AudioTrackKind.DESCRIPTION);
         if (isAudioDescription) {
           // set the language to ad-<language> for audio description tracks
           track.language = `ad-${track.language}`;
-          if (isAudioFlavors && !audioFlavors[audioTracksIndex]?.label) {
+          if (hasAudioFlavors && !audioFlavors[audioTracksIndex]?.label) {
             // add "Audio Description" to the label if custom label is not provided
             track.label = `${track.label} - Audio Description`;
           }
