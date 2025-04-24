@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.26 (2025-04-24)
+
+
+### Features
+
+* **FEC-14432:** Player end time feature ([#814](https://github.com/kaltura/playkit-js/issues/814)) ([344675b](https://github.com/kaltura/playkit-js/commit/344675b54e8e94ed71f0812115749fe0c3363c41))
+
 ### 0.84.25 (2025-04-02)
 
 
