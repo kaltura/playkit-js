@@ -34,6 +34,7 @@ import {ScreenOrientationType} from './enums/screen-orientation-type';
 import {AutoPlayType} from './enums/auto-play-type';
 import {ThumbnailInfo} from './thumbnail/thumbnail-info';
 import {filterTracksByRestriction} from './utils/restrictions';
+import { AudioTrackKind } from './track/audio-track';
 
 declare let __VERSION__: string;
 declare let __NAME__: string;
@@ -56,7 +57,7 @@ export {registerMediaSourceAdapter, BaseMediaSourceAdapter};
 export {BaseMiddleware};
 
 // Export the tracks classes
-export {Track, VideoTrack, AudioTrack, TextTrack, PKTextTrack, ImageTrack, TextStyle};
+export {Track, VideoTrack, AudioTrack, TextTrack, PKTextTrack, ImageTrack, TextStyle, AudioTrackKind};
 
 // Export the timed metadata class and function
 export {TimedMetadata, createTextTrackCue, createTimedMetadata};
