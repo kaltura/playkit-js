@@ -1,22 +1,20 @@
-import {CustomEventType, Html5EventType} from '../../../../event/event-type';
+import { CustomEventType, Html5EventType } from '../../../../event/event-type';
 import Track from '../../../../track/track';
 import VideoTrack from '../../../../track/video-track';
 import AudioTrack from '../../../../track/audio-track';
 import PKTextTrack from '../../../../track/text-track';
-import {RequestType} from '../../../../enums/request-type';
+import { RequestType } from '../../../../enums/request-type';
 import BaseMediaSourceAdapter from '../base-media-source-adapter';
-import {getSuitableSourceForResolution} from '../../../../utils/resolution';
-import {filterTracksByRestriction} from '../../../../utils/restrictions';
+import { getSuitableSourceForResolution } from '../../../../utils/resolution';
+import { filterTracksByRestriction } from '../../../../utils/restrictions';
 import * as Utils from '../../../../utils/util';
 import FairPlay from '../../../../drm/fairplay';
 import Env from '../../../../utils/env';
 import Error from '../../../../error/error';
 import defaultConfig from './native-adapter-default-config.json';
-import type {FairPlayDrmConfigType} from './fairplay-drm-handler';
-import {FairPlayDrmHandler} from './fairplay-drm-handler';
-import {IDrmProtocol} from '../../../../types';
-import {PKABRRestrictionObject, PKDrmConfigObject, PKDrmDataObject, PKMediaSourceObject, PKRequestObject, PKVideoDimensionsObject} from '../../../../types';
-import {IMediaSourceAdapter} from '../../../../types';
+import type { FairPlayDrmConfigType } from './fairplay-drm-handler';
+import { FairPlayDrmHandler } from './fairplay-drm-handler';
+import { IDrmProtocol, IMediaSourceAdapter, PKABRRestrictionObject, PKDrmConfigObject, PKDrmDataObject, PKMediaSourceObject, PKRequestObject, PKVideoDimensionsObject } from '../../../../types';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
@@ -779,7 +777,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           active: audioTracks[i].enabled,
           label: audioTracks[i].label,
           language: audioTracks[i].language,
-          index: i
+          index: i,
+          kind: audioTracks[i].kind
         };
         parsedTracks.push(new AudioTrack(settings));
       }
@@ -963,8 +962,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   private _getPKAudioTracks(): Array<AudioTrack> {
-    const audioTracks = this._playerTracks.filter(track => track instanceof AudioTrack);
-    return audioTracks;
+    return this._playerTracks.filter((track) => track instanceof AudioTrack).map((at) => at as AudioTrack);
   }
 
   private _getActivePKAudioTrack(): AudioTrack | undefined {
