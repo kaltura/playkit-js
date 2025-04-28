@@ -2950,4 +2950,8 @@ export default class Player extends FakeEventTarget {
   public setClipTo(clipTo: number): void {
     this._externalCaptionsHandler.clipTo = clipTo;
   }
+
+  public clearReset(): void {
+    this._reset = false;
+  }
 }
