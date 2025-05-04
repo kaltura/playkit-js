@@ -50,7 +50,11 @@ const Category: CategoryType = {
   SITE_RESTRICTED: 16,
 
   /** Scheduled restriction error. */
-  SCHEDULED_RESTRICTED: 17
+  SCHEDULED_RESTRICTED: 17,
+
+  /** Access Control error */
+
+  ACCESS_CONTROL_BLOCKED: 18
 };
 
 export {Category};
