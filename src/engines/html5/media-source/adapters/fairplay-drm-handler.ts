@@ -119,13 +119,18 @@ class FairPlayDrmHandler {
   private _onWebkitKeyMessage(event: any): void {
     this._logger.debug('Webkit key message triggered');
     const message = event.message;
+    // WebkitMediaKeySession has attribute contentId (which is the mykeyid from playlist's skd://mykeyid)
+    const session = event.target;
+    const kid = session.contentId;
+    const kidBase64 = btoa(kid);
+
     const request = new XMLHttpRequest();
     request.responseType = 'arraybuffer';
     this._eventManager.listenOnce(request, 'load', (e: Event) => this._licenseRequestLoaded(e));
     const pkRequest: PKRequestObject = {
       url: this._config.licenseUrl,
       body: FairPlayDrmHandler._base64EncodeUint8Array(message),
-      headers: {}
+      headers: {'X-Kaltura-InitData': kidBase64} // pass the kid to uDRM
     };
     let requestFilterPromise;
     const requestFilter = this._config.network.requestFilter;
@@ -265,9 +270,9 @@ class FairPlayDrmHandler {
   }
 
   public static _extractContentId(initData: Uint8Array): string {
-    const link = document.createElement('a');
-    link.href = FairPlayDrmHandler._arrayToString(initData);
-    return link.hostname;
+    const url = FairPlayDrmHandler._arrayToString(initData);;
+    const hostname = url.slice(url.lastIndexOf("skd://")+6,url.length); // handle the skd://mykeyid format
+    return hostname; 
   }
 
   public static _arrayToString(array: Uint8Array): string {
