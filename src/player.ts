@@ -1803,14 +1803,23 @@ export default class Player extends FakeEventTarget {
    */
   private _appendEngineEl(): void {
     if (this._el) {
+      const isYoutubeEngine = this._engine.id === 'youtube';
       const engineEl = this._engine.getVideoElement();
       const className = `${ENGINE_CLASS_NAME}`;
       Utils.Dom.addClassName(engineEl, className);
       const classNameWithId = `${ENGINE_CLASS_NAME}-${this._engine.id}`;
       Utils.Dom.addClassName(engineEl, classNameWithId);
+      // in case of yt engine - check for an old yt engine element existence and remove it, before appending the new one
+      // in order to avoid duplicates which can cause ui issues
+      if (isYoutubeEngine) {
+        const ytEngineEl = Utils.Dom.getElementBySelector(`.${this._el.className} .${className}.${classNameWithId}`);
+        if (ytEngineEl) {
+          Utils.Dom.removeChild(this._el, ytEngineEl);
+        }
+      }
       Utils.Dom.prependTo(engineEl, this._el);
       Utils.Dom.setAttribute(engineEl, 'tabindex', '-1');
-      if (this._engine.id === 'youtube') {
+      if (isYoutubeEngine) {
         this._el.style.zIndex = '1';
       } else if (this._el.style.zIndex) {
         // in case the engine is not yt, need to remove the z-index value if exists
