@@ -1803,23 +1803,14 @@ export default class Player extends FakeEventTarget {
    */
   private _appendEngineEl(): void {
     if (this._el) {
-      const isYoutubeEngine = this._engine.id === 'youtube';
       const engineEl = this._engine.getVideoElement();
       const className = `${ENGINE_CLASS_NAME}`;
       Utils.Dom.addClassName(engineEl, className);
       const classNameWithId = `${ENGINE_CLASS_NAME}-${this._engine.id}`;
       Utils.Dom.addClassName(engineEl, classNameWithId);
-      // in case of yt engine - check for an old yt engine element existence and remove it, before appending the new one
-      // in order to avoid duplicates which can cause ui issues
-      if (isYoutubeEngine) {
-        const ytEngineEl = Utils.Dom.getElementBySelector(`.${this._el.className} .${className}.${classNameWithId}`);
-        if (ytEngineEl) {
-          Utils.Dom.removeChild(this._el, ytEngineEl);
-        }
-      }
       Utils.Dom.prependTo(engineEl, this._el);
       Utils.Dom.setAttribute(engineEl, 'tabindex', '-1');
-      if (isYoutubeEngine) {
+      if (this._isYouTubeEngine()) {
         this._el.style.zIndex = '1';
       } else if (this._el.style.zIndex) {
         // in case the engine is not yt, need to remove the z-index value if exists
@@ -1939,9 +1930,28 @@ export default class Player extends FakeEventTarget {
       } else {
         this._engine.destroy();
         this._createEngine(Engine, source);
+
+        if (this._isYouTubeEngine()) {
+          // cleanup the old yt engine element if exists, in order to avoid duplicated elements, which can cause ui issues
+          const ytEngineSelector = `.${this._el.className} .${ENGINE_CLASS_NAME}.${ENGINE_CLASS_NAME}-${this._engine.id}`;
+          const ytEngineEl = Utils.Dom.getElementBySelector(ytEngineSelector);
+          if (ytEngineEl) {
+            Utils.Dom.removeChild(this._el, ytEngineEl);
+          }
+        }
+
         this._appendEngineEl();
       }
     }
+  }
+
+  /**
+   * Checks if the current engine is a YouTube engine.
+   * @returns {boolean} - whether the engine is a YouTube engine or not
+   * @private
+   */
+  private _isYouTubeEngine(): boolean {
+    return this._engine?.id === 'youtube';
   }
 
   /**
