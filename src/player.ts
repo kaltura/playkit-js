@@ -70,7 +70,6 @@ const BLACK_COVER_CLASS_NAME: string = 'playkit-black-cover';
 const CONTAINER_CLASS_NAME: string = 'playkit-container';
 
 /**
-/**
 * The player poster class name.
 * @type {string}
 * @const
