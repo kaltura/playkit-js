@@ -1809,7 +1809,7 @@ export default class Player extends FakeEventTarget {
       Utils.Dom.addClassName(engineEl, classNameWithId);
       Utils.Dom.prependTo(engineEl, this._el);
       Utils.Dom.setAttribute(engineEl, 'tabindex', '-1');
-      if (this._engine.id === 'youtube') {
+      if (this._isYouTubeEngine()) {
         this._el.style.zIndex = '1';
       } else if (this._el.style.zIndex) {
         // in case the engine is not yt, need to remove the z-index value if exists
@@ -1929,9 +1929,28 @@ export default class Player extends FakeEventTarget {
       } else {
         this._engine.destroy();
         this._createEngine(Engine, source);
+
+        if (this._isYouTubeEngine()) {
+          // cleanup the old yt engine element if exists, in order to avoid duplicated elements, which can cause ui issues
+          const ytEngineSelector = `.${this._el.className} .${ENGINE_CLASS_NAME}.${ENGINE_CLASS_NAME}-${this._engine.id}`;
+          const ytEngineEl = Utils.Dom.getElementBySelector(ytEngineSelector);
+          if (ytEngineEl) {
+            Utils.Dom.removeChild(this._el, ytEngineEl);
+          }
+        }
+
         this._appendEngineEl();
       }
     }
+  }
+
+  /**
+   * Checks if the current engine is a YouTube engine.
+   * @returns {boolean} - whether the engine is a YouTube engine or not
+   * @private
+   */
+  private _isYouTubeEngine(): boolean {
+    return this._engine?.id === 'youtube';
   }
 
   /**
