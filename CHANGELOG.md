@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.28 (2025-06-05)
+
+
+### Bug Fixes
+
+* **FEC-13481:** YouTube entries inside playlist cause wrong behavior ([#818](https://github.com/kaltura/playkit-js/issues/818)) ([385bb55](https://github.com/kaltura/playkit-js/commit/385bb5594a68d5cf7d3a7ba3f7b4bd43f7073718))
+
 ### 0.84.27 (2025-05-11)
 
 
