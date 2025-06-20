@@ -270,9 +270,9 @@ class FairPlayDrmHandler {
   }
 
   public static _extractContentId(initData: Uint8Array): string {
-    const url = FairPlayDrmHandler._arrayToString(initData);;
+    const url = FairPlayDrmHandler._arrayToString(initData);
     const hostname = url.slice(url.lastIndexOf("skd://")+6,url.length); // handle the skd://mykeyid format
-    return hostname; 
+    return hostname;
   }
 
   public static _arrayToString(array: Uint8Array): string {
