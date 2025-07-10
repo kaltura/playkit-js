@@ -264,6 +264,12 @@ export default class Player extends FakeEventTarget {
    */
   private _playbackRates!: Array<number>;
   /**
+   * The default playback rate for the player.
+   * @type {number}
+   * @private
+   */
+  private _defaultPlaybackRate!: number;
+  /**
    * The player DOM element container.
    * @type {HTMLDivElement}
    * @private
@@ -1067,7 +1073,7 @@ export default class Player extends FakeEventTarget {
    */
   public get defaultPlaybackRate(): number {
     if (this._engine) {
-      return this._engine.defaultPlaybackRate;
+      return this._defaultPlaybackRate || this._engine.defaultPlaybackRate;
     }
     return 1;
   }
@@ -2135,6 +2141,9 @@ export default class Player extends FakeEventTarget {
     if (typeof this._config.playback.crossOrigin === 'string') {
       this.crossOrigin = this._config.playback.crossOrigin;
     }
+    if (typeof this._config.playback.defaultPlaybackRate === 'number') {
+      this._defaultPlaybackRate = this._config.playback.defaultPlaybackRate;
+    }
     if (Array.isArray(this._config.playback.playbackRates)) {
       const validPlaybackRates = this._config.playback.playbackRates.filter((number, index, self) => number > 0 && number <= 16 && self.indexOf(number) === index).sort((a, b) => a - b);
       if (validPlaybackRates) {
@@ -2375,8 +2384,8 @@ export default class Player extends FakeEventTarget {
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAY));
       this.hideBlackCover();
       this._checkEndTime();
-      if (typeof this._playbackAttributesState.rate === 'number') {
-        this.playbackRate = this._playbackAttributesState.rate;
+      if (typeof this.defaultPlaybackRate === 'number') {
+        this.playbackRate = this.defaultPlaybackRate;
       }
     }
   }
