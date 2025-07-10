@@ -1073,7 +1073,10 @@ export default class Player extends FakeEventTarget {
    */
   public get defaultPlaybackRate(): number {
     if (this._engine) {
-      return this._defaultPlaybackRate || this._engine.defaultPlaybackRate;
+      if(this._defaultPlaybackRate > 0) {
+        return this._defaultPlaybackRate
+      }
+      return this._engine.defaultPlaybackRate;
     }
     return 1;
   }
@@ -2384,7 +2387,9 @@ export default class Player extends FakeEventTarget {
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAY));
       this.hideBlackCover();
       this._checkEndTime();
-      if (typeof this.defaultPlaybackRate === 'number') {
+      if (typeof this._playbackAttributesState.rate === 'number') {
+        this.playbackRate = this._playbackAttributesState.rate;
+      } else {
         this.playbackRate = this.defaultPlaybackRate;
       }
     }
