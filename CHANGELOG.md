@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.29 (2025-07-17)
+
+
+### Bug Fixes
+
+* **FEC-14574:** Fix no save normal speed regression ([#823](https://github.com/kaltura/playkit-js/issues/823)) ([82c5a1b](https://github.com/kaltura/playkit-js/commit/82c5a1b888c20b57e43ae99912f69e70a6f24c1b))
+
 ### 0.84.28 (2025-06-05)
 
 
