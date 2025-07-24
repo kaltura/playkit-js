@@ -24,6 +24,7 @@ const DefaultConfig = {
     autopause: false,
     allowMutedAutoPlay: true,
     updateAudioDescriptionLabels: true,
+    prioritizeAudioDescription: false,
     muted: false,
     pictureInPicture: true,
     options: {

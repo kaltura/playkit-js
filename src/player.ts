@@ -2596,7 +2596,23 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   private _getAudioTracks(): Array<AudioTrack> {
-    return this._getTracksByType<AudioTrack>(AudioTrack);
+    const audioTracks = this._getTracksByType<AudioTrack>(AudioTrack);
+
+    // Sort audio tracks based on prioritizeAudioDescription flag
+    const prioritize = !!this._config.playback.prioritizeAudioDescription;
+
+    return audioTracks.sort((a, b) => {
+      const aIsAudioDescription = a.language?.startsWith('ad-') || false;
+      const bIsAudioDescription = b.language?.startsWith('ad-') || false;
+
+      if (prioritize) {
+        // Audio description tracks at the top
+        return aIsAudioDescription === bIsAudioDescription ? 0 : aIsAudioDescription ? -1 : 1;
+      } else {
+        // Regular audio tracks at the top
+        return aIsAudioDescription === bIsAudioDescription ? 0 : aIsAudioDescription ? 1 : -1;
+      }
+    });
   }
 
   /**
