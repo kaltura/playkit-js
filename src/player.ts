@@ -2598,26 +2598,35 @@ export default class Player extends FakeEventTarget {
   private _getAudioTracks(): Array<AudioTrack> {
     const audioTracks = this._getTracksByType<AudioTrack>(AudioTrack);
 
-    const prioritize = !!this._config.playback.prioritizeAudioDescription;
+    const prioritizeTracks = this._config.playback.prioritizeAudioDescription;
+    const alphabeticalSort = this._config.playback.alphabeticalSort;
 
-    return audioTracks.sort((a, b) => {
-      const aIsAudioDescription = a.language?.startsWith('ad-') || false;
-      const bIsAudioDescription = b.language?.startsWith('ad-') || false;
+    // Only apply sorting if prioritizeTracks or alphabeticalSort have boolean values
+    if (typeof prioritizeTracks === 'boolean' || typeof alphabeticalSort === 'boolean') {
+      return audioTracks.sort((a, b) => {
+        const aIsAudioDescription = a.language?.startsWith('ad-') || false;
+        const bIsAudioDescription = b.language?.startsWith('ad-') || false;
 
-      // Prioritize based on prioritizeAudioDescription flag
-      if (aIsAudioDescription !== bIsAudioDescription) {
-        return prioritize
-          ? (aIsAudioDescription ? -1 : 1)  // Audio description tracks first
-          : (aIsAudioDescription ? 1 : -1); // Regular tracks first
-      }
+        // Prioritize based on prioritizeAudioDescription flag only if it has a boolean value
+        if (typeof prioritizeTracks === 'boolean' && aIsAudioDescription !== bIsAudioDescription) {
+          return prioritizeTracks
+            ? (aIsAudioDescription ? -1 : 1)  // Audio description tracks first
+            : (aIsAudioDescription ? 1 : -1); // Regular tracks first
+        }
 
-      // Order alphabetically by label (A-Z)
-      const aLabel = a.label?.toLowerCase() || '';
-      const bLabel = b.label?.toLowerCase() || '';
-      if (aLabel < bLabel) return -1;
-      if (aLabel > bLabel) return 1;
-      return 0;
-    });
+        // Order alphabetically by label (A-Z) only if alphabeticalSort has a boolean value
+        if (typeof alphabeticalSort === 'boolean') {
+          const aLabel = a.label?.toLowerCase() || '';
+          const bLabel = b.label?.toLowerCase() || '';
+          if (aLabel < bLabel) return -1;
+          if (aLabel > bLabel) return 1;
+        }
+
+        return 0;
+      });
+    }
+
+    return audioTracks;
   }
 
   /**

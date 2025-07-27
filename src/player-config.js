@@ -24,7 +24,8 @@ const DefaultConfig = {
     autopause: false,
     allowMutedAutoPlay: true,
     updateAudioDescriptionLabels: true,
-    prioritizeAudioDescription: false,
+    prioritizeAudioDescription: undefined,
+    alphabeticalSort: undefined,
     muted: false,
     pictureInPicture: true,
     options: {
