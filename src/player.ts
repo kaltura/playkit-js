@@ -2616,8 +2616,8 @@ export default class Player extends FakeEventTarget {
 
         // Order alphabetically by label (A-Z) only if alphabeticalSort has a boolean value
         if (typeof alphabeticalSort === 'boolean') {
-          const aLabel = a.label?.toLowerCase() || '';
-          const bLabel = b.label?.toLowerCase() || '';
+          const aLabel = a.label?.toLowerCase() || a.language || '';
+          const bLabel = b.label?.toLowerCase() || b.language || '';
           if (aLabel < bLabel) return -1;
           if (aLabel > bLabel) return 1;
         }
