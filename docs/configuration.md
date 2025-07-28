@@ -1109,7 +1109,7 @@ var config = {
 > >
 > > ##### Default: `undefined`
 > >
-> > ##### Description: When set to true, audio tracks will be sorted by alphabetical order. When set to false, audio tracks will not be sorted by alphabetical order. Otherwise, when undefined, no alphabetical sorting is applied to audio tracks.
+> > ##### Description: When set to true, audio tracks will be sorted by alphabetical order. Otherwise, audio tracks will not be sorted by alphabetical order.
 >
 > ##
 >
