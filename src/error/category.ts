@@ -53,10 +53,8 @@ const Category: CategoryType = {
   SCHEDULED_RESTRICTED: 17,
 
   /** Access Control error */
-  ACCESS_CONTROL_BLOCKED: 18,
 
-  /** Moderation restriction error */
-  MODERATION_RESTRICTED: 19,
+  ACCESS_CONTROL_BLOCKED: 18
 };
 
 export {Category};
