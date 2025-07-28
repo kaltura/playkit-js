@@ -2596,10 +2596,10 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   private _getAudioTracks(): Array<AudioTrack> {
-    const audioTracks = this._getTracksByType<AudioTrack>(AudioTrack);
+    let audioTracks = this._getTracksByType<AudioTrack>(AudioTrack);
 
-    const prioritizeTracks = this._config.playback.prioritizeAudioDescription;
     const alphabeticalSort = this._config.playback.alphabeticalSort;
+    const prioritizeTracks = this._config.playback.prioritizeAudioDescription;
 
     function sortByAudioTrackType(a: AudioTrack, b: AudioTrack): number {
       const aIsAudioDescription = !!a.language?.startsWith('ad-');
@@ -2619,12 +2619,12 @@ export default class Player extends FakeEventTarget {
       return aLabel.localeCompare(bLabel);
     }
 
-    if (typeof prioritizeTracks === 'boolean') {
-      return audioTracks.sort(sortByAudioTrackType);
+    if (alphabeticalSort) {
+      audioTracks = audioTracks.sort(sortAlphabetically);
     }
 
-    if (alphabeticalSort) {
-      return audioTracks.sort(sortAlphabetically);
+    if (typeof prioritizeTracks === 'boolean') {
+      audioTracks = audioTracks.sort(sortByAudioTrackType);
     }
 
     return audioTracks;
