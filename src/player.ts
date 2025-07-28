@@ -2601,29 +2601,30 @@ export default class Player extends FakeEventTarget {
     const prioritizeTracks = this._config.playback.prioritizeAudioDescription;
     const alphabeticalSort = this._config.playback.alphabeticalSort;
 
-    // Only apply sorting if prioritizeTracks or alphabeticalSort have boolean values
-    if (typeof prioritizeTracks === 'boolean' || typeof alphabeticalSort === 'boolean') {
-      return audioTracks.sort((a, b) => {
-        const aIsAudioDescription = a.language?.startsWith('ad-') || false;
-        const bIsAudioDescription = b.language?.startsWith('ad-') || false;
+    function sortByAudioTrackType(a: AudioTrack, b: AudioTrack): number {
+      const aIsAudioDescription = !!a.language?.startsWith('ad-');
+      const bIsAudioDescription = !!b.language?.startsWith('ad-');
 
-        // Prioritize based on prioritizeAudioDescription flag only if it has a boolean value
-        if (typeof prioritizeTracks === 'boolean' && aIsAudioDescription !== bIsAudioDescription) {
-          return prioritizeTracks
-            ? (aIsAudioDescription ? -1 : 1)  // Audio description tracks first
-            : (aIsAudioDescription ? 1 : -1); // Regular tracks first
-        }
+      if (aIsAudioDescription !== bIsAudioDescription) {
+        return prioritizeTracks ? (aIsAudioDescription ? -1 : 1) : (aIsAudioDescription ? 1 : -1);
+      }
 
-        // Order alphabetically by label (A-Z) only if alphabeticalSort has a boolean value
-        if (typeof alphabeticalSort === 'boolean') {
-          const aLabel = a.label?.toLowerCase() || a.language || '';
-          const bLabel = b.label?.toLowerCase() || b.language || '';
-          if (aLabel < bLabel) return -1;
-          if (aLabel > bLabel) return 1;
-        }
+      return 0;
+    }
 
-        return 0;
-      });
+    function sortAlphabetically(a: AudioTrack, b: AudioTrack): number {
+      const aLabel = a.label?.toLowerCase() || a.language || '';
+      const bLabel = b.label?.toLowerCase() || b.language || '';
+
+      return aLabel.localeCompare(bLabel);
+    }
+
+    if (typeof prioritizeTracks === 'boolean') {
+      return audioTracks.sort(sortByAudioTrackType);
+    }
+
+    if (alphabeticalSort) {
+      return audioTracks.sort(sortAlphabetically);
     }
 
     return audioTracks;
