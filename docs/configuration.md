@@ -57,6 +57,8 @@ var config = {
     updateAudioDescriptionLabels: true,
     muted: false,
     pictureInPicture: true,
+    prioritizeAudioDescription: undefined,
+    alphabeticalSort: undefined,
     options: {
       html5: {
         hls: {},
@@ -1088,6 +1090,26 @@ var config = {
 > > ##### Default: `true`
 > >
 > > ##### Description: Updates audio flavors that has "audio_description" tag
+>
+> ##
+>
+> > ### config.playback.prioritizeAudioDescription
+> >
+> > ##### Type: `undefined || boolean`
+> >
+> > ##### Default: `undefined`
+> >
+> > ##### Description: When set to true, audio description tracks (identified by language prefix "ad-") will be prioritized and appear at the top of the audio tracks list. When set to false, regular audio tracks appear first. Otherwise, when undefined, no prioritization is applied to audio description tracks.
+>
+> ##
+> 
+> > > ### config.playback.alphabeticalSort
+> >
+> > ##### Type: `undefined || boolean`
+> >
+> > ##### Default: `undefined`
+> >
+> > ##### Description: When set to true, audio tracks will be sorted by alphabetical order. Otherwise, audio tracks will not be sorted by alphabetical order.
 >
 > ##
 >
