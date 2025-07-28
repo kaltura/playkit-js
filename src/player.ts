@@ -2596,7 +2596,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   private _getAudioTracks(): Array<AudioTrack> {
-    const audioTracks = this._getTracksByType<AudioTrack>(AudioTrack);
+    let audioTracks = this._getTracksByType<AudioTrack>(AudioTrack);
 
     const prioritizeTracks = this._config.playback.prioritizeAudioDescription;
     const alphabeticalSort = this._config.playback.alphabeticalSort;
@@ -2620,11 +2620,11 @@ export default class Player extends FakeEventTarget {
     }
 
     if (typeof prioritizeTracks === 'boolean') {
-      return audioTracks.sort(sortByAudioTrackType);
+      audioTracks = audioTracks.sort(sortByAudioTrackType);
     }
 
     if (alphabeticalSort) {
-      return audioTracks.sort(sortAlphabetically);
+      audioTracks = audioTracks.sort(sortAlphabetically);
     }
 
     return audioTracks;
