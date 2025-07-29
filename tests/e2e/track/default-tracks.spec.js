@@ -29,7 +29,6 @@ describe('Audio Track Selection', () => {
   describe('With prioritizeAudioDescription', () => {
     it('should select audio description track when prioritizeAudioDescription is true with no user preferences', (done) => {
       config.playback.prioritizeAudioDescription = true;
-      config.playback.audioLanguage = '';
       player = new Player(config);
       player.setSources(SourcesConfig.Mp4);
       playerContainer.appendChild(player.getView());
@@ -120,9 +119,8 @@ describe('Audio Track Selection', () => {
       player.load();
     });
 
-    it('should fallback to standard selection when no audio description tracks are available', (done) => {
+    it('should not activate any audio track when no audio description tracks are available', (done) => {
       config.playback.prioritizeAudioDescription = true;
-      config.playback.audioLanguage = '';
       player = new Player(config);
       player.setSources(SourcesConfig.Mp4);
       playerContainer.appendChild(player.getView());
@@ -149,10 +147,51 @@ describe('Audio Track Selection', () => {
         // set default tracks
         player._setDefaultTracks();
 
-        trackFr.active.should.be.true;
+        trackFr.active.should.be.false;
         trackEn.active.should.be.false;
         done();
       });
+
+      player.load();
+    });
+
+    it('should activate audio track match system/code language, when no audio description tracks are available and audioLanguage config is "auto"', (done) => {
+      config.playback.prioritizeAudioDescription = true;
+      config.playback.audioLanguage = 'auto';
+      player = new Player(config);
+      player.setSources(SourcesConfig.Mp4);
+      playerContainer.appendChild(player.getView());
+
+      player.ready().then(() => {
+        // Create audio tracks (no audio description tracks)
+        const trackFr = new AudioTrack({
+          active: false,
+          label: 'French',
+          language: 'fr',
+          index: 0
+        });
+
+        const trackEn = new AudioTrack({
+          active: false,
+          label: 'English',
+          language: 'en',
+          index: 1
+        });
+
+        // Add tracks to player
+        player._tracks = [trackFr, trackEn];
+
+        // set default tracks
+        player._setDefaultTracks();
+
+        try {
+          trackFr.active.should.be.false;
+          trackEn.active.should.be.true;
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }).catch(done);
 
       player.load();
     });
@@ -204,8 +243,44 @@ describe('Audio Track Selection', () => {
       player.load();
     });
 
-    it('should select default audio track when available', (done) => {
+    it('should not activate any audio track when no audio tracks are available', (done) => {
       config.playback.audioLanguage = '';
+      player = new Player(config);
+      player.setSources(SourcesConfig.Mp4);
+      playerContainer.appendChild(player.getView());
+
+      player.ready().then(() => {
+        // Create audio tracks (no audio description tracks)
+        const trackFr = new AudioTrack({
+          active: false,
+          label: 'French',
+          language: 'fr',
+          index: 0
+        });
+
+        const trackEn = new AudioTrack({
+          active: false,
+          label: 'English',
+          language: 'en',
+          index: 1
+        });
+
+        // Add tracks to player
+        player._tracks = [trackFr, trackEn];
+
+        // set default tracks
+        player._setDefaultTracks();
+
+        trackFr.active.should.be.false;
+        trackEn.active.should.be.false;
+        done();
+      })
+
+      player.load();
+    });
+
+    it('should select audio track match system/code language track, when audioLanguage config is "auto"', (done) => {
+      config.playback.audioLanguage = 'auto';
       player = new Player(config);
       player.setSources(SourcesConfig.Mp4);
       playerContainer.appendChild(player.getView());
@@ -251,42 +326,6 @@ describe('Audio Track Selection', () => {
 
         // set default tracks
         player._setDefaultTracks();
-        done();
-      });
-
-      player.load();
-    });
-
-    it('should handle case when tracks are available but none match configuration', (done) => {
-      config.playback.audioLanguage = 'es';
-      player = new Player(config);
-      player.setSources(SourcesConfig.Mp4);
-      playerContainer.appendChild(player.getView());
-
-      player.ready().then(() => {
-        // Create audio tracks
-        const audioTrack1 = new AudioTrack({
-          active: false,
-          label: 'English',
-          language: 'en',
-          index: 0
-        });
-
-        const audioTrack2 = new AudioTrack({
-          active: false,
-          label: 'French',
-          language: 'fr',
-          index: 1
-        });
-
-        // Add tracks to player
-        player._tracks = [audioTrack1, audioTrack2];
-
-        // set default tracks
-        player._setDefaultTracks();
-
-        audioTrack1.active.should.be.true;
-        audioTrack2.active.should.be.false;
         done();
       });
 

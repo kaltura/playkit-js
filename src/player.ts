@@ -2781,12 +2781,6 @@ export default class Player extends FakeEventTarget {
       this._setDefaultTrack<AudioTrack>(this._getAudioTracks(), currentOrConfiguredAudioLang, activeTracks.audio);
     }
     this._setDefaultVideoTrack();
-
-    // Fallback to guarantee at least one audio track is active if available
-    const audioTracks = this._getAudioTracks();
-    if (audioTracks.length > 0 && !audioTracks.some(track => track.active)) {
-      audioTracks[0].active = true;
-    }
   }
 
   /**
