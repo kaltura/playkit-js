@@ -2743,7 +2743,27 @@ export default class Player extends FakeEventTarget {
     const offTextTrack: Track = this._getTextTracks().find((track) => PKTextTrack.langComparer(OFF, track.language))!;
     const defaultLanguage = this._getLanguage<PKTextTrack>(this._getTextTracks(), playbackConfig.textLanguage, defaultStreamTrack);
     const currentOrConfiguredTextLang = !this._playbackAttributesState.textLanguage || this.config.disableUserCache ? defaultLanguage : this._playbackAttributesState.textLanguage;
-    const currentOrConfiguredAudioLang = this._playbackAttributesState.audioLanguage || this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio);
+
+    const configureAudioTrack = (
+      prioritizeAudioDescription: boolean | undefined
+    ): string => {
+      const userPreferences = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
+      if (!userPreferences && prioritizeAudioDescription === true) {
+        // If no user preferences and prioritizeAudioDescription is true - look for audio description tracks first
+        const audioTracks = this._getAudioTracks();
+        const audioDescriptionTrack = audioTracks.find((track) => track.language?.startsWith('ad-'));
+        if (audioDescriptionTrack) {
+          return audioDescriptionTrack.language;
+        } else {
+          return this._getLanguage<AudioTrack>(audioTracks, playbackConfig.audioLanguage, activeTracks.audio);
+        }
+      } else {
+        return this._playbackAttributesState.audioLanguage || this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio);
+      }
+    }
+
+    const currentOrConfiguredAudioLang = configureAudioTrack(playbackConfig.prioritizeAudioDescription);
+
     if (!playbackConfig.captionsDisplay) {
       this._playbackAttributesState.textLanguage = defaultLanguage;
       this._setDefaultTrack<PKTextTrack>(this._getTextTracks(), OFF, offTextTrack);
@@ -2754,6 +2774,7 @@ export default class Player extends FakeEventTarget {
         this._setDefaultTrack<PKTextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack);
       }
     }
+
     if (currentOrConfiguredAudioLang === playbackConfig.audioLanguage) {
       this._setDefaultTrack<AudioTrack>(this._getAudioTracks(), currentOrConfiguredAudioLang, activeTracks.audio, playbackConfig.additionalAudioLanguage);
     } else {
