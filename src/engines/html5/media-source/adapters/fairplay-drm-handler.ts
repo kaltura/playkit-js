@@ -16,7 +16,7 @@ const WebkitEvents: WebkitEventsType = {
   KEY_ERROR: 'webkitkeyerror'
 };
 
-type FairPlayDrmConfigType = {licenseUrl: string, certificate?: string, network: {requestFilter?: (...args: any[]) => any, responseFilter: (...args: any[]) => any}};
+type FairPlayDrmConfigType = {licenseUrl: string, certificate?: string, network: {requestFilter?: (...args: any[]) => any, responseFilter: (...args: any[]) => any}, useKIDHeader?: boolean};
 
 class FairPlayDrmHandler {
   public static WebkitEvents: WebkitEventsType = WebkitEvents;
@@ -81,7 +81,7 @@ class FairPlayDrmHandler {
     const videoElement = event.target;
     let initData = event.initData;
 
-    const contentId = FairPlayDrmHandler._extractContentId(initData);
+    const contentId = FairPlayDrmHandler._extractContentId(initData, !!this._config.useKIDHeader);
     const fpsCertificate = FairPlayDrmHandler._base64DecodeUint8Array(this._config.certificate);
 
     initData = FairPlayDrmHandler._concatInitDataIdAndCertificate(initData, contentId, fpsCertificate);
@@ -119,13 +119,18 @@ class FairPlayDrmHandler {
   private _onWebkitKeyMessage(event: any): void {
     this._logger.debug('Webkit key message triggered');
     const message = event.message;
+    // WebkitMediaKeySession has attribute contentId (which is the mykeyid from playlist's skd://mykeyid)
+    const session = event.target;
+    const kid = session?.contentId;
+    const kidBase64 = btoa(kid);
+
     const request = new XMLHttpRequest();
     request.responseType = 'arraybuffer';
     this._eventManager.listenOnce(request, 'load', (e: Event) => this._licenseRequestLoaded(e));
     const pkRequest: PKRequestObject = {
       url: this._config.licenseUrl,
       body: FairPlayDrmHandler._base64EncodeUint8Array(message),
-      headers: {}
+      headers: this._config.useKIDHeader ? {'X-Kaltura-InitData': kidBase64} : {} // pass the kid to uDRM
     };
     let requestFilterPromise;
     const requestFilter = this._config.network.requestFilter;
@@ -264,10 +269,16 @@ class FairPlayDrmHandler {
     return keySystem;
   }
 
-  public static _extractContentId(initData: Uint8Array): string {
-    const link = document.createElement('a');
-    link.href = FairPlayDrmHandler._arrayToString(initData);
-    return link.hostname;
+  public static _extractContentId(initData: Uint8Array, useKIDHeader: boolean): string {
+    if (useKIDHeader) {
+      const url = FairPlayDrmHandler._arrayToString(initData);
+      const hostname = url.slice(url.lastIndexOf("skd://")+6,url.length); // handle the skd://mykeyid format
+      return hostname;
+    } else {
+      const link = document.createElement('a');
+      link.href = FairPlayDrmHandler._arrayToString(initData);
+      return link.hostname;
+    }
   }
 
   public static _arrayToString(array: Uint8Array): string {

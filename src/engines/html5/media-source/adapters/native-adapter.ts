@@ -296,7 +296,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       const drmConfig: FairPlayDrmConfigType = {
         licenseUrl: '',
         certificate: '',
-        network: this._config.network
+        network: this._config.network,
+        useKIDHeader: !!this._config.useKIDHeader
       };
       NativeAdapter._drmProtocol.setDrmPlayback(drmConfig, this._sourceObj.drmData);
       this._drmHandler = new FairPlayDrmHandler(
