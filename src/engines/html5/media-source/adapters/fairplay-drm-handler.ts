@@ -122,7 +122,7 @@ class FairPlayDrmHandler {
     // WebkitMediaKeySession has attribute contentId (which is the mykeyid from playlist's skd://mykeyid)
     const session = event.target;
     const kid = session?.contentId;
-    const kidBase64 = btoa(kid);
+    const kidBase64 = (kid !== undefined && kid !== null) ? btoa(kid) : '';
 
     const request = new XMLHttpRequest();
     request.responseType = 'arraybuffer';
