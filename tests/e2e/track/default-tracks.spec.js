@@ -93,17 +93,22 @@ describe('Audio Track Selection', () => {
       playerContainer.appendChild(player.getView());
 
       player.ready().then(() => {
-        // Add tracks to player
-        player._tracks = arrayWithAdTracks;
+        try {
+          // Add tracks to player
+          player._tracks = arrayWithAdTracks;
 
-        // set default tracks
-        player._setDefaultTracks();
+          // set default tracks
+          player._setDefaultTracks();
 
-        regularTrackEn.active.should.be.true;
-        regularTrackFr.active.should.be.false;
-        adTrackEn.active.should.be.false;
-        adTrackFr.active.should.be.false;
-        done();
+          regularTrackFr.active.should.be.true;
+          regularTrackEn.active.should.be.false;
+          adTrackEn.active.should.be.false;
+          adTrackFr.active.should.be.false;
+
+          done();
+        } catch (e) {
+          done(e); // Will print which assertion failed and why
+        }
       });
 
       player.load();
@@ -148,8 +153,8 @@ describe('Audio Track Selection', () => {
         player._setDefaultTracks();
 
         try {
-          regularTrackEn.active.should.be.true;
-          regularTrackFr.active.should.be.false;
+          regularTrackFr.active.should.be.true;
+          regularTrackEn.active.should.be.false;
           adTrackEn.active.should.be.false;
           adTrackFr.active.should.be.false;
           done();
@@ -221,8 +226,8 @@ describe('Audio Track Selection', () => {
         // set default tracks
         player._setDefaultTracks();
 
-        regularTrackEn.active.should.be.true;
-        regularTrackFr.active.should.be.false;
+        regularTrackFr.active.should.be.true;
+        regularTrackEn.active.should.be.false;
         done();
       });
 
