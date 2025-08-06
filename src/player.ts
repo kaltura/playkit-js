@@ -2775,6 +2775,7 @@ export default class Player extends FakeEventTarget {
 
         return (
           this._playbackAttributesState.audioLanguage ||
+          playbackConfig.audioLanguage ||
           nonAudioDescriptionTrack?.language ||
           this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio)
         );

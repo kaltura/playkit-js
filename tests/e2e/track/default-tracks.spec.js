@@ -99,8 +99,8 @@ describe('Audio Track Selection', () => {
         // set default tracks
         player._setDefaultTracks();
 
-        regularTrackFr.active.should.be.true;
-        regularTrackEn.active.should.be.false;
+        regularTrackEn.active.should.be.true;
+        regularTrackFr.active.should.be.false;
         adTrackEn.active.should.be.false;
         adTrackFr.active.should.be.false;
 
@@ -149,8 +149,8 @@ describe('Audio Track Selection', () => {
         player._setDefaultTracks();
 
         try {
-          regularTrackFr.active.should.be.true;
-          regularTrackEn.active.should.be.false;
+          regularTrackEn.active.should.be.true;
+          regularTrackFr.active.should.be.false;
           adTrackEn.active.should.be.false;
           adTrackFr.active.should.be.false;
           done();
@@ -222,8 +222,8 @@ describe('Audio Track Selection', () => {
         // set default tracks
         player._setDefaultTracks();
 
-        regularTrackFr.active.should.be.true;
-        regularTrackEn.active.should.be.false;
+        regularTrackEn.active.should.be.true;
+        regularTrackFr.active.should.be.false;
         done();
       });
 
