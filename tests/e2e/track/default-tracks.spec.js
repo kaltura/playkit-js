@@ -203,7 +203,7 @@ describe('Audio Track Selection', () => {
         regularTrackEn.active.should.be.true;
         regularTrackFr.active.should.be.false;
         done();
-      })
+      }).catch(done);
 
       player.load();
     });
