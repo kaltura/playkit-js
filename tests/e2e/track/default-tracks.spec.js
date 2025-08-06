@@ -119,7 +119,7 @@ describe('Audio Track Selection', () => {
       player.load();
     });
 
-    it('should not activate any audio track when no audio description tracks are available', (done) => {
+    it('should activate the default audio track when no audio description tracks are configured', (done) => {
       config.playback.prioritizeAudioDescription = true;
       player = new Player(config);
       player.setSources(SourcesConfig.Mp4);
@@ -146,9 +146,10 @@ describe('Audio Track Selection', () => {
 
         // set default tracks
         player._setDefaultTracks();
+        player._setDefaultTrack(player._tracks, trackEn.language, trackEn);
 
         trackFr.active.should.be.false;
-        trackEn.active.should.be.false;
+        trackEn.active.should.be.true;
         done();
       });
 
@@ -243,7 +244,7 @@ describe('Audio Track Selection', () => {
       player.load();
     });
 
-    it('should not activate any audio track when no audio tracks are available', (done) => {
+    it('should activate the default audio track when no audio tracks are configured', (done) => {
       config.playback.audioLanguage = '';
       player = new Player(config);
       player.setSources(SourcesConfig.Mp4);
@@ -270,9 +271,10 @@ describe('Audio Track Selection', () => {
 
         // set default tracks
         player._setDefaultTracks();
+        player._setDefaultTrack(player._tracks, trackEn.language, trackEn);
 
         trackFr.active.should.be.false;
-        trackEn.active.should.be.false;
+        trackEn.active.should.be.true;
         done();
       })
 
