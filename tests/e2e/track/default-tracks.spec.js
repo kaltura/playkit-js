@@ -276,7 +276,7 @@ describe('Audio Track Selection', () => {
         trackFr.active.should.be.false;
         trackEn.active.should.be.true;
         done();
-      })
+      }).catch(done);
 
       player.load();
     });
