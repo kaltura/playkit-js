@@ -2765,8 +2765,21 @@ export default class Player extends FakeEventTarget {
           return this._getLanguage<AudioTrack>(audioTracks, playbackConfig.audioLanguage, activeTracks.audio);
         }
       } else {
-        // If there are no user preferences or the prioritizeAudioDescription is false - then return the language according to audioLanguage config
-        return this._playbackAttributesState.audioLanguage || this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio);
+        // If there are no user preferences or the prioritizeAudioDescription is false - return first audio language that does not start with 'ad-'
+
+        // If there is a user audio language preference, return it.
+        // Otherwise - return the first audio track whose language does NOT start with 'ad-' string.
+        // If no such track exists - fall back to the default language selection logic.
+        const audioTracks = this._getAudioTracks();
+        const nonAudioDescriptionTrack = audioTracks.find(
+          (track) => !track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX)
+        );
+
+        return (
+          this._playbackAttributesState.audioLanguage ||
+          nonAudioDescriptionTrack?.language ||
+          this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio)
+        );
       }
     }
 
