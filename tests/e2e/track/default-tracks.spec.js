@@ -6,6 +6,41 @@ import {createElement, getConfigStructure, removeElement, removeVideoElementsFro
 
 const targetId = 'player-placeholder_default-tracks.spec';
 
+// Create audio tracks
+const regularTrackFr = new AudioTrack({
+  active: false,
+  label: 'Regular',
+  language: 'fr',
+  index: 0
+});
+
+const regularTrackEn = new AudioTrack({
+  active: false,
+  label: 'Regular',
+  language: 'en',
+  index: 1
+});
+
+const adTrackEn = new AudioTrack({
+  active: false,
+  label: 'Audio Description EN',
+  language: 'ad-en',
+  kind: AudioTrackKind.DESCRIPTION,
+  index: 2
+});
+
+const adTrackFr = new AudioTrack({
+  active: false,
+  label: 'Audio Description FR',
+  language: 'ad-fr',
+  kind: AudioTrackKind.DESCRIPTION,
+  index: 3
+});
+
+// track arrays to player
+const arrayWithAdTracks = [regularTrackFr, regularTrackEn, adTrackEn, adTrackFr];
+const arrayWithoutAdTracks = [regularTrackFr, regularTrackEn];
+
 describe('Audio Track Selection', () => {
   let config, player, playerContainer;
 
@@ -26,7 +61,7 @@ describe('Audio Track Selection', () => {
     removeElement(targetId);
   });
 
-  describe('With prioritizeAudioDescription', () => {
+  describe('With prioritizeAudioDescription = true', () => {
     it('should select audio description track when prioritizeAudioDescription is true with no user preferences', (done) => {
       config.playback.prioritizeAudioDescription = true;
       player = new Player(config);
@@ -34,30 +69,16 @@ describe('Audio Track Selection', () => {
       playerContainer.appendChild(player.getView());
 
       player.ready().then(() => {
-        // Create audio tracks
-        const regularTrack = new AudioTrack({
-          active: false,
-          label: 'Regular',
-          language: 'en',
-          index: 0
-        });
-
-        const adTrack = new AudioTrack({
-          active: false,
-          label: 'Audio Description',
-          language: 'ad-en',
-          kind: AudioTrackKind.DESCRIPTION,
-          index: 1
-        });
-
         // Add tracks to player
-        player._tracks = [regularTrack, adTrack];
+        player._tracks = arrayWithAdTracks;
 
         // set default tracks
         player._setDefaultTracks();
 
-        adTrack.active.should.be.true;
-        regularTrack.active.should.be.false;
+        regularTrackEn.active.should.be.false;
+        regularTrackFr.active.should.be.false;
+        adTrackEn.active.should.be.true;
+        adTrackFr.active.should.be.false;
         done();
       });
 
@@ -72,39 +93,8 @@ describe('Audio Track Selection', () => {
       playerContainer.appendChild(player.getView());
 
       player.ready().then(() => {
-        // Create audio tracks
-        const regularTrackFr = new AudioTrack({
-          active: false,
-          label: 'Regular',
-          language: 'fr',
-          index: 0
-        });
-
-        const regularTrackEn = new AudioTrack({
-          active: false,
-          label: 'Regular',
-          language: 'en',
-          index: 1
-        });
-
-        const adTrackEn = new AudioTrack({
-          active: false,
-          label: 'Audio Description EN',
-          language: 'ad-en',
-          kind: AudioTrackKind.DESCRIPTION,
-          index: 2
-        });
-
-        const adTrackFr = new AudioTrack({
-          active: false,
-          label: 'Audio Description FR',
-          language: 'ad-fr',
-          kind: AudioTrackKind.DESCRIPTION,
-          index: 3
-        });
-
         // Add tracks to player
-        player._tracks = [regularTrackFr, regularTrackEn, adTrackEn, adTrackFr];
+        player._tracks = arrayWithAdTracks;
 
         // set default tracks
         player._setDefaultTracks();
@@ -126,30 +116,17 @@ describe('Audio Track Selection', () => {
       playerContainer.appendChild(player.getView());
 
       player.ready().then(() => {
-        // Create audio tracks (no audio description tracks)
-        const trackFr = new AudioTrack({
-          active: false,
-          label: 'French',
-          language: 'fr',
-          index: 0
-        });
-
-        const trackEn = new AudioTrack({
-          active: false,
-          label: 'English',
-          language: 'en',
-          index: 1
-        });
-
         // Add tracks to player
-        player._tracks = [trackFr, trackEn];
+        player._tracks = arrayWithAdTracks;
 
         // set default tracks
         player._setDefaultTracks();
-        player._setDefaultTrack(player._tracks, trackEn.language, trackEn);
+        player._setDefaultTrack(player._tracks, regularTrackEn.language, regularTrackEn);
 
-        trackFr.active.should.be.false;
-        trackEn.active.should.be.true;
+        regularTrackEn.active.should.be.true;
+        regularTrackFr.active.should.be.false;
+        adTrackEn.active.should.be.false;
+        adTrackFr.active.should.be.false;
         done();
       });
 
@@ -164,30 +141,17 @@ describe('Audio Track Selection', () => {
       playerContainer.appendChild(player.getView());
 
       player.ready().then(() => {
-        // Create audio tracks (no audio description tracks)
-        const trackFr = new AudioTrack({
-          active: false,
-          label: 'French',
-          language: 'fr',
-          index: 0
-        });
-
-        const trackEn = new AudioTrack({
-          active: false,
-          label: 'English',
-          language: 'en',
-          index: 1
-        });
-
         // Add tracks to player
-        player._tracks = [trackFr, trackEn];
+        player._tracks = arrayWithAdTracks;
 
         // set default tracks
         player._setDefaultTracks();
 
         try {
-          trackFr.active.should.be.false;
-          trackEn.active.should.be.true;
+          regularTrackEn.active.should.be.true;
+          regularTrackFr.active.should.be.false;
+          adTrackEn.active.should.be.false;
+          adTrackFr.active.should.be.false;
           done();
         } catch (e) {
           done(e);
@@ -206,38 +170,16 @@ describe('Audio Track Selection', () => {
       playerContainer.appendChild(player.getView());
 
       player.ready().then(() => {
-        // Create audio tracks
-        const trackEn = new AudioTrack({
-          active: false,
-          label: 'English',
-          language: 'en',
-          index: 0
-        });
-
-        const trackFr = new AudioTrack({
-          active: false,
-          label: 'French',
-          language: 'fr',
-          index: 1
-        });
-
-        const adTrack = new AudioTrack({
-          active: false,
-          label: 'Audio Description',
-          language: 'ad-en',
-          kind: AudioTrackKind.DESCRIPTION,
-          index: 2
-        });
-
         // Add tracks to player
-        player._tracks = [trackEn, trackFr, adTrack];
+        player._tracks = arrayWithAdTracks;
 
         // set default tracks
         player._setDefaultTracks();
 
-        trackFr.active.should.be.true;
-        trackEn.active.should.be.false;
-        adTrack.active.should.be.false;
+        regularTrackEn.active.should.be.false;
+        regularTrackFr.active.should.be.true;
+        adTrackEn.active.should.be.false;
+        adTrackFr.active.should.be.false;
         done();
       });
 
@@ -251,30 +193,15 @@ describe('Audio Track Selection', () => {
       playerContainer.appendChild(player.getView());
 
       player.ready().then(() => {
-        // Create audio tracks (no audio description tracks)
-        const trackFr = new AudioTrack({
-          active: false,
-          label: 'French',
-          language: 'fr',
-          index: 0
-        });
-
-        const trackEn = new AudioTrack({
-          active: false,
-          label: 'English',
-          language: 'en',
-          index: 1
-        });
-
         // Add tracks to player
-        player._tracks = [trackFr, trackEn];
+        player._tracks = arrayWithoutAdTracks;
 
         // set default tracks
         player._setDefaultTracks();
-        player._setDefaultTrack(player._tracks, trackEn.language, trackEn);
+        player._setDefaultTrack(player._tracks, regularTrackEn.language, regularTrackEn);
 
-        trackFr.active.should.be.false;
-        trackEn.active.should.be.true;
+        regularTrackEn.active.should.be.true;
+        regularTrackFr.active.should.be.false;
         done();
       })
 
@@ -288,29 +215,14 @@ describe('Audio Track Selection', () => {
       playerContainer.appendChild(player.getView());
 
       player.ready().then(() => {
-        // Create audio tracks
-        const trackEn = new AudioTrack({
-          active: false,
-          label: 'English',
-          language: 'en',
-          index: 0
-        });
-
-        const trackFr = new AudioTrack({
-          active: false,
-          label: 'French',
-          language: 'fr',
-          index: 1
-        });
-
         // Add tracks to player
-        player._tracks = [trackEn, trackFr];
+        player._tracks = arrayWithoutAdTracks;
 
         // set default tracks
         player._setDefaultTracks();
 
-        trackEn.active.should.be.true;
-        trackFr.active.should.be.false;
+        regularTrackEn.active.should.be.true;
+        regularTrackFr.active.should.be.false;
         done();
       });
 

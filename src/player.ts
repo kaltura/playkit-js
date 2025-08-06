@@ -127,6 +127,13 @@ const DURATION_OFFSET: number = 0.1;
 const LIVE_EDGE_THRESHOLD: number = 1;
 
 /**
+ *  The audio description prefix string, for audio description tracks
+ *  @type {string}
+ *  @const
+ */
+const AUDIO_DESCRIPTION_PREFIX: string = 'ad-';
+
+/**
  * The HTML5 player class.
  * @classdesc
  */
@@ -2602,8 +2609,8 @@ export default class Player extends FakeEventTarget {
     const prioritizeTracks = this._config.playback.prioritizeAudioDescription;
 
     function sortByAudioTrackType(a: AudioTrack, b: AudioTrack): number {
-      const aIsAudioDescription = !!a.language?.startsWith('ad-');
-      const bIsAudioDescription = !!b.language?.startsWith('ad-');
+      const aIsAudioDescription = !!a.language?.startsWith(AUDIO_DESCRIPTION_PREFIX);
+      const bIsAudioDescription = !!b.language?.startsWith(AUDIO_DESCRIPTION_PREFIX);
 
       if (aIsAudioDescription !== bIsAudioDescription) {
         return prioritizeTracks ? (aIsAudioDescription ? -1 : 1) : (aIsAudioDescription ? 1 : -1);
@@ -2744,25 +2751,26 @@ export default class Player extends FakeEventTarget {
     const defaultLanguage = this._getLanguage<PKTextTrack>(this._getTextTracks(), playbackConfig.textLanguage, defaultStreamTrack);
     const currentOrConfiguredTextLang = !this._playbackAttributesState.textLanguage || this.config.disableUserCache ? defaultLanguage : this._playbackAttributesState.textLanguage;
 
-    const configureAudioTrack = (
+    const getAudioLanguage = (
       prioritizeAudioDescription: boolean | undefined
     ): string => {
       const userPreferences = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
       if (!userPreferences && prioritizeAudioDescription === true) {
         // If no user preferences and prioritizeAudioDescription is true - look for audio description tracks first
         const audioTracks = this._getAudioTracks();
-        const audioDescriptionTrack = audioTracks.find((track) => track.language?.startsWith('ad-'));
+        const audioDescriptionTrack = audioTracks.find((track) => track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX));
         if (audioDescriptionTrack) {
           return audioDescriptionTrack.language;
         } else {
           return this._getLanguage<AudioTrack>(audioTracks, playbackConfig.audioLanguage, activeTracks.audio);
         }
       } else {
+        // If there are no user preferences or the prioritizeAudioDescription is false - then return the language according to audioLanguage config
         return this._playbackAttributesState.audioLanguage || this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio);
       }
     }
 
-    const currentOrConfiguredAudioLang = configureAudioTrack(playbackConfig.prioritizeAudioDescription);
+    const currentOrConfiguredAudioLang = getAudioLanguage(playbackConfig.prioritizeAudioDescription);
 
     if (!playbackConfig.captionsDisplay) {
       this._playbackAttributesState.textLanguage = defaultLanguage;
