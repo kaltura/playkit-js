@@ -93,22 +93,18 @@ describe('Audio Track Selection', () => {
       playerContainer.appendChild(player.getView());
 
       player.ready().then(() => {
-        try {
-          // Add tracks to player
-          player._tracks = arrayWithAdTracks;
+        // Add tracks to player
+        player._tracks = arrayWithAdTracks;
 
-          // set default tracks
-          player._setDefaultTracks();
+        // set default tracks
+        player._setDefaultTracks();
 
-          regularTrackFr.active.should.be.true;
-          regularTrackEn.active.should.be.false;
-          adTrackEn.active.should.be.false;
-          adTrackFr.active.should.be.false;
+        regularTrackFr.active.should.be.true;
+        regularTrackEn.active.should.be.false;
+        adTrackEn.active.should.be.false;
+        adTrackFr.active.should.be.false;
 
-          done();
-        } catch (e) {
-          done(e); // Will print which assertion failed and why
-        }
+        done();
       });
 
       player.load();
