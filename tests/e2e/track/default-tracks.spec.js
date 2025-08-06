@@ -103,7 +103,6 @@ describe('Audio Track Selection', () => {
         regularTrackFr.active.should.be.false;
         adTrackEn.active.should.be.false;
         adTrackFr.active.should.be.false;
-
         done();
       });
 
