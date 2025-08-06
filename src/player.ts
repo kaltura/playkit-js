@@ -2767,14 +2767,13 @@ export default class Player extends FakeEventTarget {
         }
       } else {
         // If there is a user audio language preference, return it.
-        // Otherwise - return the first audio track whose language does NOT start with 'ad-' string.
+        // Otherwise - return the locale audio track or the first audio track whose language does NOT start with 'ad-' string.
         // If no such track exists - fall back to the default language selection logic.
         const nonAudioDescriptionTrack = audioTracks.find(
-          (track) => !track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX)
-        );
+          (track) => !track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX) && Track.langComparer(Locale.language, track.language)
+        ) || audioTracks.find((track) => !track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX));
 
         return (
-          this._playbackAttributesState.audioLanguage ||
           playbackConfig.audioLanguage ||
           nonAudioDescriptionTrack?.language ||
           this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio)
