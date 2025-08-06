@@ -1100,8 +1100,8 @@ var config = {
 > > ##### Default: `undefined`
 > >
 > > ##### Description: When set to true, the default audio track will be the audio description track and audio description tracks (identified by language prefix "ad-") will be prioritized and appear at the top of the audio tracks list
-> When set to false, the default audio track will be the regular audio track and regular audio tracks appear first. 
-> Otherwise, when undefined, the default audio track will be the regular audio track and no prioritization is applied to audio description tracks in the list's order.
+> > When set to false, the default audio track will be the regular audio track and regular audio tracks appear first. 
+> > Otherwise, when undefined, the default audio track will be the regular audio track and no prioritization is applied to audio description tracks in the list's order.
 >
 > ##
 > 
