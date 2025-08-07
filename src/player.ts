@@ -2756,6 +2756,9 @@ export default class Player extends FakeEventTarget {
     ): string => {
       const userPreferences = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
       const audioTracks = this._getAudioTracks();
+      const nonAudioDescriptionTrack = audioTracks.find(
+        (track) => !track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX) && Track.langComparer(Locale.language, track.language)
+      ) || audioTracks.find((track) => !track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX));
 
       if (!userPreferences && prioritizeAudioDescription === true) {
         // If no user preferences and prioritizeAudioDescription is true - look for audio description tracks first
@@ -2763,16 +2766,13 @@ export default class Player extends FakeEventTarget {
         if (audioDescriptionTrack) {
           return audioDescriptionTrack.language;
         } else {
-          return this._getLanguage<AudioTrack>(audioTracks, playbackConfig.audioLanguage, activeTracks.audio);
+          return nonAudioDescriptionTrack?.language ||
+            this._getLanguage<AudioTrack>(audioTracks, playbackConfig.audioLanguage, activeTracks.audio);
         }
       } else {
         // If there is a user audio language preference, return it.
         // Otherwise - return the locale audio track or the first audio track whose language does NOT start with 'ad-' string.
         // If no such track exists - fall back to the default language selection logic.
-        const nonAudioDescriptionTrack = audioTracks.find(
-          (track) => !track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX) && Track.langComparer(Locale.language, track.language)
-        ) || audioTracks.find((track) => !track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX));
-
         return (
           playbackConfig.audioLanguage ||
           nonAudioDescriptionTrack?.language ||
