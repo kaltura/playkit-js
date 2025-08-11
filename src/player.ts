@@ -2750,15 +2750,43 @@ export default class Player extends FakeEventTarget {
     const offTextTrack: Track = this._getTextTracks().find((track) => PKTextTrack.langComparer(OFF, track.language))!;
     const defaultLanguage = this._getLanguage<PKTextTrack>(this._getTextTracks(), playbackConfig.textLanguage, defaultStreamTrack);
     const currentOrConfiguredTextLang = !this._playbackAttributesState.textLanguage || this.config.disableUserCache ? defaultLanguage : this._playbackAttributesState.textLanguage;
+    const audioTracks = this._getAudioTracks();
+
+    const getAudioTrackPreferredLanguage = (): AudioTrack | undefined => {
+      // Build the full preferred-language list from the browser.
+      const preferredLanguages: string[] =
+        (typeof navigator !== 'undefined' && Array.isArray(navigator.languages) && navigator.languages.length > 0)
+          ? navigator.languages
+          : [Locale.language].filter(Boolean); // Fallback to Locale.language if navigator.languages isn't available
+
+      let nonAudioDescriptionTrack: AudioTrack | undefined;
+
+      // Find the first  preferred language that matches any non ad track
+      for (const lang of preferredLanguages) {
+        const match = audioTracks.find(
+          (track) =>
+            !track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX) &&
+            Track.langComparer(lang, track.language)
+        );
+        if (match) {
+          return match;
+        }
+      }
+
+      // Fallback to first non ad track if none matched preferred languages
+      if (!nonAudioDescriptionTrack) {
+        return audioTracks.find(
+          (track) => !track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX)
+        );
+      }
+    }
 
     const getAudioLanguage = (
       prioritizeAudioDescription: boolean | undefined
     ): string => {
       const userPreferences = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
-      const audioTracks = this._getAudioTracks();
-      const nonAudioDescriptionTrack = audioTracks.find(
-        (track) => !track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX) && Track.langComparer(Locale.language, track.language)
-      ) || audioTracks.find((track) => !track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX));
+      const nonAudioDescriptionTrack = getAudioTrackPreferredLanguage();
+
 
       if (!userPreferences && prioritizeAudioDescription === true) {
         // If no user preferences and prioritizeAudioDescription is true - look for audio description tracks first
