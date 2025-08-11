@@ -2764,8 +2764,6 @@ export default class Player extends FakeEventTarget {
         preferredLanguages = [];
       }
 
-      let nonAudioDescriptionTrack: AudioTrack | undefined;
-
       // Find the first  preferred language that matches any non ad track
       for (const lang of preferredLanguages) {
         const match = audioTracks.find(
@@ -2779,11 +2777,9 @@ export default class Player extends FakeEventTarget {
       }
 
       // Fallback to first non ad track if none matched preferred languages
-      if (!nonAudioDescriptionTrack) {
-        return audioTracks.find(
-          (track) => !track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX)
-        );
-      }
+      return audioTracks.find(
+        (track) => !track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX)
+      );
     }
 
     const getAudioLanguage = (
