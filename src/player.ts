@@ -2753,11 +2753,11 @@ export default class Player extends FakeEventTarget {
     const audioTracks = this._getAudioTracks();
 
     const getAudioTrackPreferredLanguage = (): AudioTrack | undefined => {
-      // Build the full preferred-language list from the browser.
+      // Build the full preferred-language list from the browser
       const preferredLanguages: string[] =
-        (typeof navigator !== 'undefined' && Array.isArray(navigator.languages) && navigator.languages.length > 0)
-          ? navigator.languages
-          : [Locale.language].filter(Boolean); // Fallback to Locale.language if navigator.languages isn't available
+        navigator?.languages?.length > 0
+          ? [...navigator.languages]
+          : (Locale.language ? [Locale.language] : []); // Fallback to Locale.language if navigator.languages isn't available
 
       let nonAudioDescriptionTrack: AudioTrack | undefined;
 
