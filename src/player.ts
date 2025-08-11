@@ -2788,7 +2788,6 @@ export default class Player extends FakeEventTarget {
       const userPreferences = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
       const nonAudioDescriptionTrack = getAudioTrackPreferredLanguage();
 
-
       if (!userPreferences && prioritizeAudioDescription === true) {
         // If no user preferences and prioritizeAudioDescription is true - look for audio description tracks first
         const audioDescriptionTrack = audioTracks.find((track) => track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX));
