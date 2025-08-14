@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.30 (2025-08-14)
+
+
+### Features
+
+* **FEC-14583:** Fix default audio track to check all user's preferred languages and not only current one ([#830](https://github.com/kaltura/playkit-js/issues/830)) ([73bd8f0](https://github.com/kaltura/playkit-js/commit/73bd8f07f3eb26bc13305365443e4abd7cac66d7))
+
 ### 0.84.29 (2025-07-17)
 
 
