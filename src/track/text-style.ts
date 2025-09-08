@@ -57,7 +57,7 @@ class TextStyle {
     CYAN: [0, 255, 255],
     DARK_BLUE: [0, 51, 102],
     LIGHT_YELLOW: [255, 255, 204],
-    LIGHT_GRAY: [204, 204, 204],
+    LIGHT_GRAY: [204, 204, 204]
   };
 
   /**
@@ -310,10 +310,10 @@ class TextStyle {
    * @param {TextStyle} textStyle - The textStyle to compare with.
    * @returns {boolean} - Whether the text styles are equal.
    */
-public isEqual(textStyle?: TextStyle): boolean {
-  if (!textStyle) return false;
-  return JSON.stringify(TextStyle.toJson(this)) === JSON.stringify(TextStyle.toJson(textStyle));
-}
+  public isEqual(textStyle?: TextStyle): boolean {
+    if (!textStyle) return false;
+    return JSON.stringify(TextStyle.toJson(this)) === JSON.stringify(TextStyle.toJson(textStyle));
+  }
 
   public get implicitFontScale(): number {
     const fontSizeValue = TextStyle.FontSizes[this._fontSizeIndex].value;
