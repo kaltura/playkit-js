@@ -57,7 +57,7 @@ class TextStyle {
     CYAN: [0, 255, 255],
     DARK_BLUE: [0, 51, 102],
     LIGHT_YELLOW: [255, 255, 204],
-    LIGHT_GRAY: [204, 204, 204]
+    LIGHT_GRAY: [204, 204, 204],
   };
 
   /**
