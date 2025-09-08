@@ -189,19 +189,19 @@ class TextStyle {
     return textStyle;
   }
 
-public static toJson(text: TextStyle): PKTextStyleObject {
-  return {
-    fontEdge: text.fontEdge,
-    fontSize: text.fontSize,
-    textAlign: text.textAlign,
-    fontScale: text.fontScale,
-    fontColor: text.fontColor,
-    fontOpacity: text.fontOpacity,
-    backgroundColor: text.backgroundColor,
-    backgroundOpacity: text.backgroundOpacity,
-    fontFamily: text.fontFamily
-  };
-}
+  public static toJson(text: TextStyle): PKTextStyleObject {
+    return {
+      fontEdge: text.fontEdge,
+      fontSize: text.fontSize,
+      textAlign: text.textAlign,
+      fontScale: text.fontScale,
+      fontColor: text.fontColor,
+      fontOpacity: text.fontOpacity,
+      backgroundColor: text.backgroundColor,
+      backgroundOpacity: text.backgroundOpacity,
+      fontFamily: text.fontFamily
+    };
+  }
 
   private _fontSizeIndex: number = 2; // 100%
 
