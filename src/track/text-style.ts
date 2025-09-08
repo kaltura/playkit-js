@@ -32,7 +32,12 @@ class TextStyle {
     ARIAL: 'Arial',
     HELVETICA: 'Helvetica',
     VERDANA: 'Verdana',
-    SANS_SERIF: 'sans-serif'
+    SANS_SERIF: 'sans-serif',
+    ROBOTO: 'Roboto, "Open Sans", Arial, sans-serif',
+    OPEN_DYSLEXIC: '"OpenDyslexic", Lexend, sans-serif',
+    COMIC: '"Comic Sans MS", "Century Gothic", Arial, sans-serif',
+    SEGOE: '"Segoe UI", "SF Pro Text", Helvetica, sans-serif',
+    COURIER: 'Courier, "Lucida Console", Verdana, monospace'
   };
 
   /**
@@ -49,7 +54,10 @@ class TextStyle {
     BLUE: [0, 0, 255],
     YELLOW: [255, 255, 0],
     MAGENTA: [255, 0, 255],
-    CYAN: [0, 255, 255]
+    CYAN: [0, 255, 255],
+    DARK_BLUE: [0, 51, 102],
+    LIGHT_YELLOW: [255, 255, 204],
+    LIGHT_GRAY: [204, 204, 204]
   };
 
   /**
@@ -302,7 +310,8 @@ class TextStyle {
    * @param {TextStyle} textStyle - The textStyle to compare with.
    * @returns {boolean} - Whether the text styles are equal.
    */
-  public isEqual(textStyle: TextStyle): boolean {
+  public isEqual(textStyle?: TextStyle): boolean {
+    if (!textStyle) return false;
     return JSON.stringify(TextStyle.toJson(this)) === JSON.stringify(TextStyle.toJson(textStyle));
   }
 
