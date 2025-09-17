@@ -34,7 +34,6 @@ class FairPlayDrmHandlerV2 {
     }
 
     if (!this.videoElement.mediaKeys) {
-      // TODO does this need to be configurable ?
       const supportedConfigurations = [
         {
           initDataTypes: [initDataType],
@@ -49,13 +48,24 @@ class FairPlayDrmHandlerV2 {
         const access = await navigator.requestMediaKeySystemAccess(KEY_SYSTEM, supportedConfigurations);
         const keys = await access.createMediaKeys();
 
+        if (!access || !keys) {
+          this.onError(Error.Code.COULD_NOT_CREATE_MEDIA_KEY);
+          return;
+        }
+
         await keys.setServerCertificate(FairPlayDrmHandler._base64DecodeUint8Array(this.config.certificate));
         await this.videoElement.setMediaKeys(keys);
 
-        this.keySession = this.videoElement.mediaKeys!.createSession();
+        if (!this.videoElement.mediaKeys) {
+          this.onError(Error.Code.COULD_NOT_SET_MEDIA_KEYS);
+          return;
+        }
+
+        this.keySession = (this.videoElement.mediaKeys as MediaKeys).createSession();
 
         if (!this.keySession) {
           this.onError(Error.Code.COULD_NOT_CREATE_KEY_SESSION);
+          return;
         }
 
         this.keySession.generateRequest(initDataType, event.initData!);
@@ -65,24 +75,23 @@ class FairPlayDrmHandlerV2 {
             resolve(event.message);
           });
 
-          // TODO
           setTimeout(reject, 1000);
         });
 
         if (!message) {
-          // TODO
+          this.onError(Error.Code.COULD_NOT_CREATE_KEY_SESSION);
           return;
         }
 
         const response = await FairPlayDrmHandlerV2.getUDRMResponse(this.config.licenseUrl, message);
-        if (response.ckc === '') return;
-        // TODO throw an error and / or add logs
+        if (response.ckc === '') {
+          this.onError(Error.Code.LICENSE_RESPONSE_EMPTY);
+          return;
+        }
 
         await this.keySession.update(FairPlayDrmHandlerV2.base64DecodeUint8Array(response.ckc));
       } catch (e) {
-        this.logger.error('Failed to request MediaKeySystemAccess:', e);
-        // TODO
-        return;
+        this.onError(Error.Code.FAILED_TO_REQUEST_MEDIA_KEY_SYSTEM_ACCESS, e);
       }
     }
   }
