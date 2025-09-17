@@ -26,8 +26,8 @@ class FairPlayDrmHandlerV2 {
     this.eventManager.listen(videoElement, EME_EVENTS.ENCRYPTED, this.onEncrypted.bind(this) as ListenerType);
   }
 
-  private async onEncrypted(event: MediaEncryptedEvent) {
-    let initDataType = event.initDataType;
+  private async onEncrypted(event: MediaEncryptedEvent): Promise<void> {
+    const initDataType = event.initDataType;
     if (initDataType !== 'skd') {
       this.logger.warn(`Received unexpected initialization data type "${initDataType}"`);
       return;
@@ -35,7 +35,7 @@ class FairPlayDrmHandlerV2 {
 
     if (!this.videoElement.mediaKeys) {
       // TODO does this need to be configurable ?
-      let supportedConfigurations = [
+      const supportedConfigurations = [
         {
           initDataTypes: [initDataType],
           videoCapabilities: [{ contentType: 'application/vnd.apple.mpegurl', robustness: '' }],
@@ -46,8 +46,8 @@ class FairPlayDrmHandlerV2 {
       ];
 
       try {
-        let access = await navigator.requestMediaKeySystemAccess(KEY_SYSTEM, supportedConfigurations);
-        let keys = await access.createMediaKeys();
+        const access = await navigator.requestMediaKeySystemAccess(KEY_SYSTEM, supportedConfigurations);
+        const keys = await access.createMediaKeys();
 
         await keys.setServerCertificate(FairPlayDrmHandler._base64DecodeUint8Array(this.config.certificate));
         await this.videoElement.setMediaKeys(keys);

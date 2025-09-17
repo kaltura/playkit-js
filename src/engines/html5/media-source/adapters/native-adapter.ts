@@ -303,12 +303,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       NativeAdapter._drmProtocol.setDrmPlayback(drmConfig, this._sourceObj.drmData);
 
       if (this._config.useFairPlayHandlerV2) {
-      this._drmHandler = new FairPlayDrmHandlerV2(
-        this._videoElement,
-        drmConfig,
-        (error) => this._dispatchErrorCallback(error),
-        (data) => this._dispatchDRMLicenseLoaded(data)
-      );
+        this._drmHandler = new FairPlayDrmHandlerV2(
+          this._videoElement,
+          drmConfig,
+          (error) => this._dispatchErrorCallback(error),
+          (data) => this._dispatchDRMLicenseLoaded(data)
+        );
       } else {
         this._drmHandler = new FairPlayDrmHandler(
           this._videoElement,
