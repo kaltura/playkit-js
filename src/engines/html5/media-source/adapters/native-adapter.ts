@@ -15,6 +15,7 @@ import defaultConfig from './native-adapter-default-config.json';
 import type { FairPlayDrmConfigType } from './fairplay-drm-handler';
 import { FairPlayDrmHandler } from './fairplay-drm-handler';
 import { IDrmProtocol, IMediaSourceAdapter, PKABRRestrictionObject, PKDrmConfigObject, PKDrmDataObject, PKMediaSourceObject, PKRequestObject, PKVideoDimensionsObject } from '../../../../types';
+import { FairPlayDrmHandlerV2 } from './fairplay-drm-handler-v2';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
@@ -78,7 +79,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @type {?FairPlayDrmHandler}
    * @private
    */
-  private _drmHandler: FairPlayDrmHandler | undefined;
+  private _drmHandler: FairPlayDrmHandler | FairPlayDrmHandlerV2 | undefined;
   /**
    * The original progressive sources
    * @member {Array<PKMediaSourceObject>} - _progressiveSources
@@ -300,12 +301,22 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         useKIDHeader: !!this._config.useKIDHeader
       };
       NativeAdapter._drmProtocol.setDrmPlayback(drmConfig, this._sourceObj.drmData);
-      this._drmHandler = new FairPlayDrmHandler(
+
+      if (this._config.useFairPlayHandlerV2) {
+      this._drmHandler = new FairPlayDrmHandlerV2(
         this._videoElement,
         drmConfig,
-        error => this._dispatchErrorCallback(error),
-        data => this._dispatchDRMLicenseLoaded(data)
+        (error) => this._dispatchErrorCallback(error),
+        (data) => this._dispatchDRMLicenseLoaded(data)
       );
+      } else {
+        this._drmHandler = new FairPlayDrmHandler(
+          this._videoElement,
+          drmConfig,
+          (error) => this._dispatchErrorCallback(error),
+          (data) => this._dispatchDRMLicenseLoaded(data)
+        );
+      }
     }
   }
 
