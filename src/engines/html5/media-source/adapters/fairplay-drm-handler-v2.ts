@@ -4,6 +4,7 @@ import { FairPlayDrmConfigType, FairPlayDrmHandler } from './fairplay-drm-handle
 import getLogger from '../../../../utils/logger';
 import { DrmScheme } from '../../../../drm/drm-scheme';
 import { PKDrmDataObject } from '../../../../types';
+import { RequestType } from '../../../../enums/request-type';
 
 enum EME_EVENTS {
   ENCRYPTED = 'encrypted'
@@ -15,6 +16,8 @@ class FairPlayDrmHandlerV2 {
   private eventManager: EventManager;
   private logger = getLogger('FairPlayDrmHandlerV2');
   private keySession: any;
+  private requestFilter?: (type: number, request: any) => Promise<any>;
+  private responseFilter: (type: number, response: any) => Promise<any>;
 
   constructor(
     private videoElement: HTMLVideoElement,
@@ -24,6 +27,8 @@ class FairPlayDrmHandlerV2 {
   ) {
     this.eventManager = new EventManager();
     this.eventManager.listen(videoElement, EME_EVENTS.ENCRYPTED, this.onEncrypted.bind(this) as ListenerType);
+    this.requestFilter = config.network?.requestFilter;
+    this.responseFilter = config.network?.responseFilter || (async (_type, response) => response);
   }
 
   private async onEncrypted(event: MediaEncryptedEvent): Promise<void> {
@@ -83,8 +88,41 @@ class FairPlayDrmHandlerV2 {
           return;
         }
 
-        const response = await FairPlayDrmHandlerV2.getUDRMResponse(this.config.licenseUrl, message);
-        if (response.ckc === '') {
+        // Apply request filter if present
+        let licenseRequest = {
+          url: this.config.licenseUrl,
+          body: (new Uint8Array(message) as any).toBase64 ? (new Uint8Array(message) as any).toBase64() : message,
+          headers: { 'Content-Type': 'application/json' }
+        };
+        if (this.requestFilter) {
+          try {
+            licenseRequest = await this.requestFilter(RequestType.LICENSE, licenseRequest);
+          } catch (error) {
+            this.onError(Error.Code.REQUEST_FILTER_ERROR, error);
+            return;
+          }
+        }
+
+        // Send license request
+        let response;
+        try {
+          response = await FairPlayDrmHandlerV2.getUDRMResponse(licenseRequest.url, licenseRequest.body, licenseRequest.headers);
+        } catch (error) {
+          this.onError(Error.Code.LICENSE_REQUEST_FAILED, error);
+          return;
+        }
+
+        // Apply response filter if present
+        if (this.responseFilter) {
+          try {
+            response = await this.responseFilter(RequestType.LICENSE, response);
+          } catch (error) {
+            this.onError(Error.Code.RESPONSE_FILTER_ERROR, error);
+            return;
+          }
+        }
+
+        if (!response.ckc || response.ckc === '') {
           this.onError(Error.Code.LICENSE_RESPONSE_EMPTY);
           return;
         }
@@ -100,14 +138,13 @@ class FairPlayDrmHandlerV2 {
     return Uint8Array.from(atob(base64String), (c) => c.charCodeAt(0));
   }
 
-  private static getUDRMResponse(url, data): Promise<any> {
-    return fetch(url, {
+  private static async getUDRMResponse(url, data, headers = { 'Content-Type': 'application/json' }): Promise<any> {
+    const res = await fetch(url, {
       method: 'POST',
-      body: (new Uint8Array(data) as any).toBase64(),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then((res) => res.json());
+      body: data,
+      headers
+    });
+    return res.json();
   }
 
   private onError(code: number, data?: any): void {
