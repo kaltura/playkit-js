@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.31 (2025-09-30)
+
+
+### Features
+
+* **FEC-14649:** Integrate FPS Safari using Modern EME APIs ([#833](https://github.com/kaltura/playkit-js/issues/833)) ([f816311](https://github.com/kaltura/playkit-js/commit/f816311b82d5efbe4518b109904dd5263ee02bac))
+
 ### 0.84.30 (2025-08-14)
 
 
