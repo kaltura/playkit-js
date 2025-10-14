@@ -178,6 +178,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     if (!Html5.videoElementStore[playerId]) {
       Html5._logger.debug(`Create the video element for playing ${playerId}`);
       const videoElement = Utils.Dom.createElement('video');
+      videoElement.setAttribute('aria-hidden', 'true');
       Html5.videoElementStore[playerId] = videoElement;
     }
     Html5._logger.debug(`Prepare the video element for playing ${playerId}`);
