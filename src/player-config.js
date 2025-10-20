@@ -1,4 +1,4 @@
-import {ScreenOrientationType} from './enums/screen-orientation-type';
+import { ScreenOrientationType } from './enums/screen-orientation-type';
 
 const DefaultConfig = {
   log: {
@@ -24,7 +24,6 @@ const DefaultConfig = {
     autopause: false,
     allowMutedAutoPlay: true,
     updateAudioDescriptionLabels: true,
-    prioritizeAudioDescription: undefined,
     alphabeticalSort: undefined,
     muted: false,
     pictureInPicture: true,
@@ -92,4 +91,4 @@ const DefaultSources = {
   metadata: {}
 };
 
-export {DefaultConfig, DefaultSources};
+export { DefaultConfig, DefaultSources };
