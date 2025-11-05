@@ -2059,6 +2059,11 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this._onTextTrackChanged(event));
       this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._externalThumbnailsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
+
+      this._eventManager.listen(this._engine, CustomEventType.TIMELINE_REGION_ADDED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, CustomEventType.TIMELINE_REGION_ENTER, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, CustomEventType.TIMELINE_REGION_EXIT, (event: FakeEvent) => this.dispatchEvent(event));
+
       const rootElement = Utils.Dom.getElementBySelector(`#${this.config.targetId}`);
       if (rootElement) {
         this._eventManager.listen(
