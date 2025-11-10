@@ -1,8 +1,8 @@
 import Player from '../../../src/player';
 import SourcesConfig from '../../configs/sources.json';
 import AudioTrack from '../../../src/track/audio-track';
-import {AudioTrackKind} from '../../../src/track/audio-track';
-import {createElement, getConfigStructure, removeElement, removeVideoElementsFromTestPage} from '../../utils/test-utils';
+import { AudioTrackKind } from '../../../src/track/audio-track';
+import { createElement, getConfigStructure, removeElement, removeVideoElementsFromTestPage } from '../../utils/test-utils';
 
 const targetId = 'player-placeholder_default-tracks.spec';
 
@@ -61,138 +61,38 @@ describe('Audio Track Selection', () => {
     removeElement(targetId);
   });
 
-  describe('With prioritizeAudioDescription = true', () => {
-    it('should select audio description track when prioritizeAudioDescription is true with no user preferences', (done) => {
-      config.playback.prioritizeAudioDescription = true;
-      player = new Player(config);
-      player.setSources(SourcesConfig.Mp4);
-      playerContainer.appendChild(player.getView());
+  it('should select audio track based on configured language', (done) => {
+    config.playback.audioLanguage = 'fr';
+    player = new Player(config);
+    player.setSources(SourcesConfig.Mp4);
+    playerContainer.appendChild(player.getView());
 
-      player.ready().then(() => {
-        // Add tracks to player
-        player._tracks = arrayWithAdTracks;
+    player.ready().then(() => {
+      // Add tracks to player
+      player._tracks = arrayWithAdTracks;
 
-        // set default tracks
-        player._setDefaultTracks();
+      // set default tracks
+      player._setDefaultTracks();
 
-        regularTrackEn.active.should.be.false;
-        regularTrackFr.active.should.be.false;
-        adTrackEn.active.should.be.true;
-        adTrackFr.active.should.be.false;
-        done();
-      });
-
-      player.load();
+      regularTrackEn.active.should.be.false;
+      regularTrackFr.active.should.be.true;
+      adTrackEn.active.should.be.false;
+      adTrackFr.active.should.be.false;
+      done();
     });
 
-    it('should select audio track in the configured language without consider prioritizeAudioDescription is true', (done) => {
-      config.playback.prioritizeAudioDescription = true;
-      config.playback.audioLanguage = 'en';
-      player = new Player(config);
-      player.setSources(SourcesConfig.Mp4);
-      playerContainer.appendChild(player.getView());
-
-      player.ready().then(() => {
-        // Add tracks to player
-        player._tracks = arrayWithAdTracks;
-
-        // set default tracks
-        player._setDefaultTracks();
-
-        regularTrackEn.active.should.be.true;
-        regularTrackFr.active.should.be.false;
-        adTrackEn.active.should.be.false;
-        adTrackFr.active.should.be.false;
-        done();
-      });
-
-      player.load();
-    });
-
-    it('should activate the default audio track when no audio description tracks are configured', (done) => {
-      config.playback.prioritizeAudioDescription = true;
-      player = new Player(config);
-      player.setSources(SourcesConfig.Mp4);
-      playerContainer.appendChild(player.getView());
-
-      player.ready().then(() => {
-        // Add tracks to player
-        player._tracks = arrayWithAdTracks;
-
-        // set default tracks
-        player._setDefaultTracks();
-        player._setDefaultTrack(player._tracks, regularTrackEn.language, regularTrackEn);
-
-        regularTrackEn.active.should.be.true;
-        regularTrackFr.active.should.be.false;
-        adTrackEn.active.should.be.false;
-        adTrackFr.active.should.be.false;
-        done();
-      });
-
-      player.load();
-    });
-
-    it('should activate audio track match system/code language, when no audio description tracks are available and audioLanguage config is "auto"', (done) => {
-      config.playback.prioritizeAudioDescription = true;
-      config.playback.audioLanguage = 'auto';
-      player = new Player(config);
-      player.setSources(SourcesConfig.Mp4);
-      playerContainer.appendChild(player.getView());
-
-      player.ready().then(() => {
-        // Add tracks to player
-        player._tracks = arrayWithAdTracks;
-
-        // set default tracks
-        player._setDefaultTracks();
-
-        try {
-          regularTrackEn.active.should.be.true;
-          regularTrackFr.active.should.be.false;
-          adTrackEn.active.should.be.false;
-          adTrackFr.active.should.be.false;
-          done();
-        } catch (e) {
-          done(e);
-        }
-      }).catch(done);
-
-      player.load();
-    });
+    player.load();
   });
 
-  describe('Without prioritizeAudioDescription', () => {
-    it('should select audio track based on configured language', (done) => {
-      config.playback.audioLanguage = 'fr';
-      player = new Player(config);
-      player.setSources(SourcesConfig.Mp4);
-      playerContainer.appendChild(player.getView());
+  it('should activate the default audio track when no audio tracks are configured', (done) => {
+    config.playback.audioLanguage = '';
+    player = new Player(config);
+    player.setSources(SourcesConfig.Mp4);
+    playerContainer.appendChild(player.getView());
 
-      player.ready().then(() => {
-        // Add tracks to player
-        player._tracks = arrayWithAdTracks;
-
-        // set default tracks
-        player._setDefaultTracks();
-
-        regularTrackEn.active.should.be.false;
-        regularTrackFr.active.should.be.true;
-        adTrackEn.active.should.be.false;
-        adTrackFr.active.should.be.false;
-        done();
-      });
-
-      player.load();
-    });
-
-    it('should activate the default audio track when no audio tracks are configured', (done) => {
-      config.playback.audioLanguage = '';
-      player = new Player(config);
-      player.setSources(SourcesConfig.Mp4);
-      playerContainer.appendChild(player.getView());
-
-      player.ready().then(() => {
+    player
+      .ready()
+      .then(() => {
         // Add tracks to player
         player._tracks = arrayWithoutAdTracks;
 
@@ -203,47 +103,47 @@ describe('Audio Track Selection', () => {
         regularTrackEn.active.should.be.true;
         regularTrackFr.active.should.be.false;
         done();
-      }).catch(done);
+      })
+      .catch(done);
 
-      player.load();
+    player.load();
+  });
+
+  it('should select audio track match system/code language track, when audioLanguage config is "auto"', (done) => {
+    config.playback.audioLanguage = 'auto';
+    player = new Player(config);
+    player.setSources(SourcesConfig.Mp4);
+    playerContainer.appendChild(player.getView());
+
+    player.ready().then(() => {
+      // Add tracks to player
+      player._tracks = arrayWithoutAdTracks;
+
+      // set default tracks
+      player._setDefaultTracks();
+
+      regularTrackEn.active.should.be.true;
+      regularTrackFr.active.should.be.false;
+      done();
     });
 
-    it('should select audio track match system/code language track, when audioLanguage config is "auto"', (done) => {
-      config.playback.audioLanguage = 'auto';
-      player = new Player(config);
-      player.setSources(SourcesConfig.Mp4);
-      playerContainer.appendChild(player.getView());
+    player.load();
+  });
 
-      player.ready().then(() => {
-        // Add tracks to player
-        player._tracks = arrayWithoutAdTracks;
+  it('should handle case when no tracks are available', (done) => {
+    player = new Player();
+    player.setSources(SourcesConfig.Mp4);
+    playerContainer.appendChild(player.getView());
 
-        // set default tracks
-        player._setDefaultTracks();
+    player.ready().then(() => {
+      // Set empty tracks array
+      player._tracks = [];
 
-        regularTrackEn.active.should.be.true;
-        regularTrackFr.active.should.be.false;
-        done();
-      });
-
-      player.load();
+      // set default tracks
+      player._setDefaultTracks();
+      done();
     });
 
-    it('should handle case when no tracks are available', (done) => {
-      player = new Player();
-      player.setSources(SourcesConfig.Mp4);
-      playerContainer.appendChild(player.getView());
-
-      player.ready().then(() => {
-        // Set empty tracks array
-        player._tracks = [];
-
-        // set default tracks
-        player._setDefaultTracks();
-        done();
-      });
-
-      player.load();
-    });
+    player.load();
   });
 });

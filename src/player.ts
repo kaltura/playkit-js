@@ -1082,7 +1082,7 @@ export default class Player extends FakeEventTarget {
    */
   public get defaultPlaybackRate(): number {
     if (this._engine) {
-      if(typeof this._defaultPlaybackRate === 'number' || this._defaultPlaybackRate > 0) {
+      if (typeof this._defaultPlaybackRate === 'number' || this._defaultPlaybackRate > 0) {
         return this._defaultPlaybackRate;
       }
       return this._engine.defaultPlaybackRate;
@@ -2533,7 +2533,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   public _updateTracks(tracks: Array<Track>): void {
-    if(!tracks) {
+    if (!tracks) {
       return;
     }
     Player._logger.debug('Tracks changed', tracks);
@@ -2605,20 +2605,6 @@ export default class Player extends FakeEventTarget {
   private _getAudioTracks(): Array<AudioTrack> {
     let audioTracks = this._getTracksByType<AudioTrack>(AudioTrack);
 
-    const alphabeticalSort = this._config.playback.alphabeticalSort;
-    const prioritizeTracks = this._config.playback.prioritizeAudioDescription;
-
-    function sortByAudioTrackType(a: AudioTrack, b: AudioTrack): number {
-      const aIsAudioDescription = !!a.language?.startsWith(AUDIO_DESCRIPTION_PREFIX);
-      const bIsAudioDescription = !!b.language?.startsWith(AUDIO_DESCRIPTION_PREFIX);
-
-      if (aIsAudioDescription !== bIsAudioDescription) {
-        return prioritizeTracks ? (aIsAudioDescription ? -1 : 1) : (aIsAudioDescription ? 1 : -1);
-      }
-
-      return 0;
-    }
-
     function sortAlphabetically(a: AudioTrack, b: AudioTrack): number {
       const aLabel = a.label?.toLowerCase() || a.language || '';
       const bLabel = b.label?.toLowerCase() || b.language || '';
@@ -2626,12 +2612,9 @@ export default class Player extends FakeEventTarget {
       return aLabel.localeCompare(bLabel);
     }
 
+    const alphabeticalSort = this._config.playback.alphabeticalSort;
     if (alphabeticalSort) {
       audioTracks = audioTracks.sort(sortAlphabetically);
-    }
-
-    if (typeof prioritizeTracks === 'boolean') {
-      audioTracks = audioTracks.sort(sortByAudioTrackType);
     }
 
     return audioTracks;
@@ -2750,6 +2733,7 @@ export default class Player extends FakeEventTarget {
     const offTextTrack: Track = this._getTextTracks().find((track) => PKTextTrack.langComparer(OFF, track.language))!;
     const defaultLanguage = this._getLanguage<PKTextTrack>(this._getTextTracks(), playbackConfig.textLanguage, defaultStreamTrack);
     const currentOrConfiguredTextLang = !this._playbackAttributesState.textLanguage || this.config.disableUserCache ? defaultLanguage : this._playbackAttributesState.textLanguage;
+
     const audioTracks = this._getAudioTracks();
 
     const getAudioTrackPreferredLanguage = (): AudioTrack | undefined => {
@@ -2766,50 +2750,26 @@ export default class Player extends FakeEventTarget {
 
       // Find the first  preferred language that matches any non ad track
       for (const lang of preferredLanguages) {
-        const match = audioTracks.find(
-          (track) =>
-            !track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX) &&
-            Track.langComparer(lang, track.language)
-        );
+        const match = audioTracks.find((track) => !track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX) && Track.langComparer(lang, track.language));
         if (match) {
           return match;
         }
       }
 
       // Fallback to first non ad track if none matched preferred languages
-      return audioTracks.find(
-        (track) => !track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX)
-      );
-    }
+      return audioTracks.find((track) => !track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX));
+    };
 
-    const getAudioLanguage = (
-      prioritizeAudioDescription: boolean | undefined
-    ): string => {
-      const userPreferences = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
+    const getAudioLanguage = (): string => {
       const nonAudioDescriptionTrack = getAudioTrackPreferredLanguage();
 
-      if (!userPreferences && prioritizeAudioDescription === true) {
-        // If no user preferences and prioritizeAudioDescription is true - look for audio description tracks first
-        const audioDescriptionTrack = audioTracks.find((track) => track.language?.startsWith(AUDIO_DESCRIPTION_PREFIX));
-        if (audioDescriptionTrack) {
-          return audioDescriptionTrack.language;
-        } else {
-          return nonAudioDescriptionTrack?.language ||
-            this._getLanguage<AudioTrack>(audioTracks, playbackConfig.audioLanguage, activeTracks.audio);
-        }
-      } else {
-        // If there is a user audio language preference, return it.
-        // Otherwise - return the locale audio track or the first audio track whose language does NOT start with 'ad-' string.
-        // If no such track exists - fall back to the default language selection logic.
-        return (
-          playbackConfig.audioLanguage ||
-          nonAudioDescriptionTrack?.language ||
-          this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio)
-        );
-      }
-    }
+      // If there is a user audio language preference, return it.
+      // Otherwise - return the locale audio track or the first audio track whose language does NOT start with 'ad-' string.
+      // If no such track exists - fall back to the default language selection logic.
+      return playbackConfig.audioLanguage || nonAudioDescriptionTrack?.language || this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio);
+    };
 
-    const currentOrConfiguredAudioLang = getAudioLanguage(playbackConfig.prioritizeAudioDescription);
+    const currentOrConfiguredAudioLang = getAudioLanguage();
 
     if (!playbackConfig.captionsDisplay) {
       this._playbackAttributesState.textLanguage = defaultLanguage;
