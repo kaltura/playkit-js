@@ -1595,11 +1595,11 @@ describe('Player', function () {
 
       it('should override fontSize with fontScale if fontScale is set', () => {
         let textStyle = TextStyle.fromJson({
-          fontScale: 4, // 400%
-          fontSize: '75%'
+          fontScale: 2, // 125%
+          fontSize: '125%'
         });
-        textStyle.fontScale.should.equal(4);
-        textStyle.fontSize.should.equal('400%');
+        textStyle.fontScale.should.equal(2);
+        textStyle.fontSize.should.equal('125%');
       });
 
       it('should change style setting', () => {
@@ -1625,7 +1625,8 @@ describe('Player', function () {
       it('should create fromJson set the correct value', () => {
         const settings = {
           fontEdge: TextStyle.EdgeStyles.NONE,
-          fontSize: '75%',
+          fontSize: '115%',
+          fontWeight: 400,
           fontColor: TextStyle.StandardColors.CYAN,
           fontOpacity: TextStyle.StandardOpacities.TRANSPARENT,
           backgroundOpacity: TextStyle.StandardOpacities.TRANSPARENT,
@@ -1635,6 +1636,7 @@ describe('Player', function () {
         const textStyle = TextStyle.fromJson(settings);
         textStyle.fontEdge.should.deep.equal(settings.fontEdge);
         textStyle.fontSize.should.equal(settings.fontSize);
+        textStyle.fontWeight.should.equal(settings.fontWeight);
         textStyle.fontColor.should.deep.equal(settings.fontColor);
         textStyle.fontOpacity.should.equal(settings.fontOpacity);
         textStyle.backgroundOpacity.should.equal(settings.backgroundOpacity);
@@ -1645,7 +1647,8 @@ describe('Player', function () {
       it('should fromJson return an object equal to explicit set object', () => {
         const settings = {
           fontEdge: TextStyle.EdgeStyles.RAISED,
-          fontSize: '75%',
+          fontSize: '115%',
+          fontWeight: 400,
           fontColor: TextStyle.StandardColors.CYAN,
           fontOpacity: TextStyle.StandardOpacities.SEMI_LOW,
           backgroundOpacity: TextStyle.StandardOpacities.SEMI_LOW,
@@ -1654,7 +1657,8 @@ describe('Player', function () {
         };
         let textStyle = new TextStyle();
         textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
-        textStyle.fontSize = '75%';
+        textStyle.fontSize = '115%';
+        textStyle.fontWeight = 400;
         textStyle.fontColor = TextStyle.StandardColors.CYAN;
         textStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_LOW;
         textStyle.backgroundColor = TextStyle.StandardColors.RED;
@@ -1666,9 +1670,10 @@ describe('Player', function () {
       it('should toJson return same object', () => {
         const settings = {
           fontEdge: TextStyle.EdgeStyles.RAISED,
-          fontSize: '75%',
+          fontSize: '115%',
           textAlign: "default",
-          fontScale: -1,
+          fontScale: 0,
+          fontWeight: 400,
           fontColor: TextStyle.StandardColors.CYAN,
           fontOpacity: TextStyle.StandardOpacities.SEMI_LOW,
           backgroundOpacity: TextStyle.StandardOpacities.SEMI_LOW,
@@ -1677,7 +1682,8 @@ describe('Player', function () {
         };
         let textStyle = new TextStyle();
         textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
-        textStyle.fontSize = '75%';
+        textStyle.fontSize = '115%';
+        textStyle.fontWeight = 400;
         textStyle.fontColor = TextStyle.StandardColors.CYAN;
         textStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_LOW;
         textStyle.backgroundColor = TextStyle.StandardColors.RED;
