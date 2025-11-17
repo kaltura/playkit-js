@@ -266,7 +266,19 @@ const CustomEventType = {
   /**
    * Fired when the source url switched
    */
-  SOURCE_URL_SWITCHED: 'sourceurlswitched'
+  SOURCE_URL_SWITCHED: 'sourceurlswitched',
+  /**
+   * Fired when a new timeline region is parsed and added by the playback engine
+   */
+  TIMELINE_REGION_ADDED: 'timelineregionadded',
+  /**
+   * Fired when a new timeline region entered
+   */
+  TIMELINE_REGION_ENTER: 'timelineregionenter',
+  /**
+   * Fired when a new timeline region exited
+   */
+  TIMELINE_REGION_EXIT: 'timelineregionexit'
 } as const;
 
 const EventType: PKEventTypes = { ...Html5EventType, ...CustomEventType, ...AdEventType};
