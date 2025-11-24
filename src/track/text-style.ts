@@ -32,11 +32,7 @@ class TextStyle {
     ARIAL: 'Arial',
     HELVETICA: 'Helvetica',
     VERDANA: 'Verdana',
-    SANS_SERIF: 'sans-serif',
-    TIMES_NEW_ROMAN: 'Times New Roman',
-    TAHOMA: 'Tahoma',
-    TREBUCHET_MS: 'Trebuchet MS',
-    EB_GARAMOND: 'EB Garamond'
+    SANS_SERIF: 'sans-serif'
   };
 
   /**
@@ -53,10 +49,7 @@ class TextStyle {
     BLUE: [0, 0, 255],
     YELLOW: [255, 255, 0],
     MAGENTA: [255, 0, 255],
-    CYAN: [0, 255, 255],
-    DARK_BLUE: [0, 51, 102],
-    LIGHT_YELLOW: [255, 255, 204],
-    LIGHT_GRAY: [204, 204, 204],
+    CYAN: [0, 255, 255]
   };
 
   /**
@@ -108,36 +101,33 @@ class TextStyle {
   };
 
   /**
-   * Possible font sizes are 100%, 115%, 125%
+   * Possible font sizes are 50%, 75%, 100%, 200%, 300%, 400%
    */
-  public static FontSizes: { label: FontSizeOptions; value: FontScaleOptions; name?: string }[] = [
-
+  public static FontSizes: { label: FontSizeOptions; value: FontScaleOptions }[] = [
+    {
+      value: -2,
+      label: '50%'
+    },
     {
       value: -1,
-      label: '100%',
-      name: 'Small'
+      label: '75%'
     },
     {
       value: 0,
-      label: '115%',
-      name: 'Medium'
+      label: '100%'
     },
     {
       value: 2,
-      label: '125%',
-      name: 'Large'
+      label: '200%'
+    },
+    {
+      value: 3,
+      label: '300%'
+    },
+    {
+      value: 4,
+      label: '400%'
     }
-  ];
-
-
-  /**
-   * Possible font weights are Light, Normal, SemiBold, Bold
-   */
-  public static StandardFontWeights: { label: string; value: number }[] = [
-    { label: 'Light', value: 300 },
-    { label: 'Normal', value: 400 },
-    { label: 'SemiBold', value: 600 },
-    { label: 'Bold', value: 700 }
   ];
 
   /**
@@ -188,7 +178,6 @@ class TextStyle {
     textStyle.backgroundColor = getValue(setting.backgroundColor, textStyle.backgroundColor);
     textStyle.backgroundOpacity = getValue(setting.backgroundOpacity, textStyle.backgroundOpacity);
     textStyle.fontFamily = getValue(setting.fontFamily, textStyle.fontFamily);
-    textStyle.fontWeight = getValue(setting.fontWeight, textStyle.fontWeight);
     return textStyle;
   }
 
@@ -202,29 +191,16 @@ class TextStyle {
       fontOpacity: text.fontOpacity,
       backgroundColor: text.backgroundColor,
       backgroundOpacity: text.backgroundOpacity,
-      fontFamily: text.fontFamily,
-      fontWeight: text.fontWeight,
+      fontFamily: text.fontFamily
     };
   }
 
-  private _fontSizeIndex: number = 1; // 100%
+  private _fontSizeIndex: number = 2; // 100%
 
   public set fontSize(fontSize: string) {
     const index = TextStyle.FontSizes.findIndex(({ label }) => label === fontSize);
     if (index !== -1) {
       this._fontSizeIndex = index;
-    }
-  }
-
-  private _fontWeightIndex: number = 1; // 'Normal'
-
-  public set fontWeight(weight: string | number) {
-    if (typeof weight === 'string') {
-      const index = TextStyle.StandardFontWeights.findIndex(({ label }) => label.toLowerCase() === weight.toLowerCase());
-      this._fontWeightIndex = index !== -1 ? index : 1; // Default 'Normal'
-    } else if (typeof weight === 'number') {
-      const index = TextStyle.StandardFontWeights.findIndex(({ value }) => value === weight);
-      this._fontWeightIndex = index !== -1 ? index : 1; // Default 'Normal'
     }
   }
 
@@ -242,10 +218,6 @@ class TextStyle {
     if (index !== -1) {
       this._fontSizeIndex = index;
     }
-  }
-
-  public get fontWeight(): number {
-    return TextStyle.StandardFontWeights[this._fontWeightIndex].value;
   }
 
   /**
@@ -314,7 +286,6 @@ class TextStyle {
     attributes.push(`background: linear-gradient(0deg, ${TextStyle.toRGBA(this.backgroundColor, this.backgroundOpacity)}, ${TextStyle.toRGBA(this.backgroundColor, this.backgroundOpacity)})`);
     attributes.push('font-size: ' + this.fontSize);
     attributes.push('text-shadow: ' + this.getTextShadow());
-    attributes.push('font-weight: ' + this.fontWeight);
     return attributes.join('!important; ');
   }
 
