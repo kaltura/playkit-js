@@ -108,7 +108,7 @@ class TextStyle {
   };
 
   /**
-    * Possible font sizes are 100%, 115%, 125%   
+    * Possible font sizes are 100%, 115%, 125%
   */
   public static FontSizes: { label: FontSizeOptions; value: FontScaleOptions; name?: string }[] = [
     {
