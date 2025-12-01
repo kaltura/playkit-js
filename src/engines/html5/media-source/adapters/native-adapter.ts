@@ -169,6 +169,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @static
    */
   public static canPlayType(mimeType: string): boolean {
+    if (Env.isChrome) {
+      return false;
+    }
+
     let canPlayType = false;
     if (typeof mimeType === 'string') {
       canPlayType = !!NativeAdapter.TEST_VIDEO.canPlayType(mimeType.toLowerCase());
