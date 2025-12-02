@@ -16,8 +16,7 @@ import type { FairPlayDrmConfigType } from './fairplay-drm-handler';
 import { FairPlayDrmHandler } from './fairplay-drm-handler';
 import { IDrmProtocol, IMediaSourceAdapter, PKABRRestrictionObject, PKDrmConfigObject, PKDrmDataObject, PKMediaSourceObject, PKRequestObject, PKVideoDimensionsObject } from '../../../../types';
 import { FairPlayDrmHandlerV2 } from './fairplay-drm-handler-v2';
-import { MimeType } from '../../../../enums/mime-type';
-
+ 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
 const NUDGE_SEEK_AFTER_FOCUS: number = 0.1;
