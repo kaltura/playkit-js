@@ -169,7 +169,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @static
    */
   public static canPlayType(mimeType: string): boolean {
-    if (!Env.isIOS && Env.isChrome && mimeType === "application/x-mpegURL") {
+    if (mimeType === "application/x-mpegURL" && !Env.isIOS && (Env.isChrome || Env.isEdge) ) {
       return false;
     }
 
