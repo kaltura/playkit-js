@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.34 (2025-12-07)
+
+
+### Bug Fixes
+
+* **FEC-14781:** preferNative hls + specific flavors doesn't show all audio tracks. ([#842](https://github.com/kaltura/playkit-js/issues/842)) ([5e3723f](https://github.com/kaltura/playkit-js/commit/5e3723f4a4d66995349a129b9442ece3d8724d62))
+
 ### 0.84.33 (2025-11-27)
 
 ### 0.84.32 (2025-10-23)
