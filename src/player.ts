@@ -11,7 +11,7 @@ import getLogger, { getLogLevel, LogLevel, LogLevelType, setLogHandler, setLogLe
 import StateManager from './state/state-manager';
 import Track from './track/track';
 import VideoTrack from './track/video-track';
-import AudioTrack, { audioDescriptionTrackHandler } from './track/audio-track';
+import AudioTrack, { audioDescriptionTrackHandler, updateUnknownAudioLanguageTracks } from './track/audio-track';
 import { PKTextTrack } from './track/text-track';
 import TextStyle from './track/text-style';
 import { processCues } from './track/text-track-display';
@@ -1280,16 +1280,16 @@ export default class Player extends FakeEventTarget {
    */
   public getTracks<T extends Track | AudioTrack | PKTextTrack | VideoTrack | ImageTrack>(type?: TrackTypes): T[] {
     switch (type) {
-    case TrackType.VIDEO:
-      return Utils.Object.copyDeep(this._getVideoTracks());
-    case TrackType.AUDIO:
-      return Utils.Object.copyDeep(this._getAudioTracks());
-    case TrackType.TEXT:
-      return Utils.Object.copyDeep(this._getTextTracks());
-    case TrackType.IMAGE:
-      return Utils.Object.copyDeep(this._getImageTracks());
-    default:
-      return Utils.Object.copyDeep(this._tracks);
+      case TrackType.VIDEO:
+        return Utils.Object.copyDeep(this._getVideoTracks());
+      case TrackType.AUDIO:
+        return Utils.Object.copyDeep(this._getAudioTracks());
+      case TrackType.TEXT:
+        return Utils.Object.copyDeep(this._getTextTracks());
+      case TrackType.IMAGE:
+        return Utils.Object.copyDeep(this._getImageTracks());
+      default:
+        return Utils.Object.copyDeep(this._tracks);
     }
   }
 
@@ -2547,6 +2547,8 @@ export default class Player extends FakeEventTarget {
       audioDescriptionTrackHandler(tracks, this._sources.metadata?.audioFlavors);
     }
 
+    updateUnknownAudioLanguageTracks(tracks);
+
     this._tracks = tracks?.concat(this._externalCaptionsHandler.getExternalTracks(tracks));
     this._applyABRRestriction(this._config);
     this._addTextTrackOffOption();
@@ -2876,15 +2878,15 @@ export default class Player extends FakeEventTarget {
           return;
         }
         switch (callbackType) {
-        case LabelOptions.QUALITIES:
-          this._setTracksCustomLabels(this._getVideoTracks(), customLabels[callbackType]);
-          break;
-        case LabelOptions.AUDIO:
-          this._setTracksCustomLabels(this._getAudioTracks(), customLabels[callbackType]);
-          break;
-        case LabelOptions.CAPTIONS:
-          this._setTracksCustomLabels(this._getTextTracks(), customLabels[callbackType]);
-          break;
+          case LabelOptions.QUALITIES:
+            this._setTracksCustomLabels(this._getVideoTracks(), customLabels[callbackType]);
+            break;
+          case LabelOptions.AUDIO:
+            this._setTracksCustomLabels(this._getAudioTracks(), customLabels[callbackType]);
+            break;
+          case LabelOptions.CAPTIONS:
+            this._setTracksCustomLabels(this._getTextTracks(), customLabels[callbackType]);
+            break;
         }
       }
     }
