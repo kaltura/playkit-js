@@ -59,7 +59,7 @@
   "Live": {
     "hls": [
       {
-        "mimetype": "application/x-mpegurl",
+        "mimetype": "application/x-mpegURL",
         "url": "http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8"
       }
     ]
