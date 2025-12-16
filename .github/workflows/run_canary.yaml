@@ -7,6 +7,7 @@ on:
     branches:
       - master
       - patch-version
+      - ad-custom-canary-12-2025
     paths-ignore:
       - '.github/workflows/**'
 
