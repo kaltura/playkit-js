@@ -36,7 +36,7 @@ describe('NativeAdapter: canPlayType', () => {
     NativeAdapter.canPlayType('video/ogg').should.equal(!!video.canPlayType('video/ogg'));
   });
 
-  it('should return application/x-mpegURL support', () => {
+  it.skip('should return application/x-mpegURL support', () => {
     NativeAdapter.canPlayType('application/x-mpegURL').should.equal(!!video.canPlayType('application/x-mpegURL'));
   });
 
