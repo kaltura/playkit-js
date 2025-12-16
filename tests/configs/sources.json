@@ -60,7 +60,7 @@
     "hls": [
       {
         "mimetype": "application/x-mpegurl",
-        "url": "https://storage.googleapis.com/shaka-live-assets/player-source.m3u8"
+        "url": "https://samson.streamerr.co:8081/carinatv/tracks-v1a1/playlist.m3u8"
       }
     ]
   }
