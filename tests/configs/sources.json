@@ -60,7 +60,7 @@
     "hls": [
       {
         "mimetype": "application/x-mpegurl",
-        "url": "https://samson.streamerr.co:8081/carinatv/tracks-v1a1/playlist.m3u8"
+        "url": "http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8"
       }
     ]
   }
