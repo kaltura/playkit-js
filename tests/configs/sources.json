@@ -59,8 +59,8 @@
   "Live": {
     "hls": [
       {
-        "mimetype": "application/x-mpegurl",
-        "url": "http://wms.shared.streamshow.it/carinatv/carinatv/playlist.m3u8"
+        "mimetype": "application/x-mpegURL",
+        "url": "http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8"
       }
     ]
   }
