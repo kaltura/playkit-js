@@ -1037,7 +1037,7 @@ function processCues(window, cues, overlay, style) {
     dimensionSize = containerBox.height < containerBox.width ? containerBox.height : containerBox.width,
     fontSize = Math.round(dimensionSize * FONT_SIZE_PERCENT * 100) / 100;
   let styleOptions = {
-    font: fontSize * fontScale * style.implicitFontScale + 'px ' + style.fontFamily,
+    font: style.fontWeight + ' ' + fontSize * fontScale * style.implicitFontScale + 'px ' + style.fontFamily,
     textAlign: style.textAlign,
     color: TextStyle.toRGBA(style.fontColor, style.fontOpacity),
     backgroundColor: TextStyle.toRGBA(style.backgroundColor, style.backgroundOpacity),
