@@ -1,3 +1,4 @@
+import { audioLanguageMapping } from '../utils/audio-language-mapping';
 import Track from './track';
 
 enum FlavorAssetTags {
@@ -9,6 +10,8 @@ export enum AudioTrackKind {
   MAIN = 'main',
   DESCRIPTION = 'description'
 }
+
+const UNKNOWN_LANGUAGE_CODE = 'un';
 
 /**
  * Audio track representation of the player.
@@ -71,6 +74,16 @@ export function audioDescriptionTrackHandler(tracks: Track[], audioFlavors?: Arr
       }
     });
   }
+}
+
+export function updateUnknownAudioLanguageTracks(tracks: Track[]): void {
+  tracks.forEach((track) => {
+    if (track instanceof AudioTrack) {
+      if (track.language.toLowerCase() === UNKNOWN_LANGUAGE_CODE && track.label) {
+        track.language = audioLanguageMapping[track.label];
+      }
+    }
+  });
 }
 
 export default AudioTrack;
