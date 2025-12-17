@@ -226,7 +226,7 @@ class TextStyle {
     }
   }
 
-  public textAlign: FontAlignmentOptions = TextStyle.FontAlignment[2].value;
+  public textAlign: FontAlignmentOptions = TextStyle.FontAlignment[0].value;
 
   /**
    * Percentage string matching a FontSizes entry
@@ -256,7 +256,7 @@ class TextStyle {
   /**
    * @type {TextStyle.FontFamily}
    */
-  public fontFamily: string = TextStyle.FontFamily.VERDANA;
+  public fontFamily: string = TextStyle.FontFamily.SANS_SERIF;
 
   /**
    * @type {TextStyle.StandardColors}
@@ -277,7 +277,7 @@ class TextStyle {
   /**
    * @type {TextStyle.StandardOpacities}
    */
-  public backgroundOpacity: number = TextStyle.StandardOpacities.SEMI_HIGH;
+  public backgroundOpacity: number = TextStyle.StandardOpacities.OPAQUE;
 
   /**
    * @type {TextStyle.EdgeStyles}

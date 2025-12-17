@@ -1671,7 +1671,7 @@ describe('Player', function () {
         const settings = {
           fontEdge: TextStyle.EdgeStyles.RAISED,
           fontSize: '112.5%',
-          textAlign: TextStyle.FontAlignment[2].value,
+          textAlign: "default",
           fontScale: 0,
           fontWeight: 400,
           fontColor: TextStyle.StandardColors.CYAN,
