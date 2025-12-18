@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.35 (2025-12-18)
+
+
+### Bug Fixes
+
+* **FEC-14814:** Switching between unidentify audio language to another doesn't work properly ([#849](https://github.com/kaltura/playkit-js/issues/849)) ([ce1b8d4](https://github.com/kaltura/playkit-js/commit/ce1b8d46b76d566c6a8f8226bf2a1a7f9dec481a))
+
 ### 0.84.34 (2025-12-07)
 
 
