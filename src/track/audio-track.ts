@@ -79,7 +79,7 @@ export function audioDescriptionTrackHandler(tracks: Track[], audioFlavors?: Arr
 export function updateUnknownAudioLanguageTracks(tracks: Track[]): void {
   tracks.forEach((track) => {
     if (track instanceof AudioTrack) {
-      if (track.language.toLowerCase() === UNKNOWN_LANGUAGE_CODE && track.label) {
+      if (track.label && track.language?.toLowerCase() === UNKNOWN_LANGUAGE_CODE) {
         track.language = audioLanguageMapping[track.label];
       }
     }
