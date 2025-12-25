@@ -502,7 +502,7 @@ export default class Player extends FakeEventTarget {
    * @param {string | Array<{value: string; language?: string}>} field - The field that can be string or array
    * @returns {string} - The extracted string value
    */
-  private extractMetadataValue = (field: string | Array<{value: string; language?: string}> | undefined): string => {
+  private extractMetadataStringValue = (field: string | Array<{value: string; language?: string}> | undefined): string => {
     if (!field) {
       return '';
     }
@@ -537,10 +537,10 @@ export default class Player extends FakeEventTarget {
     const processedMetadata = {...metadata};
 
     if (metadata.name !== undefined) {
-      processedMetadata.name = this.extractMetadataValue(metadata.name);
+      processedMetadata.name = this.extractMetadataStringValue(metadata.name);
     }
     if (metadata.description !== undefined) {
-      processedMetadata.description = this.extractMetadataValue(metadata.description);
+      processedMetadata.description = this.extractMetadataStringValue(metadata.description);
     }
 
     return processedMetadata;
