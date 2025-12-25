@@ -537,9 +537,13 @@ export default class Player extends FakeEventTarget {
     const processedMetadata = {...metadata};
 
     if (metadata.name !== undefined) {
+      // store the original value
+      processedMetadata.multiLingualName = metadata.name;
       processedMetadata.name = this.extractMetadataStringValue(metadata.name);
     }
     if (metadata.description !== undefined) {
+      // store the original value
+      processedMetadata.multiLingualDescription = metadata.description;
       processedMetadata.description = this.extractMetadataStringValue(metadata.description);
     }
 

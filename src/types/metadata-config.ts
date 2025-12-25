@@ -7,4 +7,6 @@ export type PKMetadataConfigObject = {
   epgId?: string,
   recordingId?: string
   audioFlavors?: Array<any>,
+  multiLingualName?: string | Array<any>;
+  multiLingualDescription?: string | Array<any>;
 };
