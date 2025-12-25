@@ -3,7 +3,7 @@ import { EventManager } from './event/event-manager';
 import PosterManager from './utils/poster-manager';
 import { FakeEvent } from './event/fake-event';
 import { FakeEventTarget } from './event/fake-event-target';
-import { IEngine, IEngineStatic, LoggerLevels } from './types';
+import {IEngine, IEngineStatic, LoggerLevels} from './types';
 import { CustomEventType, EventType, Html5EventType } from './event/event-type';
 import * as Utils from './utils/util';
 import Locale from './utils/locale';
@@ -497,16 +497,69 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Utility function to handle string or array format for metadata fields
+   * If the field is an array, it first tries to find an item with English language, otherwise it extracts the first item's value property
+   * @param {string | Array<{value: string; language?: string}>} field - The field that can be string or array
+   * @returns {string} - The extracted string value
+   */
+  private extractMetadataValue = (field: string | Array<{value: string; language?: string}> | undefined): string => {
+    if (!field) {
+      return '';
+    }
+    if (typeof field === 'string') {
+      return field;
+    }
+    if (Array.isArray(field) && field.length > 0) {
+      // prioritize item with 'en' language
+      const englishItem = field.find(item => item.language?.toLowerCase() === 'en');
+      if (englishItem?.value) {
+        return englishItem.value;
+      }
+      // fallback to the first item with a value
+      if (field[0].value) {
+        return field[0].value;
+      }
+    }
+    return '';
+  };
+
+  /**
+   * Process expected metadata string fields that might be an array/object
+   * @param {PKMetadataConfigObject} metadata - The metadata to process
+   * @returns {PKMetadataConfigObject} - The processed metadata
+   * @private
+   */
+  private _processMetadataFields(metadata: PKMetadataConfigObject): PKMetadataConfigObject {
+    if (!metadata) {
+      return metadata;
+    }
+
+    const processedMetadata = {...metadata};
+
+    if (metadata.name !== undefined) {
+      processedMetadata.name = this.extractMetadataValue(metadata.name);
+    }
+    if (metadata.description !== undefined) {
+      processedMetadata.description = this.extractMetadataValue(metadata.description);
+    }
+
+    return processedMetadata;
+  }
+
+  /**
    * Configures the player metadata according to a given configuration.
    * @param {PKMetadataConfigObject} sourcesMetadata - The sources metadata for the player instance.
    * @returns {void}
    */
+
   public setSourcesMetadata(sourcesMetadata: PKMetadataConfigObject): void {
     if (this._sources) {
       if (!this._sources.metadata) {
         this._sources.metadata = {};
       }
-      Utils.Object.mergeDeep(this._sources.metadata, sourcesMetadata);
+
+      const processedMetadata = this._processMetadataFields(sourcesMetadata);
+      Utils.Object.mergeDeep(this._sources.metadata, processedMetadata);
     }
   }
 
@@ -516,9 +569,16 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   public setSources(sources: PKSourcesConfigObject): void {
-    if (this._hasSources(sources)) {
+    // process metadata fields if they exist in sources
+    const processedSources = {...sources};
+
+    if (processedSources.metadata) {
+      processedSources.metadata = this._processMetadataFields(processedSources.metadata);
+    }
+
+    if (this._hasSources(processedSources)) {
       this.reset();
-      Utils.Object.mergeDeep(this._sources, sources);
+      Utils.Object.mergeDeep(this._sources, processedSources);
       this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
       Player._logger.debug('Change source started');
       this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
@@ -540,7 +600,7 @@ export default class Player extends FakeEventTarget {
         );
       }
     } else {
-      Utils.Object.mergeDeep(this._sources, sources);
+      Utils.Object.mergeDeep(this._sources, processedSources);
     }
   }
 
