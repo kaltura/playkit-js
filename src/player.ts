@@ -546,6 +546,11 @@ export default class Player extends FakeEventTarget {
       processedMetadata.multiLingualDescription = metadata.description;
       processedMetadata.description = this.extractMetadataStringValue(metadata.description);
     }
+    if (metadata.tags !== undefined) {
+      // store the original value
+      processedMetadata.multiLingualTags = metadata.tags;
+      processedMetadata.tags = this.extractMetadataStringValue(metadata.tags);
+    }
 
     return processedMetadata;
   }

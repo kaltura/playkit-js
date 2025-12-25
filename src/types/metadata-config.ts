@@ -3,10 +3,11 @@ export type PKMetadataConfigObject = {
   description?: string,
   mediaType?: string,
   metas?: Object,
-  tags?: Object,
+  tags?: string,
   epgId?: string,
   recordingId?: string
   audioFlavors?: Array<any>,
   multiLingualName?: string | Array<any>;
   multiLingualDescription?: string | Array<any>;
+  multiLingualTags?: string | Array<any>;
 };
