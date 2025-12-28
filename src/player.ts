@@ -510,7 +510,12 @@ export default class Player extends FakeEventTarget {
       return field;
     }
     if (Array.isArray(field) && field.length > 0) {
-      // prioritize item with 'en' language
+      // prioritize item with locale language
+      const localeItem = field.find(item => item.language?.toLowerCase() === this?.config?.ui?.locale);
+      if (localeItem?.value) {
+        return localeItem.value;
+      }
+      // if no locale language or locale language does not included in the array - prioritize item with 'en' language
       const englishItem = field.find(item => item.language?.toLowerCase() === 'en');
       if (englishItem?.value) {
         return englishItem.value;
