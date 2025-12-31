@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.36 (2025-12-31)
+
+
+### Bug Fixes
+
+* **FEC-14836:** Live entry with low latency doesn’t play. ([#851](https://github.com/kaltura/playkit-js/issues/851)) ([79e9d18](https://github.com/kaltura/playkit-js/commit/79e9d18c9c98bbf8043535839bfa05b8141ea6a5))
+
 ### 0.84.35 (2025-12-18)
 
 
