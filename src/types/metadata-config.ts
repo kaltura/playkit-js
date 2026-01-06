@@ -3,7 +3,7 @@ export type PKMetadataConfigObject = {
   description?: string,
   mediaType?: string,
   metas?: Object,
-  tags?: Object,
+  tags?: string,
   epgId?: string,
   recordingId?: string
   audioFlavors?: Array<any>,
