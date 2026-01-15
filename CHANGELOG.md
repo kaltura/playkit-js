@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.37 (2026-01-15)
+
+
+### Bug Fixes
+
+* **SUP-51058:** Random black lines appearing on border of spotlight video ([#854](https://github.com/kaltura/playkit-js/issues/854)) ([249bede](https://github.com/kaltura/playkit-js/commit/249bede415bf7b028c1537a02b1afb40def32715))
+
 ### 0.84.36 (2025-12-31)
 
 
