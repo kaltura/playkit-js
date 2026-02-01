@@ -49,6 +49,7 @@
   "dependencies": {
     "@playkit-js/webpack-common": "^1.0.3",
     "js-logger": "^1.6.0",
+    "playkit-prettier-config": "^1.0.0",
     "ua-parser-js": "^1.0.36"
   },
   "devDependencies": {
