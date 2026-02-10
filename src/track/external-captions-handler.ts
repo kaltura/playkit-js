@@ -363,9 +363,6 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     // Find where the parameters start
     const indexPhpPos = segments.indexOf('index.php');
 
-    // If index.php isn't found, we return the original or handle error
-    if (indexPhpPos === -1) return { baseUrl: urlTarget, params: {} };
-
     // The base URL ends at index.php
     const baseSegments = segments.slice(0, indexPhpPos + 1);
     const paramSegments = segments.slice(indexPhpPos + 1);
