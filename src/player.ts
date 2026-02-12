@@ -1257,6 +1257,13 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  public shouldAddTextTrack(): boolean {
+    if (this._engine && typeof this._engine.shouldAddTextTrack === 'function') {
+      return true;
+    }
+    return false;
+  }
+
   /**
    * Get the start time of DVR window in live playback in seconds.
    * @returns {Number} - start time of DVR window.
