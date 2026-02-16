@@ -341,18 +341,97 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         this._textTrackModel[textTrack.language].cuesStatus = CuesStatus.NOT_DOWNLOADED;
         reject(new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNKNOWN_FILE_TYPE, {captionType: captionType}));
       }
-      Utils.Http.execute(track.url, {}, 'GET')
-        .then(response => {
-          resolve(captionType === SRT_POSTFIX ? this._convertSrtToVtt(response) : response);
-        })
-        .catch(() => {
+
+      this._downloadCaptionByUrl(track.url, captionType)
+        .then(response => resolve(response))
+        .catch((error) => {
           this._textTrackModel[textTrack.language].cuesStatus = CuesStatus.NOT_DOWNLOADED;
-          reject(
-            new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.HTTP_ERROR, {
-              url: track.url
-            })
-          );
+          reject(error);
         });
+    });
+  }
+
+
+  /**
+   * Rebuilds a URL by stripping everything after index.php
+   * and converting those segments into a params object.
+   */
+  private rebuildKalturaUrl(urlTarget: string) {
+    const url = new URL(urlTarget);
+    const segments = url.pathname.split('/').filter(Boolean);
+
+    // Find where the parameters start
+    const indexPhpPos = segments.indexOf('index.php');
+
+    // The base URL ends at index.php
+    const baseSegments = segments.slice(0, indexPhpPos + 1);
+    const paramSegments = segments.slice(indexPhpPos + 1);
+
+    const params: Record<string, string> = {};
+
+    // Map segments to key:value pairs
+    for (let i = 0; i < paramSegments.length; i += 2) {
+      const key = paramSegments[i];
+      const value = paramSegments[i + 1];
+      if (key) {
+        // If there's no trailing value for a key, we set it to an empty string
+        params[key] = value ? decodeURIComponent(value) : '';
+      }
+    }
+
+    return {
+      baseUrl: `${url.origin}/${baseSegments.join('/')}`,
+      params: params
+    };
+  }
+  /**
+   * Downloads caption content by URL. If the URL contains /ks/ parameter,
+   * it will be extracted and sent as a POST request in the body.
+   * Otherwise, a GET request is made.
+   * @param {string} url - The caption URL
+   * @param {string} captionType - The caption type (srt or vtt)
+   * @returns {Promise<string>} - Resolves with the caption content (converted to VTT if needed)
+   * @private
+   */
+  private _downloadCaptionByUrl(url: string, captionType: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      // Shared response handler
+      const handleResponse = (response: string): void => {
+        resolve(captionType === SRT_POSTFIX ? this._convertSrtToVtt(response) : response);
+      };
+
+      // Shared error handler
+      const handleError = (requestUrl: string): void => {
+        reject(
+          new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.HTTP_ERROR, {
+            url: requestUrl
+          })
+        );
+      };
+
+      // Check if this is a Kaltura caption URL
+      const isKalturaUrl = url.includes('api_v3/index.php');
+
+      if (isKalturaUrl) {
+        // Kaltura URL: rebuild it and send as POST with JSON body
+        const {baseUrl, params} = this.rebuildKalturaUrl(url);
+        ExternalCaptionsHandler._logger.debug('Downloading Kaltura caption via POST from URL:', baseUrl, 'with params:', params);
+
+        // Convert params object to JSON string for POST request
+        const body = JSON.stringify(params);
+        const headers = new Map<string, string>();
+        headers.set('Content-Type', 'application/json');
+
+        Utils.Http.execute(baseUrl, body, 'POST', headers)
+          .then(handleResponse)
+          .catch(() => handleError(baseUrl));
+      } else {
+        // Regular caption URL: do a normal GET request
+        ExternalCaptionsHandler._logger.debug('Downloading caption via GET from URL:', url);
+        Utils.Http.execute(url, {}, 'GET')
+          .then(handleResponse)
+          .catch(() => handleError(url));
+      }
     });
   }
 
