@@ -403,15 +403,15 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         // Return base URL up to and including index.php
         return {
           baseUrl: `${url.origin}/${baseSegments.join('/')}`,
-          params: params
+          params
         };
       }
 
       // For non-Kaltura URLs or URLs without path parameters, return full URL and query params
       const baseUrl = url.origin + url.pathname;
       return {
-        baseUrl: baseUrl,
-        params: params
+        baseUrl,
+        params
       };
     } catch (error) {
       ExternalCaptionsHandler._logger.error('Failed to parse URL:', urlString, error);
@@ -420,10 +420,10 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     }
   }
   /**
-   * Downloads caption content by URL.
-   * If config.text.usePostForCaption is enabled, it will extract URL parameters and send them
-   * as a POST request with JSON body. Otherwise, it uses a standard GET request.
-   *
+   * Downloads caption content by URL. 
+   * If its Kaltura captions URL (contains 'api_v3/index.php') -
+   * the URL will be rebuilt and the parameters will be extracted and sent as a POST request in the body.
+   * Otherwise, a GET request is made.
    * @param {string} url - The caption URL
    * @param {string} captionType - The caption type (srt or vtt)
    * @returns {Promise<string>} - Resolves with the caption content (converted to VTT if needed)
