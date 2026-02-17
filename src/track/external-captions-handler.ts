@@ -353,44 +353,77 @@ class ExternalCaptionsHandler extends FakeEventTarget {
 
 
   /**
-   * Rebuilds a URL by stripping everything after index.php
-   * and converting those segments into a params object.
+   * Extracts query parameters and path parameters from a URL.
+   * Combines both URL query parameters and path-based parameters (e.g., /key1/value1/key2/value2)
+   * into a single params object for use in POST request body.
+   *
+   * For Kaltura API URLs with format: .../index.php/key1/value1/key2/value2?query=param
+   * It extracts both path segments after index.php and existing query parameters.
+   *
+   * @param {string} urlString - The URL to parse
+   * @returns {{ baseUrl: string, params: Record<string, string> }} - Object with base URL and extracted parameters
+   * @private
    */
-  private rebuildKalturaUrl(urlTarget: string) {
-    const url = new URL(urlTarget);
-    const segments = url.pathname.split('/').filter(Boolean);
+  private _extractUrlParameters(urlString: string): { baseUrl: string, params: Record<string, string> } {
+    try {
+      const url = new URL(urlString);
+      const params: Record<string, string> = {};
 
-    // Find where the parameters start
-    const indexPhpPos = segments.indexOf('index.php');
+      // Extract existing query parameters
+      url.searchParams.forEach((value, key) => {
+        params[key] = value;
+      });
 
-    // If index.php isn't found, we return the original or handle error
-    if (indexPhpPos === -1) return { baseUrl: urlTarget, params: {} };
+      // Check if this is a Kaltura API URL with path-based parameters
+      const segments = url.pathname.split('/').filter(Boolean);
+      const indexPhpPos = segments.indexOf('index.php');
 
-    // The base URL ends at index.php
-    const baseSegments = segments.slice(0, indexPhpPos + 1);
-    const paramSegments = segments.slice(indexPhpPos + 1);
+      if (indexPhpPos !== -1 && indexPhpPos < segments.length - 1) {
+        // Extract path segments after index.php as key/value pairs
+        const paramSegments = segments.slice(indexPhpPos + 1);
+        const baseSegments = segments.slice(0, indexPhpPos + 1);
 
-    const params: Record<string, string> = {};
+        for (let i = 0; i < paramSegments.length; i += 2) {
+          const encodedKey = paramSegments[i];
+          const encodedValue = paramSegments[i + 1];
 
-    // Map segments to key:value pairs
-    for (let i = 0; i < paramSegments.length; i += 2) {
-      const key = paramSegments[i];
-      const value = paramSegments[i + 1];
-      if (key) {
-        // If there's no trailing value for a key, we set it to an empty string
-        params[key] = value ? decodeURIComponent(value) : '';
+          if (encodedKey) {
+            try {
+              const key = decodeURIComponent(encodedKey);
+              const value = encodedValue ? decodeURIComponent(encodedValue) : '';
+              params[key] = value;
+            } catch (error) {
+              // If decoding fails, log warning and use original values
+              ExternalCaptionsHandler._logger.warn('Failed to decode URL parameter:', encodedKey, encodedValue, error);
+              params[encodedKey] = encodedValue || '';
+            }
+          }
+        }
+
+        // Return base URL up to and including index.php
+        return {
+          baseUrl: `${url.origin}/${baseSegments.join('/')}`,
+          params: params
+        };
       }
-    }
 
-    return {
-      baseUrl: `${url.origin}/${baseSegments.join('/')}`,
-      params: params
-    };
+      // For non-Kaltura URLs or URLs without path parameters, return full URL and query params
+      const baseUrl = url.origin + url.pathname;
+      return {
+        baseUrl: baseUrl,
+        params: params
+      };
+    } catch (error) {
+      ExternalCaptionsHandler._logger.error('Failed to parse URL:', urlString, error);
+      // Return original URL with empty params on error
+      return { baseUrl: urlString, params: {} };
+    }
   }
   /**
-   * Downloads caption content by URL. If the URL contains /ks/ parameter,
-   * it will be extracted and sent as a POST request in the body.
-   * Otherwise, a GET request is made.
+   * Downloads caption content by URL.
+   * If config.text.usePostForCaption is enabled, it will extract URL parameters and send them
+   * as a POST request with JSON body. Otherwise, it uses a standard GET request.
+   *
    * @param {string} url - The caption URL
    * @param {string} captionType - The caption type (srt or vtt)
    * @returns {Promise<string>} - Resolves with the caption content (converted to VTT if needed)
@@ -398,13 +431,16 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    */
   private _downloadCaptionByUrl(url: string, captionType: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      // Shared response handler
+      // Shared response handler - converts SRT to VTT if needed
       const handleResponse = (response: string): void => {
         resolve(captionType === SRT_POSTFIX ? this._convertSrtToVtt(response) : response);
       };
 
       // Shared error handler
-      const handleError = (requestUrl: string): void => {
+      const handleError = (requestUrl: string, error?: any): void => {
+        if (error) {
+          ExternalCaptionsHandler._logger.error('Failed to download caption from:', requestUrl, error);
+        }
         reject(
           new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.HTTP_ERROR, {
             url: requestUrl
@@ -412,28 +448,27 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         );
       };
 
-      // Check if this is a Kaltura caption URL
-      const isKalturaUrl = url.includes('api_v3/index.php');
+      // Check configuration flag to determine request method
+      const usePostForCaption = this._player.config.text.usePostForCaption;
 
-      if (isKalturaUrl) {
-        // Kaltura URL: rebuild it and send as POST with JSON body
-        const {baseUrl, params} = this.rebuildKalturaUrl(url);
-        ExternalCaptionsHandler._logger.debug('Downloading Kaltura caption via POST from URL:', baseUrl, 'with params:', params);
+      if (usePostForCaption) {
+        // POST mode: extract parameters from URL and send as JSON body
+        const {baseUrl, params} = this._extractUrlParameters(url);
+        ExternalCaptionsHandler._logger.debug('Downloading caption via POST from URL:', baseUrl, 'with params:', params);
 
-        // Convert params object to JSON string for POST request
         const body = JSON.stringify(params);
         const headers = new Map<string, string>();
         headers.set('Content-Type', 'application/json');
 
         Utils.Http.execute(baseUrl, body, 'POST', headers)
           .then(handleResponse)
-          .catch(() => handleError(baseUrl));
+          .catch((error) => handleError(baseUrl, error));
       } else {
-        // Regular caption URL: do a normal GET request
+        // GET mode (default): standard GET request with URL as-is
         ExternalCaptionsHandler._logger.debug('Downloading caption via GET from URL:', url);
         Utils.Http.execute(url, {}, 'GET')
           .then(handleResponse)
-          .catch(() => handleError(url));
+          .catch((error) => handleError(url, error));
       }
     });
   }
