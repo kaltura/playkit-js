@@ -341,18 +341,135 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         this._textTrackModel[textTrack.language].cuesStatus = CuesStatus.NOT_DOWNLOADED;
         reject(new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNKNOWN_FILE_TYPE, {captionType: captionType}));
       }
-      Utils.Http.execute(track.url, {}, 'GET')
-        .then(response => {
-          resolve(captionType === SRT_POSTFIX ? this._convertSrtToVtt(response) : response);
-        })
-        .catch(() => {
+
+      this._downloadCaptionByUrl(track.url, captionType)
+        .then(response => resolve(response))
+        .catch((error) => {
           this._textTrackModel[textTrack.language].cuesStatus = CuesStatus.NOT_DOWNLOADED;
-          reject(
-            new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.HTTP_ERROR, {
-              url: track.url
-            })
-          );
+          reject(error);
         });
+    });
+  }
+
+
+  /**
+   * Extracts query parameters and path parameters from a URL.
+   * Combines both URL query parameters and path-based parameters (e.g., /key1/value1/key2/value2)
+   * into a single params object for use in POST request body.
+   *
+   * For Kaltura API URLs with format: .../index.php/key1/value1/key2/value2?query=param
+   * It extracts both path segments after index.php and existing query parameters.
+   *
+   * @param {string} urlString - The URL to parse
+   * @returns {{ baseUrl: string, params: Record<string, string> }} - Object with base URL and extracted parameters
+   * @private
+   */
+  private _extractUrlParameters(urlString: string): { baseUrl: string, params: Record<string, string> } {
+    try {
+      const url = new URL(urlString);
+      const params: Record<string, string> = {};
+
+      // Extract existing query parameters
+      url.searchParams.forEach((value, key) => {
+        params[key] = value;
+      });
+
+      // Check if this is a Kaltura API URL with path-based parameters
+      const segments = url.pathname.split('/').filter(Boolean);
+      const indexPhpPos = segments.indexOf('index.php');
+
+      if (indexPhpPos !== -1 && indexPhpPos < segments.length - 1) {
+        // Extract path segments after index.php as key/value pairs
+        const paramSegments = segments.slice(indexPhpPos + 1);
+        const baseSegments = segments.slice(0, indexPhpPos + 1);
+
+        for (let i = 0; i < paramSegments.length; i += 2) {
+          const encodedKey = paramSegments[i];
+          const encodedValue = paramSegments[i + 1];
+
+          if (encodedKey) {
+            try {
+              const key = decodeURIComponent(encodedKey);
+              const value = encodedValue ? decodeURIComponent(encodedValue) : '';
+              params[key] = value;
+            } catch (error) {
+              // If decoding fails, log warning and use original values
+              ExternalCaptionsHandler._logger.warn('Failed to decode URL parameter:', encodedKey, encodedValue, error);
+              params[encodedKey] = encodedValue || '';
+            }
+          }
+        }
+
+        // Return base URL up to and including index.php
+        return {
+          baseUrl: `${url.origin}/${baseSegments.join('/')}`,
+          params
+        };
+      }
+
+      // For non-Kaltura URLs or URLs without path parameters, return full URL and query params
+      const baseUrl = url.origin + url.pathname;
+      return {
+        baseUrl,
+        params
+      };
+    } catch (error) {
+      ExternalCaptionsHandler._logger.error('Failed to parse URL:', urlString, error);
+      // Return original URL with empty params on error
+      return { baseUrl: urlString, params: {} };
+    }
+  }
+  /**
+   * Downloads caption content by URL.
+   * If its Kaltura captions URL (contains 'api_v3/index.php') -
+   * the URL will be rebuilt and the parameters will be extracted and sent as a POST request in the body.
+   * Otherwise, a GET request is made.
+   * @param {string} url - The caption URL
+   * @param {string} captionType - The caption type (srt or vtt)
+   * @returns {Promise<string>} - Resolves with the caption content (converted to VTT if needed)
+   * @private
+   */
+  private _downloadCaptionByUrl(url: string, captionType: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      // Shared response handler - converts SRT to VTT if needed
+      const handleResponse = (response: string): void => {
+        resolve(captionType === SRT_POSTFIX ? this._convertSrtToVtt(response) : response);
+      };
+
+      // Shared error handler
+      const handleError = (requestUrl: string, error?: any): void => {
+        if (error) {
+          ExternalCaptionsHandler._logger.error('Failed to download caption from:', requestUrl, error);
+        }
+        reject(
+          new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.HTTP_ERROR, {
+            url: requestUrl
+          })
+        );
+      };
+
+      // Check configuration flag to determine request method
+      const usePostForCaption = this._player.config.text.usePostForCaption;
+
+      if (usePostForCaption) {
+        // POST mode: extract parameters from URL and send as JSON body
+        const {baseUrl, params} = this._extractUrlParameters(url);
+        ExternalCaptionsHandler._logger.debug('Downloading caption via POST from URL:', baseUrl, 'with params:', params);
+
+        const body = JSON.stringify(params);
+        const headers = new Map<string, string>();
+        headers.set('Content-Type', 'application/json');
+
+        Utils.Http.execute(baseUrl, body, 'POST', headers)
+          .then(handleResponse)
+          .catch((error) => handleError(baseUrl, error));
+      } else {
+        // GET mode (default): standard GET request with URL as-is
+        ExternalCaptionsHandler._logger.debug('Downloading caption via GET from URL:', url);
+        Utils.Http.execute(url, {}, 'GET')
+          .then(handleResponse)
+          .catch((error) => handleError(url, error));
+      }
     });
   }
 

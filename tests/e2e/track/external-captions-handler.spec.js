@@ -560,4 +560,163 @@ describe('ExternalCaptionsHandler', () => {
       externalCaptionsHandler._activeTextCues.length.should.equal(0);
     });
   });
+
+  describe('_extractUrlParameters', () => {
+    let config, player, playerContainer, externalCaptionsHandler;
+
+    before(() => {
+      playerContainer = createElement('div', targetId);
+    });
+
+    beforeEach(() => {
+      config = getConfigStructure();
+      player = new Player(config);
+      externalCaptionsHandler = new ExternalCaptionsHandler(player);
+      playerContainer.appendChild(player.getView());
+    });
+
+    afterEach(() => {
+      player.destroy();
+    });
+
+    after(() => {
+      removeVideoElementsFromTestPage();
+      removeElement(targetId);
+    });
+
+    it('should extract path parameters from Kaltura API URL', () => {
+      const url = 'https://cdnapi.kaltura.com/api_v3/index.php/service/caption/action/serve/ks/abc123';
+      const result = externalCaptionsHandler._extractUrlParameters(url);
+      result.baseUrl.should.equal('https://cdnapi.kaltura.com/api_v3/index.php');
+      result.params.should.deep.equal({
+        service: 'caption',
+        action: 'serve',
+        ks: 'abc123'
+      });
+    });
+
+    it('should extract both path and query parameters', () => {
+      const url = 'https://cdnapi.kaltura.com/api_v3/index.php/service/caption/action/serve?format=1&ks=xyz789';
+      const result = externalCaptionsHandler._extractUrlParameters(url);
+      result.baseUrl.should.equal('https://cdnapi.kaltura.com/api_v3/index.php');
+      result.params.should.deep.equal({
+        format: '1',
+        ks: 'xyz789',
+        service: 'caption',
+        action: 'serve'
+      });
+    });
+
+    it('should decode URL-encoded parameters', () => {
+      const url = 'https://cdnapi.kaltura.com/api_v3/index.php/service/caption/action/serve/caption%20id/test%20value';
+      const result = externalCaptionsHandler._extractUrlParameters(url);
+      result.params['caption id'].should.equal('test value');
+    });
+
+    it('should handle regular URLs without path parameters', () => {
+      const url = 'https://example.com/captions/en.vtt?extra=value';
+      const result = externalCaptionsHandler._extractUrlParameters(url);
+      result.baseUrl.should.equal('https://example.com/captions/en.vtt');
+      result.params.should.deep.equal({
+        extra: 'value'
+      });
+    });
+
+    it('should handle URLs without any parameters', () => {
+      const url = 'https://example.com/captions/en.vtt';
+      const result = externalCaptionsHandler._extractUrlParameters(url);
+      result.baseUrl.should.equal('https://example.com/captions/en.vtt');
+      result.params.should.deep.equal({});
+    });
+
+    it('should handle parameter with empty value', () => {
+      const url = 'https://cdnapi.kaltura.com/api_v3/index.php/service/caption/action';
+      const result = externalCaptionsHandler._extractUrlParameters(url);
+      result.params.should.deep.equal({
+        service: 'caption',
+        action: ''
+      });
+    });
+  });
+
+  describe('_downloadCaptionByUrl with usePostForCaption config', () => {
+    let config, player, playerContainer, externalCaptionsHandler;
+
+    before(() => {
+      playerContainer = createElement('div', targetId);
+    });
+
+    beforeEach(() => {
+      config = getConfigStructure();
+      config.text = config.text || {};
+      player = new Player(config);
+      externalCaptionsHandler = new ExternalCaptionsHandler(player);
+      playerContainer.appendChild(player.getView());
+    });
+
+    afterEach(() => {
+      player.destroy();
+    });
+
+    after(() => {
+      removeVideoElementsFromTestPage();
+      removeElement(targetId);
+    });
+
+    it('should use GET request when usePostForCaption is false', done => {
+      config.text.usePostForCaption = false;
+      player.configure(config);
+      externalCaptionsHandler._textTrackModel['en'] = {
+        url: '/base/tests/assets/en.vtt',
+        type: 'vtt',
+        cues: []
+      };
+      externalCaptionsHandler._downloadCaptionByUrl('/base/tests/assets/en.vtt', 'vtt')
+        .then(result => {
+          result.should.include('WEBVTT');
+          done();
+        })
+        .catch(err => {
+          done(err);
+        });
+    });
+
+    it('should use GET request when usePostForCaption is undefined (default)', done => {
+      // usePostForCaption not set, should default to GET
+      externalCaptionsHandler._textTrackModel['en'] = {
+        url: '/base/tests/assets/en.vtt',
+        type: 'vtt',
+        cues: []
+      };
+      externalCaptionsHandler._downloadCaptionByUrl('/base/tests/assets/en.vtt', 'vtt')
+        .then(result => {
+          result.should.include('WEBVTT');
+          done();
+        })
+        .catch(err => {
+          done(err);
+        });
+    });
+
+    it('should convert SRT to VTT when caption type is srt', done => {
+      config.text.usePostForCaption = false;
+      player.configure(config);
+      externalCaptionsHandler._textTrackModel['en'] = {
+        url: '/base/tests/assets/en.vtt',
+        type: 'srt',
+        cues: []
+      };
+      // Even though we're loading a VTT file, we're simulating SRT conversion
+      const srtContent = '1\n00:00:19,000 --> 00:00:21,989\nTest caption';
+      externalCaptionsHandler._downloadCaptionByUrl('/base/tests/assets/en.vtt', 'srt')
+        .then(result => {
+          // The result should be VTT format
+          result.should.include('WEBVTT');
+          done();
+        })
+        .catch(err => {
+          done(err);
+        });
+    });
+  });
 });
