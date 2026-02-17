@@ -420,7 +420,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     }
   }
   /**
-   * Downloads caption content by URL. 
+   * Downloads caption content by URL.
    * If its Kaltura captions URL (contains 'api_v3/index.php') -
    * the URL will be rebuilt and the parameters will be extracted and sent as a POST request in the body.
    * Otherwise, a GET request is made.
