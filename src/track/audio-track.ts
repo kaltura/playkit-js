@@ -64,9 +64,7 @@ export function audioDescriptionTrackHandler(tracks: Track[], audioFlavors: Arra
       if (track instanceof AudioTrack) {
         let matchingFlavor: any = null;
         if (hasAudioFlavors) {
-          matchingFlavor = audioFlavors.find((flavor) => {
-            return track.label === flavor.label;
-          });
+          matchingFlavor = audioFlavors.find((flavor) => flavor.label === track.label);
         }
 
         const isAudioDescription = (matchingFlavor && matchingFlavor.tags?.includes(FlavorAssetTags.AUDIO_DESCRIPTION)) || track.kind.includes(AudioTrackKind.DESCRIPTION);
