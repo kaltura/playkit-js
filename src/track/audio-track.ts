@@ -57,20 +57,27 @@ class AudioTrack extends Track {
 export function audioDescriptionTrackHandler(tracks: Track[], audioFlavors?: Array<any>): void {
   if (tracks?.length) {
     const hasAudioFlavors = audioFlavors && audioFlavors.length > 0;
-    let audioTracksIndex = 0;
     // iterate over the audio tracks and set the isAudioDescription flag based on the audioFlavors tags
     tracks.forEach((track) => {
       if (track instanceof AudioTrack) {
-        const isAudioDescription = (hasAudioFlavors && audioFlavors[audioTracksIndex]?.tags?.includes(FlavorAssetTags.AUDIO_DESCRIPTION)) || track.kind.includes(AudioTrackKind.DESCRIPTION);
+        let matchingFlavor: any = null;
+        if (hasAudioFlavors) {
+          matchingFlavor = audioFlavors.find((flavor) => {
+            const trackLabel = (track.label || '').toLowerCase();
+            const flavorLabel = (flavor.label || '').toLowerCase();
+            return trackLabel === flavorLabel;
+          });
+        }
+
+        const isAudioDescription = (matchingFlavor && matchingFlavor.tags?.includes(FlavorAssetTags.AUDIO_DESCRIPTION)) || track.kind.includes(AudioTrackKind.DESCRIPTION);
         if (isAudioDescription) {
           // set the language to ad-<language> for audio description tracks
           track.language = `ad-${track.language}`;
-          if (hasAudioFlavors && !audioFlavors[audioTracksIndex]?.label) {
+          if (matchingFlavor && !matchingFlavor.label) {
             // add "Audio Description" to the label if custom label is not provided
             track.label = `${track.label} - Audio Description`;
           }
         }
-        audioTracksIndex++;
       }
     });
   }
