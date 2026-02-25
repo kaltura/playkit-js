@@ -58,7 +58,7 @@ export function audioDescriptionTrackHandler(tracks: Track[], audioFlavors: Arra
   audioFlavors = audioFlavors.filter((f) => f.label);
 
   if (tracks?.length) {
-    const hasAudioFlavors = audioFlavors && audioFlavors.length > 0;
+    const hasAudioFlavors = audioFlavors.length > 0;
     // iterate over the audio tracks and set the isAudioDescription flag based on the audioFlavors tags
     tracks.forEach((track) => {
       if (track instanceof AudioTrack) {
