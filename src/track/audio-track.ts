@@ -55,13 +55,13 @@ class AudioTrack extends Track {
 }
 
 export function audioDescriptionTrackHandler(tracks: Track[], audioFlavors: Array<any> = []): void {
-  audioFlavors = audioFlavors?.filter((f) => f.label);
+  audioFlavors = audioFlavors.filter((f) => f.label);
 
   if (tracks?.length) {
     const hasAudioFlavors = audioFlavors && audioFlavors.length > 0;
     // iterate over the audio tracks and set the isAudioDescription flag based on the audioFlavors tags
     tracks.forEach((track) => {
-      if (track instanceof AudioTrack && track.label) {
+      if (track instanceof AudioTrack) {
         let matchingFlavor: any = null;
         if (hasAudioFlavors) {
           matchingFlavor = audioFlavors.find((flavor) => {
