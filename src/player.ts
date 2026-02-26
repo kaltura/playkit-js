@@ -2454,39 +2454,39 @@ export default class Player extends FakeEventTarget {
    * @private
    * @returns {void}
    */
-   private _checkTimeUpdate(): void {
-      const onTimeUpdate = (): void => {
-        const percent = parseFloat((this.currentTime! / this.duration!).toFixed(2));
-        const endTime = this._sources.endTime;
-        if (!this._timePercentEvent.PLAY_REACHED_25 && percent >= 0.25) {
-          this._timePercentEvent.PLAY_REACHED_25 = true;
-          this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_REACHED_25_PERCENT));
+  private _checkTimeUpdate(): void {
+    const onTimeUpdate = (): void => {
+      const percent = parseFloat((this.currentTime! / this.duration!).toFixed(2));
+      const endTime = this._sources.endTime;
+      if (!this._timePercentEvent.PLAY_REACHED_25 && percent >= 0.25) {
+        this._timePercentEvent.PLAY_REACHED_25 = true;
+        this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_REACHED_25_PERCENT));
+      }
+      if (!this._timePercentEvent.PLAY_REACHED_50 && percent >= 0.5) {
+        this._timePercentEvent.PLAY_REACHED_50 = true;
+        this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_REACHED_50_PERCENT));
+      }
+      if (!this._timePercentEvent.PLAY_REACHED_75 && percent >= 0.75) {
+        this._timePercentEvent.PLAY_REACHED_75 = true;
+        this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_REACHED_75_PERCENT));
+      }
+      if (!this._timePercentEvent.PLAY_REACHED_100 && percent === 1) {
+        this._timePercentEvent.PLAY_REACHED_100 = true;
+        this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_REACHED_100_PERCENT));
+      }
+      if (endTime && typeof this.currentTime === 'number' && this.currentTime < endTime) {
+        if (Math.floor(this.currentTime!) === endTime!) {
+          this.pause();
+          this._eventManager.unlisten(this._engine, Html5EventType.TIME_UPDATE, onTimeUpdate);
+          this._timePercentEvent = {
+            PLAY_REACHED_25_PERCENT: false,
+            PLAY_REACHED_50_PERCENT: false,
+            PLAY_REACHED_75_PERCENT: false,
+            PLAY_REACHED_100_PERCENT: false
+          };
         }
-        if (!this._timePercentEvent.PLAY_REACHED_50 && percent >= 0.5) {
-          this._timePercentEvent.PLAY_REACHED_50 = true;
-          this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_REACHED_50_PERCENT));
-        }
-        if (!this._timePercentEvent.PLAY_REACHED_75 && percent >= 0.75) {
-          this._timePercentEvent.PLAY_REACHED_75 = true;
-          this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_REACHED_75_PERCENT));
-        }
-        if (!this._timePercentEvent.PLAY_REACHED_100 && percent === 1) {
-          this._timePercentEvent.PLAY_REACHED_100 = true;
-          this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_REACHED_100_PERCENT));
-        } 
-        if (endTime && typeof this.currentTime === 'number' && this.currentTime < endTime) {
-          if (Math.floor(this.currentTime!) === endTime!) {
-            this.pause();
-            this._eventManager.unlisten(this._engine, Html5EventType.TIME_UPDATE, onTimeUpdate);
-            this._timePercentEvent = {
-              PLAY_REACHED_25_PERCENT: false,
-              PLAY_REACHED_50_PERCENT: false,
-              PLAY_REACHED_75_PERCENT: false,
-              PLAY_REACHED_100_PERCENT: false
-            };
-          }
-        }
-      };
+      }
+    };
     this._eventManager.listen(this._engine, Html5EventType.TIME_UPDATE, onTimeUpdate);
   }
 
