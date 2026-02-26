@@ -2478,12 +2478,6 @@ export default class Player extends FakeEventTarget {
         if (Math.floor(this.currentTime!) === endTime!) {
           this.pause();
           this._eventManager.unlisten(this._engine, Html5EventType.TIME_UPDATE, onTimeUpdate);
-          this._timePercentEvent = {
-            PLAY_REACHED_25_PERCENT: false,
-            PLAY_REACHED_50_PERCENT: false,
-            PLAY_REACHED_75_PERCENT: false,
-            PLAY_REACHED_100_PERCENT: false
-          };
         }
       }
     };
