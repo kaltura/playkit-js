@@ -278,7 +278,24 @@ const CustomEventType = {
   /**
    * Fired when a new timeline region exited
    */
-  TIMELINE_REGION_EXIT: 'timelineregionexit'
+  TIMELINE_REGION_EXIT: 'timelineregionexit',
+  /**
+   * Fired when playback reaches 25% of the total duration
+   */
+  PLAY_REACHED_25_PERCENT: 'playreached25percent',
+  /**
+   * Fired when playback reaches 50% of the total duration
+   */
+  PLAY_REACHED_50_PERCENT: 'playreached50percent',
+  /**
+   * Fired when playback reaches 75% of the total duration
+   */
+  PLAY_REACHED_75_PERCENT: 'playreached75percent',
+  /**
+   * Fired when playback reaches 100% of the total duration
+   */
+  PLAY_REACHED_100_PERCENT: 'playreached100percent'
+
 } as const;
 
 const EventType: PKEventTypes = { ...Html5EventType, ...CustomEventType, ...AdEventType};
