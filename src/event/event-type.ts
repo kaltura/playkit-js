@@ -292,6 +292,10 @@ const CustomEventType = {
    */
   PLAY_REACHED_75_PERCENT: 'playreached75percent',
   /**
+   * Fired when playback reaches 90% of the total duration
+   */
+  PLAY_REACHED_90_PERCENT: 'playreached90percent',
+  /**
    * Fired when playback reaches 100% of the total duration
    */
   PLAY_REACHED_100_PERCENT: 'playreached100percent'

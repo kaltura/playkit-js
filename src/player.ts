@@ -447,6 +447,7 @@ export default class Player extends FakeEventTarget {
     PLAY_REACHED_25_PERCENT: false,
     PLAY_REACHED_50_PERCENT: false,
     PLAY_REACHED_75_PERCENT: false,
+    PLAY_REACHED_90_PERCENT: false,
     PLAY_REACHED_100_PERCENT: false
   }
 
@@ -703,6 +704,7 @@ export default class Player extends FakeEventTarget {
       PLAY_REACHED_25_PERCENT: false,
       PLAY_REACHED_50_PERCENT: false,
       PLAY_REACHED_75_PERCENT: false,
+      PLAY_REACHED_90_PERCENT: false,
       PLAY_REACHED_100_PERCENT: false
     };
   }
@@ -2469,6 +2471,10 @@ export default class Player extends FakeEventTarget {
       if (!this._timePercentEvent.PLAY_REACHED_75 && percent >= 0.75) {
         this._timePercentEvent.PLAY_REACHED_75 = true;
         this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_REACHED_75_PERCENT));
+      }
+      if (!this._timePercentEvent.PLAY_REACHED_90 && percent >= 0.9) {
+        this._timePercentEvent.PLAY_REACHED_90 = true;
+        this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_REACHED_90_PERCENT));
       }
       if (!this._timePercentEvent.PLAY_REACHED_100 && percent === 1) {
         this._timePercentEvent.PLAY_REACHED_100 = true;
