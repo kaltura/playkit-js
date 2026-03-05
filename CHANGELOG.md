@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.40 (2026-03-05)
+
+
+### Features
+
+* **FEC-13694:** Add quartile (25/50/75/100%) events in v7 player ([#863](https://github.com/kaltura/playkit-js/issues/863)) ([bde6537](https://github.com/kaltura/playkit-js/commit/bde65376c20054e0a00f7d7f76c573760a421763))
+
 ### 0.84.39 (2026-02-26)
 
 ### 0.84.38 (2026-01-29)
