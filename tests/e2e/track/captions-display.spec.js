@@ -174,8 +174,9 @@ describe('Captions Display - User Preference Persistence', () => {
         video.addTextTrack('subtitles', 'English', 'en');
         video.addTextTrack('captions', 'French', 'fr');
 
-        // Verify initial state - captionsDisplay is undefined or false
-        (player._playbackAttributesState.captionsDisplay === undefined || player._playbackAttributesState.captionsDisplay === false).should.be.true;
+        // Verify initial state - captionsDisplay is undefined or false (not explicitly true)
+        const initialCaptionsDisplay = player._playbackAttributesState.captionsDisplay;
+        (initialCaptionsDisplay === undefined || initialCaptionsDisplay === false).should.be.true;
 
         // Find a non-OFF text track
         const textTracks = player._getTextTracks();
