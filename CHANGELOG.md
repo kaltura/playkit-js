@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.41 (2026-03-12)
+
+
+### Features
+
+* **FEC-14898:** add milestone for 90% viewing ([#864](https://github.com/kaltura/playkit-js/issues/864)) ([3039abb](https://github.com/kaltura/playkit-js/commit/3039abb9bc004141100b968a73fa73d0ae3ed532))
+
 ### 0.84.40 (2026-03-05)
 
 
