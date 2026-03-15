@@ -298,7 +298,11 @@ const CustomEventType = {
   /**
    * Fired when playback reaches 100% of the total duration
    */
-  PLAY_REACHED_100_PERCENT: 'playreached100percent'
+  PLAY_REACHED_100_PERCENT: 'playreached100percent',
+  /**
+   * Fired when new thumbnail ks is updated
+   */
+  THUMBNAIL_KS_UPDATED: 'thumbnailksupdated'
 
 } as const;
 
