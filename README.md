@@ -1,4 +1,4 @@
-# PlayKit JS - State of the Art HTML5 Player
+# PlayKit JS - State of the Art HTML5 Player 
 
 [![Build Status](https://github.com/kaltura/playkit-js/actions/workflows/run_canary.yaml/badge.svg)](https://github.com/kaltura/playkit-js/actions/workflows/run_canary.yaml)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
