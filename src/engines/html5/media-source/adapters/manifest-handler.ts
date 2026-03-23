@@ -65,10 +65,11 @@ export class ManifestHandler {
    * @returns {string} - The extracted flavor ID or empty string
    */
   public extractFlavorId(index: number): string {
-    if (!this._manifestAudioTracks[index].url) {
+    const url = this._manifestAudioTracks?.[index]?.url;
+    if (!url) {
       return '';
     }
-    const id = this._manifestAudioTracks[index].url.match(/flavorId\/([^/]+)/);
+    const id = url.match(/flavorId\/([^/]+)/);
     return id ? id[1] : '';
   }
 
