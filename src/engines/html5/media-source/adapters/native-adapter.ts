@@ -16,6 +16,7 @@ import type { FairPlayDrmConfigType } from './fairplay-drm-handler';
 import { FairPlayDrmHandler } from './fairplay-drm-handler';
 import { IDrmProtocol, IMediaSourceAdapter, PKABRRestrictionObject, PKDrmConfigObject, PKDrmDataObject, PKMediaSourceObject, PKRequestObject, PKVideoDimensionsObject } from '../../../../types';
 import { FairPlayDrmHandlerV2 } from './fairplay-drm-handler-v2';
+import { ManifestHandler } from './manifest-handler';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
@@ -162,7 +163,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   private _captionsHidden: boolean = false;
 
-  private _manifestAudioTracks: any[] = [];
+  /**
+   * Handler for HLS manifest parsing
+   * @type {ManifestHandler}
+   * @private
+   */
+  private _hlsManifestHandler: ManifestHandler = new ManifestHandler();
   /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
@@ -484,7 +490,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     requestFilterPromise = requestFilterPromise || Promise.resolve(pkRequest);
     requestFilterPromise
       .then(updatedRequest => {
-        return this._fetchManifestData(updatedRequest.url).then(() => {
+        return this._hlsManifestHandler.fetchManifestData(updatedRequest.url).then(() => {
           if (this._config.useSourceTag) {
             const source = document.createElement('source');
             const mimetype = this._sourceObj?.mimetype.toLowerCase() || '';
@@ -661,6 +667,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         () => {
           this._videoElement.classList.remove(NATIVE_TEXT_CLASS);
           this._drmHandler && this._drmHandler.destroy();
+          this._hlsManifestHandler.reset();
           this._waitingEventTriggered = false;
           this._progressiveSources = [];
           this._loadPromise = undefined;
@@ -799,7 +806,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           language: audioTracks[i].language,
           index: i,
           kind: audioTracks[i].kind,
-          flavorId: this._extractFlavorId(this._manifestAudioTracks[i].url)
+          flavorId: this._hlsManifestHandler.extractFlavorId(i)
         };
         parsedTracks.push(new AudioTrack(settings));
       }
@@ -1142,43 +1149,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   private _onNativeTextTrackAdded(): void {
     this._playerTracks = this._getParsedTracks();
     this._trigger(CustomEventType.TRACKS_CHANGED, {tracks: this._playerTracks});
-  }
-
-  private _fetchManifestData(url: string): Promise<void> {
-    if (!url.includes('.m3u8')) {
-      return Promise.resolve();
-    }
-    return fetch(url)
-      .then(response => response.text())
-      .then(manifestText => {
-        this._parseHLSAudioTracks(manifestText);
-      })
-      .catch(() => {});
-  }
-
-  private _parseHLSAudioTracks(manifestText: string): void {
-    const lines = manifestText.split('\n');
-    for (const line of lines) {
-      if (line.startsWith('#EXT-X-MEDIA:TYPE=AUDIO')) {
-        const trackUrl = this._parseHLSAudioTrack(line);
-        this._manifestAudioTracks.push(trackUrl);
-      }
-    }
-  }
-
-  private _parseHLSAudioTrack(line: string): any {
-    const uriStart = line.indexOf('URI="') + 5;
-    const uriEnd = line.indexOf('"', uriStart);
-    const uri = line.substring(uriStart, uriEnd);
-    return { url: uri };
-  }
-
-  private _extractFlavorId(url?: string): string {
-    if (!url) {
-      return '';
-    }
-    const id = url.match(/flavorId\/([^/]+)/);
-    return id ? id[1] : '';
   }
 
   /**
