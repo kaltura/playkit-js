@@ -161,6 +161,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   private _captionsHidden: boolean = false;
+
+  private _manifestAudioTracks: any[] = [];
   /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
@@ -169,7 +171,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @static
    */
   public static canPlayType(mimeType: string): boolean {
-    if (mimeType === "application/x-mpegURL" && !Env.isIOS && (Env.isChrome || Env.isEdge) ) {
+    if (mimeType === 'application/x-mpegURL' && !Env.isIOS && (Env.isChrome || Env.isEdge) ) {
       return false;
     }
 
@@ -482,42 +484,44 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     requestFilterPromise = requestFilterPromise || Promise.resolve(pkRequest);
     requestFilterPromise
       .then(updatedRequest => {
-        if (this._config.useSourceTag) {
-          const source = document.createElement('source');
-          const mimetype = this._sourceObj?.mimetype.toLowerCase() || '';
+        return this._fetchManifestData(updatedRequest.url).then(() => {
+          if (this._config.useSourceTag) {
+            const source = document.createElement('source');
+            const mimetype = this._sourceObj?.mimetype.toLowerCase() || '';
 
-          source.setAttribute('src', updatedRequest.url);
-          source.setAttribute('type', mimetype);
+            source.setAttribute('src', updatedRequest.url);
+            source.setAttribute('type', mimetype);
 
-          if (this._config.useMediaOptionAttribute) {
-            let options = {};
-            // https://webostv.developer.lge.com/develop/guides/mediaoption-parameter
-            if (this._config.mediaOptionAttribute) {
-              /**
-               * Undocumented option.
-               * Usage example:
-               * var video = document.querySelector('video');
-               * video.addEventListener("umsmediainfo", function(e) {
-               *     console.log(JSON.parse(e.detail));
-               * });
-               * {
-               *   useUMSMediaInfo: true
-               * }
-               **/
-              options = this._config.mediaOptionAttribute;
+            if (this._config.useMediaOptionAttribute) {
+              let options = {};
+              // https://webostv.developer.lge.com/develop/guides/mediaoption-parameter
+              if (this._config.mediaOptionAttribute) {
+                /**
+                 * Undocumented option.
+                 * Usage example:
+                 * var video = document.querySelector('video');
+                 * video.addEventListener("umsmediainfo", function(e) {
+                 *     console.log(JSON.parse(e.detail));
+                 * });
+                 * {
+                 *   useUMSMediaInfo: true
+                 * }
+                 **/
+                options = this._config.mediaOptionAttribute;
+              }
+              if (this._config.abrEwmaDefaultEstimate) {
+                const bps = {start: this._config.abrEwmaDefaultEstimate};
+                Utils.Object.createPropertyPath(options, 'option.adaptiveStreaming.bps', bps);
+              }
+              NativeAdapter._logger.debug('Setting mediaOption -', options);
+              const mediaOption = encodeURI(JSON.stringify(options));
+              source.setAttribute('type', mimetype + ';mediaOption=' + mediaOption);
             }
-            if (this._config.abrEwmaDefaultEstimate) {
-              const bps = {start: this._config.abrEwmaDefaultEstimate};
-              Utils.Object.createPropertyPath(options, 'option.adaptiveStreaming.bps', bps);
-            }
-            NativeAdapter._logger.debug('Setting mediaOption -', options);
-            const mediaOption = encodeURI(JSON.stringify(options));
-            source.setAttribute('type', mimetype + ';mediaOption=' + mediaOption);
+            this._videoElement.appendChild(source);
+          } else {
+            this._videoElement.src = updatedRequest.url;
           }
-          this._videoElement.appendChild(source);
-        } else {
-          this._videoElement.src = updatedRequest.url;
-        }
+        });
       })
       .catch(error => {
         this._trigger(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.REQUEST_FILTER_ERROR, error));
@@ -794,7 +798,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           label: audioTracks[i].label,
           language: audioTracks[i].language,
           index: i,
-          kind: audioTracks[i].kind
+          kind: audioTracks[i].kind,
+          flavorId: this._extractFlavorId(this._manifestAudioTracks[i].url)
         };
         parsedTracks.push(new AudioTrack(settings));
       }
@@ -1137,6 +1142,43 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   private _onNativeTextTrackAdded(): void {
     this._playerTracks = this._getParsedTracks();
     this._trigger(CustomEventType.TRACKS_CHANGED, {tracks: this._playerTracks});
+  }
+
+  private _fetchManifestData(url: string): Promise<void> {
+    if (!url.includes('.m3u8')) {
+      return Promise.resolve();
+    }
+    return fetch(url)
+      .then(response => response.text())
+      .then(manifestText => {
+        this._parseHLSAudioTracks(manifestText);
+      })
+      .catch(() => {});
+  }
+
+  private _parseHLSAudioTracks(manifestText: string): void {
+    const lines = manifestText.split('\n');
+    for (const line of lines) {
+      if (line.startsWith('#EXT-X-MEDIA:TYPE=AUDIO')) {
+        const trackUrl = this._parseHLSAudioTrack(line);
+        this._manifestAudioTracks.push(trackUrl);
+      }
+    }
+  }
+
+  private _parseHLSAudioTrack(line: string): any {
+    const uriStart = line.indexOf('URI="') + 5;
+    const uriEnd = line.indexOf('"', uriStart);
+    const uri = line.substring(uriStart, uriEnd);
+    return { url: uri };
+  }
+
+  private _extractFlavorId(url?: string): string {
+    if (!url) {
+      return '';
+    }
+    const id = url.match(/flavorId\/([^/]+)/);
+    return id ? id[1] : '';
   }
 
   /**
