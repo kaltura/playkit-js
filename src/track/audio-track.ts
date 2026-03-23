@@ -25,6 +25,13 @@ class AudioTrack extends Track {
    * @private
    */
   private _kind: AudioTrackKind;
+  /**
+   * The flavor ID of the track.
+   * @member
+   * @type {string | undefined}
+   * @private
+   */
+  private _flavorId: string | undefined;
 
   /**
    * Getter for the kind value of the track.
@@ -33,6 +40,15 @@ class AudioTrack extends Track {
    */
   public get kind(): AudioTrackKind {
     return this._kind;
+  }
+
+  /**
+   * Getter for the flavor ID of the track.
+   * @public
+   * @returns {string | undefined} - The flavor ID of the track.
+   */
+  public get flavorId(): string | undefined {
+    return this._flavorId;
   }
 
   /**
@@ -45,32 +61,47 @@ class AudioTrack extends Track {
   }
 
   /**
+   * Setter for the flavor ID of the track.
+   * @public
+   * @param {string | undefined} value - The flavor ID of the track.
+  */
+  public set flavorId(value: string | undefined) {
+    this._flavorId = value;
+  }
+
+  /**
    * @constructor
    * @param {Object} settings - The track settings object.
    */
   constructor(settings: any = {}) {
     super(settings);
     this._kind = settings.kind || AudioTrackKind.MAIN;
+    this._flavorId = settings.flavorId;
   }
 }
 
-export function audioDescriptionTrackHandler(tracks: Track[], audioFlavors?: Array<any>): void {
+export function audioDescriptionTrackHandler(tracks: Track[], audioFlavors: Array<any> = []): void {
+  audioFlavors = audioFlavors.filter((f) => f.label);
+
   if (tracks?.length) {
-    const hasAudioFlavors = audioFlavors && audioFlavors.length > 0;
-    let audioTracksIndex = 0;
+    const hasAudioFlavors = audioFlavors.length > 0;
     // iterate over the audio tracks and set the isAudioDescription flag based on the audioFlavors tags
     tracks.forEach((track) => {
       if (track instanceof AudioTrack) {
-        const isAudioDescription = (hasAudioFlavors && audioFlavors[audioTracksIndex]?.tags?.includes(FlavorAssetTags.AUDIO_DESCRIPTION)) || track.kind.includes(AudioTrackKind.DESCRIPTION);
+        let matchingFlavor: any = null;
+        if (hasAudioFlavors) {
+          matchingFlavor = audioFlavors.find((flavor) => flavor.id === track.flavorId);
+        }
+
+        const isAudioDescription = (matchingFlavor && matchingFlavor.tags?.includes(FlavorAssetTags.AUDIO_DESCRIPTION)) || track.kind.includes(AudioTrackKind.DESCRIPTION);
         if (isAudioDescription) {
           // set the language to ad-<language> for audio description tracks
           track.language = `ad-${track.language}`;
-          if (hasAudioFlavors && !audioFlavors[audioTracksIndex]?.label) {
+          if (matchingFlavor) {
             // add "Audio Description" to the label if custom label is not provided
             track.label = `${track.label} - Audio Description`;
           }
         }
-        audioTracksIndex++;
       }
     });
   }

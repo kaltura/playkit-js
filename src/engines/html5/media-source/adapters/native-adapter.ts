@@ -16,6 +16,7 @@ import type { FairPlayDrmConfigType } from './fairplay-drm-handler';
 import { FairPlayDrmHandler } from './fairplay-drm-handler';
 import { IDrmProtocol, IMediaSourceAdapter, PKABRRestrictionObject, PKDrmConfigObject, PKDrmDataObject, PKMediaSourceObject, PKRequestObject, PKVideoDimensionsObject } from '../../../../types';
 import { FairPlayDrmHandlerV2 } from './fairplay-drm-handler-v2';
+import { ManifestHandler } from './manifest-handler';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
@@ -161,6 +162,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   private _captionsHidden: boolean = false;
+
+  /**
+   * Handler for HLS manifest parsing
+   * @type {ManifestHandler}
+   * @private
+   */
+  private _hlsManifestHandler: ManifestHandler = new ManifestHandler();
   /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
@@ -169,7 +177,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @static
    */
   public static canPlayType(mimeType: string): boolean {
-    if (mimeType === "application/x-mpegURL" && !Env.isIOS && (Env.isChrome || Env.isEdge) ) {
+    if (mimeType === 'application/x-mpegURL' && !Env.isIOS && (Env.isChrome || Env.isEdge) ) {
       return false;
     }
 
@@ -482,42 +490,44 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     requestFilterPromise = requestFilterPromise || Promise.resolve(pkRequest);
     requestFilterPromise
       .then(updatedRequest => {
-        if (this._config.useSourceTag) {
-          const source = document.createElement('source');
-          const mimetype = this._sourceObj?.mimetype.toLowerCase() || '';
+        return this._hlsManifestHandler.fetchManifestData(updatedRequest.url).then(() => {
+          if (this._config.useSourceTag) {
+            const source = document.createElement('source');
+            const mimetype = this._sourceObj?.mimetype.toLowerCase() || '';
 
-          source.setAttribute('src', updatedRequest.url);
-          source.setAttribute('type', mimetype);
+            source.setAttribute('src', updatedRequest.url);
+            source.setAttribute('type', mimetype);
 
-          if (this._config.useMediaOptionAttribute) {
-            let options = {};
-            // https://webostv.developer.lge.com/develop/guides/mediaoption-parameter
-            if (this._config.mediaOptionAttribute) {
-              /**
-               * Undocumented option.
-               * Usage example:
-               * var video = document.querySelector('video');
-               * video.addEventListener("umsmediainfo", function(e) {
-               *     console.log(JSON.parse(e.detail));
-               * });
-               * {
-               *   useUMSMediaInfo: true
-               * }
-               **/
-              options = this._config.mediaOptionAttribute;
+            if (this._config.useMediaOptionAttribute) {
+              let options = {};
+              // https://webostv.developer.lge.com/develop/guides/mediaoption-parameter
+              if (this._config.mediaOptionAttribute) {
+                /**
+                 * Undocumented option.
+                 * Usage example:
+                 * var video = document.querySelector('video');
+                 * video.addEventListener("umsmediainfo", function(e) {
+                 *     console.log(JSON.parse(e.detail));
+                 * });
+                 * {
+                 *   useUMSMediaInfo: true
+                 * }
+                 **/
+                options = this._config.mediaOptionAttribute;
+              }
+              if (this._config.abrEwmaDefaultEstimate) {
+                const bps = {start: this._config.abrEwmaDefaultEstimate};
+                Utils.Object.createPropertyPath(options, 'option.adaptiveStreaming.bps', bps);
+              }
+              NativeAdapter._logger.debug('Setting mediaOption -', options);
+              const mediaOption = encodeURI(JSON.stringify(options));
+              source.setAttribute('type', mimetype + ';mediaOption=' + mediaOption);
             }
-            if (this._config.abrEwmaDefaultEstimate) {
-              const bps = {start: this._config.abrEwmaDefaultEstimate};
-              Utils.Object.createPropertyPath(options, 'option.adaptiveStreaming.bps', bps);
-            }
-            NativeAdapter._logger.debug('Setting mediaOption -', options);
-            const mediaOption = encodeURI(JSON.stringify(options));
-            source.setAttribute('type', mimetype + ';mediaOption=' + mediaOption);
+            this._videoElement.appendChild(source);
+          } else {
+            this._videoElement.src = updatedRequest.url;
           }
-          this._videoElement.appendChild(source);
-        } else {
-          this._videoElement.src = updatedRequest.url;
-        }
+        });
       })
       .catch(error => {
         this._trigger(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.REQUEST_FILTER_ERROR, error));
@@ -657,6 +667,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         () => {
           this._videoElement.classList.remove(NATIVE_TEXT_CLASS);
           this._drmHandler && this._drmHandler.destroy();
+          this._hlsManifestHandler.reset();
           this._waitingEventTriggered = false;
           this._progressiveSources = [];
           this._loadPromise = undefined;
@@ -794,7 +805,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           label: audioTracks[i].label,
           language: audioTracks[i].language,
           index: i,
-          kind: audioTracks[i].kind
+          kind: audioTracks[i].kind,
+          flavorId: this._hlsManifestHandler.extractFlavorId(i)
         };
         parsedTracks.push(new AudioTrack(settings));
       }
