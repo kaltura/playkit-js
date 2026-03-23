@@ -147,54 +147,6 @@ describe('Audio Track Description Handler', () => {
       tracks[1].label.should.equal('English AD');
     });
 
-    it('should filter out audioFlavors without labels', () => {
-      const tracks = [
-        new AudioTrack({
-          label: 'Japanese',
-          language: 'ja',
-          index: 0,
-          kind: AudioTrackKind.MAIN,
-          flavorId: 'flavor1'
-        }),
-        new AudioTrack({
-          label: 'Korean',
-          language: 'ko',
-          index: 1,
-          kind: AudioTrackKind.MAIN,
-          flavorId: 'flavor2'
-        })
-      ];
-
-      const audioFlavors = [
-        {
-          // No label - should be filtered out
-          tags: ['audio_only', 'audio_description'],
-          id: 'flavor1'
-        },
-        {
-          label: 'Korean',
-          tags: ['audio_only', 'audio_description'],
-          id: 'flavor2'
-        },
-        {
-          label: '',
-          // Empty label - should be filtered out
-          tags: ['audio_only', 'audio_description'],
-          id: 'flavor3'
-        }
-      ];
-
-      audioDescriptionTrackHandler(tracks, audioFlavors);
-
-      // Japanese should remain unchanged (no matching flavor with label)
-      tracks[0].language.should.equal('ja');
-      tracks[0].label.should.equal('Japanese');
-
-      // Korean should be marked as audio description (has matching flavor with label)
-      tracks[1].language.should.equal('ad-ko');
-      tracks[1].label.should.equal('Korean - Audio Description');
-    });
-
     it('should handle tracks without matching audioFlavor labels', () => {
       const tracks = [
         new AudioTrack({
@@ -325,83 +277,6 @@ describe('Audio Track Description Handler', () => {
       // Description track should get ad- prefix based on kind alone
       tracks[1].language.should.equal('ad-pl');
       tracks[1].label.should.equal('Polish AD');
-    });
-  });
-
-  describe('Combined scenarios', () => {
-    it('should handle mix of labeled flavors, unlabeled flavors, and mismatched ordering', () => {
-      const tracks = [
-        new AudioTrack({
-          label: 'Track A',
-          language: 'en',
-          index: 0,
-          kind: AudioTrackKind.MAIN,
-          flavorId: 'flavor1'
-        }),
-        new AudioTrack({
-          label: 'Track B',
-          language: 'fr',
-          index: 1,
-          kind: AudioTrackKind.DESCRIPTION,
-          flavorId: 'flavor2'
-        }),
-        new AudioTrack({
-          label: 'Track C',
-          language: 'de',
-          index: 2,
-          kind: AudioTrackKind.MAIN,
-          flavorId: 'flavor3'
-        }),
-        new AudioTrack({
-          label: 'Track D',
-          language: 'es',
-          index: 3,
-          kind: AudioTrackKind.MAIN,
-          flavorId: 'flavor4'
-        })
-      ];
-
-      const audioFlavors = [
-        {
-          label: 'Track D',
-          tags: ['audio_only', 'audio_description'],
-          id: 'flavor4'
-        },
-        {
-          // Unlabeled flavor - should be filtered
-          tags: ['audio_only', 'audio_description'],
-          id: 'flavor2'
-        },
-        {
-          label: 'Track A',
-          tags: ['audio_only'],
-          id: 'flavor1'
-        },
-        {
-          label: 'Track C',
-          tags: ['audio_only', 'audio_description'],
-          id: 'flavor3'
-        }
-        // Note: Track B has no matching flavor
-      ];
-
-      audioDescriptionTrackHandler(tracks, audioFlavors);
-
-      // Track A - matched flavor without AD tag
-      tracks[0].language.should.equal('en');
-      tracks[0].label.should.equal('Track A');
-
-      // Track B - DESCRIPTION kind but no matching flavor
-      tracks[1].language.should.equal('ad-fr');
-      tracks[1].label.should.equal('Track B');
-
-      // Track C - matched flavor with AD tag
-      tracks[2].language.should.equal('ad-de');
-      tracks[2].label.should.equal('Track C - Audio Description');
-
-      // Track D - matched flavor with AD tag
-      tracks[3].language.should.equal('ad-es');
-      tracks[3].label.should.equal('Track D - Audio Description');
     });
   });
 });
