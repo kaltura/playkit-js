@@ -9,19 +9,22 @@ describe('Audio Track Description Handler', () => {
           label: 'English',
           language: 'en',
           index: 0,
-          kind: AudioTrackKind.MAIN
+          kind: AudioTrackKind.MAIN,
+          flavorId: 'flavor1'
         }),
         new AudioTrack({
           label: 'Spanish',
           language: 'es',
           index: 1,
-          kind: AudioTrackKind.MAIN
+          kind: AudioTrackKind.MAIN,
+          flavorId: 'flavor2'
         }),
         new AudioTrack({
           label: 'French',
           language: 'fr',
           index: 2,
-          kind: AudioTrackKind.MAIN
+          kind: AudioTrackKind.MAIN,
+          flavorId: 'flavor3'
         })
       ];
 
@@ -29,15 +32,18 @@ describe('Audio Track Description Handler', () => {
       const audioFlavors = [
         {
           label: 'French',
-          tags: ['audio_only', 'audio_description']
+          tags: ['audio_only', 'audio_description'],
+          id: 'flavor3'
         },
         {
           label: 'English',
-          tags: ['audio_only']
+          tags: ['audio_only'],
+          id: 'flavor1'
         },
         {
           label: 'Spanish',
-          tags: ['audio_only']
+          tags: ['audio_only'],
+          id: 'flavor2'
         }
       ];
 
@@ -60,34 +66,40 @@ describe('Audio Track Description Handler', () => {
           label: 'German',
           language: 'de',
           index: 0,
-          kind: AudioTrackKind.MAIN
+          kind: AudioTrackKind.MAIN,
+          flavorId: 'flavor1'
         }),
         new AudioTrack({
           label: 'Italian',
           language: 'it',
           index: 1,
-          kind: AudioTrackKind.MAIN
+          kind: AudioTrackKind.MAIN,
+          flavorId: 'flavor2'
         }),
         new AudioTrack({
           label: 'Portuguese',
           language: 'pt',
           index: 2,
-          kind: AudioTrackKind.MAIN
+          kind: AudioTrackKind.MAIN,
+          flavorId: 'flavor3'
         })
       ];
 
       const audioFlavors = [
         {
           label: 'Portuguese',
-          tags: ['audio_only', 'audio_description']
+          tags: ['audio_only', 'audio_description'],
+          id: 'flavor3'
         },
         {
           label: 'German',
-          tags: ['audio_only', 'audio_description']
+          tags: ['audio_only', 'audio_description'],
+          id: 'flavor1'
         },
         {
           label: 'Italian',
-          tags: ['audio_only']
+          tags: ['audio_only'],
+          id: 'flavor2'
         }
       ];
 
@@ -112,13 +124,15 @@ describe('Audio Track Description Handler', () => {
           label: 'English Main',
           language: 'en',
           index: 0,
-          kind: AudioTrackKind.MAIN
+          kind: AudioTrackKind.MAIN,
+          flavorId: 'flavor1'
         }),
         new AudioTrack({
           label: 'English AD',
           language: 'en',
           index: 1,
-          kind: AudioTrackKind.DESCRIPTION
+          kind: AudioTrackKind.DESCRIPTION,
+          flavorId: 'flavor2'
         })
       ];
 
@@ -139,29 +153,34 @@ describe('Audio Track Description Handler', () => {
           label: 'Japanese',
           language: 'ja',
           index: 0,
-          kind: AudioTrackKind.MAIN
+          kind: AudioTrackKind.MAIN,
+          flavorId: 'flavor1'
         }),
         new AudioTrack({
           label: 'Korean',
           language: 'ko',
           index: 1,
-          kind: AudioTrackKind.MAIN
+          kind: AudioTrackKind.MAIN,
+          flavorId: 'flavor2'
         })
       ];
 
       const audioFlavors = [
         {
           // No label - should be filtered out
-          tags: ['audio_only', 'audio_description']
+          tags: ['audio_only', 'audio_description'],
+          id: 'flavor1'
         },
         {
           label: 'Korean',
-          tags: ['audio_only', 'audio_description']
+          tags: ['audio_only', 'audio_description'],
+          id: 'flavor2'
         },
         {
           label: '',
           // Empty label - should be filtered out
-          tags: ['audio_only', 'audio_description']
+          tags: ['audio_only', 'audio_description'],
+          id: 'flavor3'
         }
       ];
 
@@ -182,24 +201,28 @@ describe('Audio Track Description Handler', () => {
           label: 'Chinese',
           language: 'zh',
           index: 0,
-          kind: AudioTrackKind.MAIN
+          kind: AudioTrackKind.MAIN,
+          flavorId: 'flavor1'
         }),
         new AudioTrack({
           label: 'Russian',
           language: 'ru',
           index: 1,
-          kind: AudioTrackKind.MAIN
+          kind: AudioTrackKind.MAIN,
+          flavorId: 'flavor2'
         })
       ];
 
       const audioFlavors = [
         {
           label: 'Arabic',
-          tags: ['audio_only', 'audio_description']
+          tags: ['audio_only', 'audio_description'],
+          id: 'flavor3'
         },
         {
           label: 'Hindi',
-          tags: ['audio_only', 'audio_description']
+          tags: ['audio_only', 'audio_description'],
+          id: 'flavor4'
         }
       ];
 
@@ -218,13 +241,15 @@ describe('Audio Track Description Handler', () => {
           label: 'Swedish Main',
           language: 'sv',
           index: 0,
-          kind: AudioTrackKind.MAIN
+          kind: AudioTrackKind.MAIN,
+          flavorId: 'flavor1'
         }),
         new AudioTrack({
           label: 'Swedish Description',
           language: 'sv',
           index: 1,
-          kind: AudioTrackKind.DESCRIPTION
+          kind: AudioTrackKind.DESCRIPTION,
+          flavorId: 'flavor2'
         })
       ];
 
@@ -232,7 +257,8 @@ describe('Audio Track Description Handler', () => {
       const audioFlavors = [
         {
           label: 'Norwegian',
-          tags: ['audio_only', 'audio_description']
+          tags: ['audio_only', 'audio_description'],
+          id: 'flavor3'
         }
       ];
 
@@ -309,44 +335,52 @@ describe('Audio Track Description Handler', () => {
           label: 'Track A',
           language: 'en',
           index: 0,
-          kind: AudioTrackKind.MAIN
+          kind: AudioTrackKind.MAIN,
+          flavorId: 'flavor1'
         }),
         new AudioTrack({
           label: 'Track B',
           language: 'fr',
           index: 1,
-          kind: AudioTrackKind.DESCRIPTION
+          kind: AudioTrackKind.DESCRIPTION,
+          flavorId: 'flavor2'
         }),
         new AudioTrack({
           label: 'Track C',
           language: 'de',
           index: 2,
-          kind: AudioTrackKind.MAIN
+          kind: AudioTrackKind.MAIN,
+          flavorId: 'flavor3'
         }),
         new AudioTrack({
           label: 'Track D',
           language: 'es',
           index: 3,
-          kind: AudioTrackKind.MAIN
+          kind: AudioTrackKind.MAIN,
+          flavorId: 'flavor4'
         })
       ];
 
       const audioFlavors = [
         {
           label: 'Track D',
-          tags: ['audio_only', 'audio_description']
+          tags: ['audio_only', 'audio_description'],
+          id: 'flavor4'
         },
         {
           // Unlabeled flavor - should be filtered
-          tags: ['audio_only', 'audio_description']
+          tags: ['audio_only', 'audio_description'],
+          id: 'flavor2'
         },
         {
           label: 'Track A',
-          tags: ['audio_only']
+          tags: ['audio_only'],
+          id: 'flavor1'
         },
         {
           label: 'Track C',
-          tags: ['audio_only', 'audio_description']
+          tags: ['audio_only', 'audio_description'],
+          id: 'flavor3'
         }
         // Note: Track B has no matching flavor
       ];
