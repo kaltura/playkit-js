@@ -636,7 +636,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   private _handleVideoTracksChange(): void {
     if (!this._isProgressivePlayback()) {
       // @ts-expect-error - Property 'videoTracks' does not exist on type 'HTMLVideoElement'
-      const {videoHeight, videoWidth, videoTracks} = this._videoElement;
+      const {videoHeight, videoWidth, videoTracks = []} = this._videoElement;
       if (!this._videoDimensions || videoHeight !== this._videoDimensions.videoHeight || videoWidth !== this._videoDimensions.videoWidth) {
         this._videoDimensions = {videoHeight, videoWidth};
         const setting = {
