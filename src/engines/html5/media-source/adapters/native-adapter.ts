@@ -488,7 +488,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       }
     }
     requestFilterPromise = requestFilterPromise || Promise.resolve(pkRequest);
-    requestFilterPromise
+    this._hlsManifestHandler.reset();
+    return requestFilterPromise
       .then(updatedRequest => {
         return this._hlsManifestHandler.fetchManifestData(updatedRequest.url).then(() => {
           if (this._config.useSourceTag) {
@@ -532,7 +533,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       .catch(error => {
         this._trigger(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.REQUEST_FILTER_ERROR, error));
       });
-    return requestFilterPromise;
   }
 
   /**
