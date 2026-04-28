@@ -302,11 +302,7 @@ const CustomEventType = {
   /**
    * Fired when new thumbnail ks is updated
    */
-  THUMBNAIL_KS_UPDATED: 'thumbnailksupdated',
-  /**
-   * Fired when the components URLs from config are loaded
-   */
-  COMPONENTS_URLS_LOADED: 'componentsurlsloaded'
+  THUMBNAIL_KS_UPDATED: 'thumbnailksupdated'
 
 } as const;
 
