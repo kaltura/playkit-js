@@ -1,0 +1,167 @@
+{
+  "repository": "kaltura/playkit-js",
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-28",
+  "coreResponsibility": {
+    "summary": "PlayKit JS is the core HTML5 video playback engine for the Kaltura Player ecosystem, providing a unified interface for adaptive streaming, DRM protection, track management, and extensible plugin architecture.",
+    "type": "core-playback-engine"
+  },
+  "domainAndLogicOwnership": {
+    "featureOwnership": [
+      "HTML5 video playback lifecycle management",
+      "MediaSource Extensions (MSE) integration",
+      "Encrypted Media Extensions (EME) / DRM handling (Widevine, PlayReady, FairPlay)",
+      "Adaptive bitrate streaming (ABR) control and track selection",
+      "Multi-track management (video, audio, text/captions, image/thumbnails)",
+      "Player state machine (idle, loading, playing, paused, buffering)",
+      "Text track display and styling (VTT, TTML captions)",
+      "Fullscreen and Picture-in-Picture control",
+      "Timed metadata parsing and events",
+      "External captions handler",
+      "Thumbnail/image track support",
+      "Playback middleware pipeline for plugin intercepts",
+      "Engine decorator pattern for extending playback behavior",
+      "Autoplay detection and fallback handling"
+    ],
+    "dataHandling": [
+      "PKSourcesConfigObject: Media source configuration (HLS, DASH, progressive)",
+      "Player state machine transitions (StateType: idle, loading, playing, paused, buffering)",
+      "Track objects (VideoTrack, AudioTrack, PKTextTrack, ImageTrack)",
+      "DRM data objects (PKDrmDataObject, PKDrmConfigObject)",
+      "Media source adapters registration and selection",
+      "Playback attributes state (volume, muted, playbackRate, currentTime)",
+      "Text style configuration (TextStyle)",
+      "Thumbnail info (ThumbnailInfo)",
+      "Timed metadata (TimedMetadata)",
+      "Player capabilities and environment detection (Env)",
+      "Error objects with severity, category, and code classification"
+    ]
+  },
+  "integrationPoints": {
+    "upstream": [
+      "kaltura/kaltura-player-js: Main player wrapper that provides configuration, plugins, and Kaltura backend integration",
+      "kaltura/playkit-js-providers: Backend data providers for Kaltura OVP/OTT",
+      "Media source adapters (hls.js, shaka-player via external adapter packages)"
+    ],
+    "downstream": [
+      "kaltura/playkit-js-ui: UI layer consuming player events and state",
+      "kaltura/playkit-js-hls: HLS.js adapter for HLS streaming",
+      "kaltura/playkit-js-dash: Shaka Player adapter for DASH streaming",
+      "kaltura/playkit-js-ima: Google IMA SDK integration for ads",
+      "kaltura/playkit-js-kava: Kaltura analytics plugin",
+      "kaltura/playkit-js-youbora: NPAW/Youbora analytics integration",
+      "kaltura/playkit-js-cast-sender: Chromecast sender integration",
+      "kaltura/playkit-js-bumper: Bumper/interstitial plugin",
+      "kaltura/playkit-js-vr: VR/360 video support plugin"
+    ],
+    "externalAPIs": [
+      "Native HTML5 Video Element API",
+      "MediaSource Extensions (MSE) API",
+      "Encrypted Media Extensions (EME) API",
+      "Fullscreen API",
+      "Picture-in-Picture API",
+      "WebVTT / TTML caption parsing",
+      "ua-parser-js: Browser/device detection"
+    ]
+  },
+  "technicalStack": {
+    "primaryLanguages": ["TypeScript", "JavaScript"],
+    "frameworks": ["None (vanilla implementation)"],
+    "buildTools": ["Webpack", "Babel", "TypeScript Compiler"],
+    "testingFrameworks": ["Karma", "Mocha", "Chai", "Sinon"],
+    "entryPoints": {
+      "main": "src/playkit.ts",
+      "playerCore": "src/player.ts",
+      "html5Engine": "src/engines/html5/html5.ts",
+      "mediaSourceProvider": "src/engines/html5/media-source/media-source-provider.ts",
+      "eventTypes": "src/event/event-type.ts",
+      "errorCodes": "src/error/code.ts",
+      "drmSchemes": "src/drm/drm-scheme.ts",
+      "stateTypes": "src/state/state-type.ts",
+      "configuration": "src/player-config.js",
+      "types": "src/types/index.ts"
+    },
+    "distributionArtifacts": [
+      "dist/playkit.js",
+      "dist/playkit-js.d.ts"
+    ]
+  },
+  "triageKeywords": [
+    "playkit-js",
+    "playkit.core",
+    "loadPlayer",
+    "MediaSource",
+    "MSE",
+    "EME",
+    "DRM license",
+    "Widevine",
+    "FairPlay",
+    "PlayReady",
+    "player state",
+    "buffering",
+    "video track",
+    "audio track",
+    "text track",
+    "captions",
+    "ABR",
+    "adaptive bitrate",
+    "fullscreen",
+    "picture-in-picture",
+    "PiP",
+    "autoplay failed",
+    "MEDIA_SOURCE_OPERATION_FAILED",
+    "VIDEO_ERROR",
+    "LICENSE_REQUEST_FAILED",
+    "NO_ENGINE_FOUND",
+    "HLS_FATAL_MEDIA_ERROR",
+    "QUOTA_EXCEEDED_ERROR",
+    "playback middleware",
+    "engine decorator",
+    "timed metadata",
+    "VTT",
+    "TTML"
+  ],
+  "errorCategories": {
+    "NETWORK": 1,
+    "TEXT": 2,
+    "MEDIA": 3,
+    "MANIFEST": 4,
+    "STREAMING": 5,
+    "DRM": 6,
+    "PLAYER": 7,
+    "ADS": 8,
+    "STORAGE": 9,
+    "CAST": 10,
+    "VR": 11
+  },
+  "keyErrorCodes": [
+    "MEDIA_SOURCE_OPERATION_FAILED (3014)",
+    "VIDEO_ERROR (3016)",
+    "QUOTA_EXCEEDED_ERROR (3017)",
+    "HLS_FATAL_MEDIA_ERROR (3018)",
+    "LICENSE_REQUEST_FAILED (6007)",
+    "LICENSE_RESPONSE_REJECTED (6008)",
+    "NO_RECOGNIZED_KEY_SYSTEMS (6000)",
+    "LOAD_FAILED (7002)",
+    "NO_SOURCE_PROVIDED (7006)",
+    "NO_ENGINE_FOUND_TO_PLAY_THE_SOURCE (7007)"
+  ],
+  "stateTypes": [
+    "IDLE",
+    "LOADING",
+    "PLAYING",
+    "PAUSED",
+    "BUFFERING"
+  ],
+  "supportedDRMSchemes": [
+    "com.widevine.alpha (Widevine)",
+    "com.microsoft.playready (PlayReady)",
+    "com.apple.fairplay (FairPlay)"
+  ],
+  "trackTypes": [
+    "VIDEO",
+    "AUDIO",
+    "TEXT",
+    "IMAGE"
+  ]
+}
