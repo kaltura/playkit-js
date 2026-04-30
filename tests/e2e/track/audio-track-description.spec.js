@@ -279,4 +279,106 @@ describe('Audio Track Description Handler', () => {
       tracks[1].label.should.equal('Polish AD');
     });
   });
+
+  describe('Label to flavorId fallback matching', () => {
+    it('should match by flavorId when label does not match', () => {
+      const tracks = [
+        new AudioTrack({
+          label: 'Track Label A',
+          language: 'en',
+          index: 0,
+          kind: AudioTrackKind.MAIN,
+          flavorId: 'flavor123'
+        }),
+        new AudioTrack({
+          label: 'Track Label B',
+          language: 'es',
+          index: 1,
+          kind: AudioTrackKind.MAIN,
+          flavorId: 'flavor456'
+        })
+      ];
+
+      const audioFlavors = [
+        {
+          label: 'Flavor Label X',
+          tags: ['audio_only'],
+          id: 'flavor123'
+        },
+        {
+          label: 'Flavor Label Y',
+          tags: ['audio_only', 'audio_description'],
+          id: 'flavor456'
+        }
+      ];
+
+      audioDescriptionTrackHandler(tracks, audioFlavors);
+
+      // First track: label doesn't match, but flavorId matches (no audio_description tag)
+      tracks[0].language.should.equal('en');
+      tracks[0].label.should.equal('Track Label A');
+
+      // Second track: label doesn't match, but flavorId matches (has audio_description tag)
+      tracks[1].language.should.equal('ad-es');
+      tracks[1].label.should.equal('Track Label B - Audio Description');
+    });
+
+    it('should prioritize label matching over flavorId matching', () => {
+      const tracks = [
+        new AudioTrack({
+          label: 'English',
+          language: 'en',
+          index: 0,
+          kind: AudioTrackKind.MAIN,
+          flavorId: 'flavor789'
+        })
+      ];
+
+      const audioFlavors = [
+        {
+          label: 'English',
+          tags: ['audio_only'],
+          id: 'flavor123'
+        },
+        {
+          label: 'Other Language',
+          tags: ['audio_only', 'audio_description'],
+          id: 'flavor789'
+        }
+      ];
+
+      audioDescriptionTrackHandler(tracks, audioFlavors);
+
+      // Track should match by label (flavor123) not by flavorId (flavor789)
+      // Therefore, should NOT be marked as audio description
+      tracks[0].language.should.equal('en');
+      tracks[0].label.should.equal('English');
+    });
+
+    it('should not match when neither label nor flavorId match', () => {
+      const tracks = [
+        new AudioTrack({
+          label: 'Unmatched Label',
+          language: 'fr',
+          index: 0,
+          kind: AudioTrackKind.MAIN,
+          flavorId: 'unmatched_flavor'
+        })
+      ];
+
+      const audioFlavors = [
+        {
+          label: 'Different Label',
+          tags: ['audio_only', 'audio_description'],
+          id: 'different_flavor'
+        }
+      ];
+
+      audioDescriptionTrackHandler(tracks, audioFlavors);
+
+      // Track should remain unchanged (no match by label or flavorId)
+      tracks[0].language.should.equal('fr');
+      tracks[0].label.should.equal('Unmatched Label');
+    });
+  });
 });

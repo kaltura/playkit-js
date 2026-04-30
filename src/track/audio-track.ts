@@ -104,7 +104,7 @@ export function audioDescriptionTrackHandler(tracks: Track[], audioFlavors: Arra
         if (isAudioDescription) {
           // set the language to ad-<language> for audio description tracks
           track.language = `ad-${track.language}`;
-          if (track.label && !track.label.includes('- Audio Description')) {
+          if (matchingFlavor) {
             // add "Audio Description" to the label if custom label is not provided
             track.label = `${track.label} - Audio Description`;
           }
