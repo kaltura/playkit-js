@@ -64,7 +64,7 @@ class AudioTrack extends Track {
    * Setter for the flavor ID of the track.
    * @public
    * @param {string | undefined} value - The flavor ID of the track.
-  */
+   */
   public set flavorId(value: string | undefined) {
     this._flavorId = value;
   }
@@ -81,15 +81,24 @@ class AudioTrack extends Track {
 }
 
 export function audioDescriptionTrackHandler(tracks: Track[], audioFlavors: Array<any> = []): void {
+  function findMatchingFlavor(track: AudioTrack, audioFlavors: Array<any>): any {
+    if (audioFlavors.length === 0) return null;
+    let matchingFlavor: any = null;
+    if (track.label) {
+      matchingFlavor = audioFlavors.find((flavor) => flavor.label === track.label);
+    }
+    // if no match found by label, try matching by flavorId
+    if (!matchingFlavor && track.flavorId) {
+      matchingFlavor = audioFlavors.find((flavor) => flavor.id === track.flavorId);
+    }
+    return matchingFlavor;
+  }
+
   if (tracks?.length) {
-    const hasAudioFlavors = audioFlavors.length > 0;
     // iterate over the audio tracks and set the isAudioDescription flag based on the audioFlavors tags
     tracks.forEach((track) => {
       if (track instanceof AudioTrack) {
-        let matchingFlavor: any = null;
-        if (hasAudioFlavors) {
-          matchingFlavor = audioFlavors.find((flavor) => flavor.id === track.flavorId);
-        }
+        const matchingFlavor: any = findMatchingFlavor(track, audioFlavors);
 
         const isAudioDescription = (matchingFlavor && matchingFlavor.tags?.includes(FlavorAssetTags.AUDIO_DESCRIPTION)) || track.kind.includes(AudioTrackKind.DESCRIPTION);
         if (isAudioDescription) {
