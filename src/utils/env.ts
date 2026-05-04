@@ -61,4 +61,5 @@ Env['isIOS'] = Env.os.name === 'iOS';
 Env['isMacOS'] = Env.os.name === 'Mac OS';
 Env['isChrome'] = Boolean(Env.browser.name?.includes('Chrome'));
 Env['isEdge'] = Boolean(Env.browser.name === 'Edge');
+Env['isFirefox'] = Boolean(Env.browser.name?.includes('Firefox'));
 export default Env;
