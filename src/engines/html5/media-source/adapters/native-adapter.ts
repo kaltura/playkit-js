@@ -17,6 +17,7 @@ import { FairPlayDrmHandler } from './fairplay-drm-handler';
 import { IDrmProtocol, IMediaSourceAdapter, PKABRRestrictionObject, PKDrmConfigObject, PKDrmDataObject, PKMediaSourceObject, PKRequestObject, PKVideoDimensionsObject } from '../../../../types';
 import { FairPlayDrmHandlerV2 } from './fairplay-drm-handler-v2';
 import { ManifestHandler } from './manifest-handler';
+import { getNativeLanguageName } from '../../../../utils/locale';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
@@ -799,11 +800,18 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const parsedTracks: AudioTrack[] = [];
     if (audioTracks) {
       for (let i = 0; i < audioTracks.length; i++) {
+        // On iOS Safari the browser-provided audioTracks[i].label is typically an
+        // English word taken from the HLS manifest NAME= attribute (e.g. "Spanish").
+        // Use the ISO language code to derive the native display name (e.g. "español")
+        // for parity with the DASH adapter; fall back to the browser-provided label.
+        const language = audioTracks[i].language;
+        const browserLabel = audioTracks[i].label;
+        const label = getNativeLanguageName(language, browserLabel);
         const settings = {
           id: audioTracks[i].id,
           active: audioTracks[i].enabled,
-          label: audioTracks[i].label,
-          language: audioTracks[i].language,
+          label,
+          language,
           index: i,
           kind: audioTracks[i].kind,
           flavorId: this._hlsManifestHandler.extractFlavorId(i)

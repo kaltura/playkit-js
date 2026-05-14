@@ -128,6 +128,9 @@ export {ThumbnailInfo};
 // Export logger utils
 export {getLogger, LogLevel, getLogLevel, setLogLevel, setLogHandler};
 
+// Export language display name utility
+export {getNativeLanguageName} from './utils/locale';
+
 export {Player}
 
 export * from './types'
