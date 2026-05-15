@@ -23,6 +23,7 @@ import {MediaType} from './enums/media-type';
 import {CustomEventType, EventType, Html5EventType} from './event/event-type';
 import {AbrMode} from './track/abr-mode-type';
 import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogLevel, setLogHandler} from './utils/logger';
+import {getNativeLanguageName} from './utils/locale';
 import {CorsType} from './engines/html5/cors-types';
 import {DrmScheme} from './drm/drm-scheme';
 import {MimeType} from './enums/mime-type';
@@ -127,6 +128,9 @@ export {ThumbnailInfo};
 
 // Export logger utils
 export {getLogger, LogLevel, getLogLevel, setLogLevel, setLogHandler};
+
+// Export language utility
+export {getNativeLanguageName};
 
 export {Player}
 

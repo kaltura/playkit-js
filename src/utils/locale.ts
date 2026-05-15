@@ -1,4 +1,21 @@
 /**
+ * Returns the native language name for a given ISO language code using Intl.DisplayNames.
+ * Falls back to the provided fallback string if the code is absent or the API throws.
+ * @param {string | undefined | null} langCode - ISO 639-1/2 language code (e.g. "es", "ja")
+ * @param {string} fallback - Value to return when the code cannot be resolved
+ * @returns {string} - Native language name or fallback
+ */
+export function getNativeLanguageName(langCode: string | undefined | null, fallback: string): string {
+  if (!langCode) return fallback;
+  try {
+    const dn = new Intl.DisplayNames([langCode], { type: 'language' });
+    return dn.of(langCode) || fallback;
+  } catch (_e) {
+    return fallback;
+  }
+}
+
+/**
  * Locale class
  * @class
  *

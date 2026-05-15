@@ -288,12 +288,174 @@
           "isAbstract": false,
           "name": "AudioTrack",
           "preserveMemberOrder": false,
-          "members": [],
+          "members": [
+            {
+              "kind": "Constructor",
+              "canonicalReference": "@playkit-js/playkit-js!AudioTrack:constructor(1)",
+              "docComment": "/**\n * @constructor Constructs a new instance of the `AudioTrack` class\n *\n * @param settings - The track settings object.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "constructor(settings?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "any"
+                },
+                {
+                  "kind": "Content",
+                  "text": ");"
+                }
+              ],
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "settings",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": true
+                }
+              ]
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@playkit-js/playkit-js!AudioTrack#flavorId:member",
+              "docComment": "/**\n * Getter for the flavor ID of the track.\n *\n * @returns {string | undefined} - The flavor ID of the track.\n *\n * @public\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get flavorId(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string | undefined"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset flavorId(value: string | undefined);"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "flavorId",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@playkit-js/playkit-js!AudioTrack#kind:member",
+              "docComment": "/**\n * Getter for the kind value of the track.\n *\n * @returns {AudioTrackKind} - The kind value of the track.\n *\n * @public\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get kind(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "AudioTrackKind",
+                  "canonicalReference": "@playkit-js/playkit-js!AudioTrackKind:enum"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n\nset kind(value: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "AudioTrackKind",
+                  "canonicalReference": "@playkit-js/playkit-js!AudioTrackKind:enum"
+                },
+                {
+                  "kind": "Content",
+                  "text": ");"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "kind",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            }
+          ],
           "extendsTokenRange": {
             "startIndex": 1,
             "endIndex": 2
           },
           "implementsTokenRanges": []
+        },
+        {
+          "kind": "Enum",
+          "canonicalReference": "@playkit-js/playkit-js!AudioTrackKind:enum",
+          "docComment": "",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare enum AudioTrackKind "
+            }
+          ],
+          "fileUrlPath": "src/track/audio-track.ts",
+          "releaseTag": "Public",
+          "name": "AudioTrackKind",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "@playkit-js/playkit-js!AudioTrackKind.DESCRIPTION:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "DESCRIPTION = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "\"description\""
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "DESCRIPTION"
+            },
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "@playkit-js/playkit-js!AudioTrackKind.MAIN:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "MAIN = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "\"main\""
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "MAIN"
+            }
+          ]
         },
         {
           "kind": "Variable",
@@ -876,6 +1038,104 @@
               "isOptional": false,
               "isAbstract": false,
               "name": "applyABRRestriction"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@playkit-js/playkit-js!BaseMediaSourceAdapter#applyTextTrackStyles:member(1)",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "applyTextTrackStyles(sheet: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "CSSStyleSheet",
+                  "canonicalReference": "!CSSStyleSheet:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", styles: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "TextStyle",
+                  "canonicalReference": "@playkit-js/playkit-js!TextStyle:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", containerId: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", engineClassName?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 9,
+                "endIndex": 10
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "sheet",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "styles",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "containerId",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "engineClassName",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 7,
+                    "endIndex": 8
+                  },
+                  "isOptional": true
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "applyTextTrackStyles"
             },
             {
               "kind": "Method",
@@ -1887,6 +2147,54 @@
             },
             {
               "kind": "Method",
+              "canonicalReference": "@playkit-js/playkit-js!BaseMediaSourceAdapter#setCachedUrls:member(1)",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "setCachedUrls(cachedUrls: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string[]"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "cachedUrls",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "setCachedUrls"
+            },
+            {
+              "kind": "Method",
               "canonicalReference": "@playkit-js/playkit-js!BaseMediaSourceAdapter#setMaxBitrate:member(1)",
               "docComment": "",
               "excerptTokens": [
@@ -2264,7 +2572,7 @@
             },
             {
               "kind": "Content",
-              "text": "{\n    readonly MEDIA_LOADED: \"medialoaded\";\n    readonly PLAYER_RESET: \"playerreset\";\n    readonly PLAYER_DESTROY: \"playerdestroy\";\n    readonly ENTER_FULLSCREEN: \"enterfullscreen\";\n    readonly EXIT_FULLSCREEN: \"exitfullscreen\";\n    readonly PLAY_FAILED: \"playfailed\";\n    readonly AUTOPLAY_FAILED: \"autoplayfailed\";\n    readonly FALLBACK_TO_MUTED_AUTOPLAY: \"fallbacktomutedautoplay\";\n    readonly CHANGE_SOURCE_STARTED: \"changesourcestarted\";\n    readonly CHANGE_SOURCE_ENDED: \"changesourceended\";\n    readonly MUTE_CHANGE: \"mutechange\";\n    readonly VIDEO_TRACK_CHANGED: \"videotrackchanged\";\n    readonly AUDIO_TRACK_CHANGED: \"audiotrackchanged\";\n    readonly TEXT_TRACK_CHANGED: \"texttrackchanged\";\n    readonly IMAGE_TRACK_CHANGED: \"imagetrackchanged\";\n    readonly TEXT_TRACK_ADDED: \"texttrackadded\";\n    readonly TEXT_CUE_CHANGED: \"textcuechanged\";\n    readonly TRACKS_CHANGED: \"trackschanged\";\n    readonly ABR_MODE_CHANGED: \"abrmodechanged\";\n    readonly PLAYER_STATE_CHANGED: \"playerstatechanged\";\n    readonly PLAYBACK_START: \"playbackstart\";\n    readonly FIRST_PLAY: \"firstplay\";\n    readonly FIRST_PLAYING: \"firstplaying\";\n    readonly PLAYBACK_ENDED: \"playbackended\";\n    readonly SOURCE_SELECTED: \"sourceselected\";\n    readonly TEXT_STYLE_CHANGED: \"textstylechanged\";\n    readonly MEDIA_RECOVERED: \"mediarecovered\";\n    readonly VR_STEREO_MODE_CHANGED: \"vrstereomodechanged\";\n    readonly FPS_DROP: \"fpsdrop\";\n    readonly BOOKMARK_ERROR: \"bookmarkerror\";\n    readonly CONCURRENCY_LIMIT: \"concurrencylimit\";\n    readonly RESIZE: \"resize\";\n    readonly TIMED_METADATA: \"timedmetadata\";\n    readonly TIMED_METADATA_CHANGE: \"timedmetadatachange\";\n    readonly TIMED_METADATA_ADDED: \"timedmetadataadded\";\n    readonly FRAG_LOADED: \"fragloaded\";\n    readonly MANIFEST_LOADED: \"manifestloaded\";\n    readonly USER_GESTURE: \"usergesture\";\n    readonly DRM_LICENSE_LOADED: \"drmlicenseloaded\";\n    readonly SOURCE_URL_SWITCHED: \"sourceurlswitched\";\n}"
+              "text": "{\n    readonly MEDIA_LOADED: \"medialoaded\";\n    readonly PLAYER_RESET: \"playerreset\";\n    readonly PLAYER_DESTROY: \"playerdestroy\";\n    readonly ENTER_FULLSCREEN: \"enterfullscreen\";\n    readonly EXIT_FULLSCREEN: \"exitfullscreen\";\n    readonly PLAY_FAILED: \"playfailed\";\n    readonly AUTOPLAY_FAILED: \"autoplayfailed\";\n    readonly FALLBACK_TO_MUTED_AUTOPLAY: \"fallbacktomutedautoplay\";\n    readonly CHANGE_SOURCE_STARTED: \"changesourcestarted\";\n    readonly CHANGE_SOURCE_ENDED: \"changesourceended\";\n    readonly MUTE_CHANGE: \"mutechange\";\n    readonly VIDEO_TRACK_CHANGED: \"videotrackchanged\";\n    readonly AUDIO_TRACK_CHANGED: \"audiotrackchanged\";\n    readonly TEXT_TRACK_CHANGED: \"texttrackchanged\";\n    readonly IMAGE_TRACK_CHANGED: \"imagetrackchanged\";\n    readonly TEXT_TRACK_ADDED: \"texttrackadded\";\n    readonly TEXT_CUE_CHANGED: \"textcuechanged\";\n    readonly TRACKS_CHANGED: \"trackschanged\";\n    readonly ABR_MODE_CHANGED: \"abrmodechanged\";\n    readonly PLAYER_STATE_CHANGED: \"playerstatechanged\";\n    readonly PLAYBACK_START: \"playbackstart\";\n    readonly FIRST_PLAY: \"firstplay\";\n    readonly FIRST_PLAYING: \"firstplaying\";\n    readonly PLAYBACK_ENDED: \"playbackended\";\n    readonly SOURCE_SELECTED: \"sourceselected\";\n    readonly TEXT_STYLE_CHANGED: \"textstylechanged\";\n    readonly MEDIA_RECOVERED: \"mediarecovered\";\n    readonly VR_STEREO_MODE_CHANGED: \"vrstereomodechanged\";\n    readonly FPS_DROP: \"fpsdrop\";\n    readonly BOOKMARK_ERROR: \"bookmarkerror\";\n    readonly CONCURRENCY_LIMIT: \"concurrencylimit\";\n    readonly RESIZE: \"resize\";\n    readonly TIMED_METADATA: \"timedmetadata\";\n    readonly TIMED_METADATA_CHANGE: \"timedmetadatachange\";\n    readonly TIMED_METADATA_ADDED: \"timedmetadataadded\";\n    readonly FRAG_LOADED: \"fragloaded\";\n    readonly MANIFEST_LOADED: \"manifestloaded\";\n    readonly USER_GESTURE: \"usergesture\";\n    readonly DRM_LICENSE_LOADED: \"drmlicenseloaded\";\n    readonly SOURCE_URL_SWITCHED: \"sourceurlswitched\";\n    readonly TIMELINE_REGION_ADDED: \"timelineregionadded\";\n    readonly TIMELINE_REGION_ENTER: \"timelineregionenter\";\n    readonly TIMELINE_REGION_EXIT: \"timelineregionexit\";\n    readonly PLAY_REACHED_25_PERCENT: \"playreached25percent\";\n    readonly PLAY_REACHED_50_PERCENT: \"playreached50percent\";\n    readonly PLAY_REACHED_75_PERCENT: \"playreached75percent\";\n    readonly PLAY_REACHED_90_PERCENT: \"playreached90percent\";\n    readonly PLAY_REACHED_100_PERCENT: \"playreached100percent\";\n    readonly THUMBNAIL_KS_UPDATED: \"thumbnailksupdated\";\n}"
             }
           ],
           "fileUrlPath": "src/event/event-type.ts",
@@ -2517,7 +2825,7 @@
             },
             {
               "kind": "Content",
-              "text": "{\n    readonly HTML5: \"html5\";\n    readonly FLASH: \"flash\";\n    readonly SILVERLIGHT: \"silverlight\";\n    readonly CAST: \"cast\";\n    readonly YOUTUBE: \"youtube\";\n    readonly IMAGE: \"image\";\n}"
+              "text": "{\n    readonly HTML5: \"html5\";\n    readonly FLASH: \"flash\";\n    readonly SILVERLIGHT: \"silverlight\";\n    readonly CAST: \"cast\";\n    readonly YOUTUBE: \"youtube\";\n    readonly IMAGE: \"image\";\n    readonly DOCUMENT: \"document\";\n}"
             }
           ],
           "fileUrlPath": "src/engines/engine-type.ts",
@@ -2572,7 +2880,7 @@
             {
               "kind": "Constructor",
               "canonicalReference": "@playkit-js/playkit-js!Error_2:constructor(1)",
-              "docComment": "/**\n * @constructor Constructs a new instance of the `Error` class\n *\n * @param severity - error's severity\n *\n * @param category - error's category.\n *\n * @param code - error's code.\n *\n * @param data - additional data for the error.\n */\n",
+              "docComment": "/**\n * @constructor Constructs a new instance of the `Error` class\n *\n * @param severity - error's severity\n *\n * @param category - error's category.\n *\n * @param code - error's code.\n *\n * @param data - additional data for the error.\n *\n * @param errorDetails - error details including title and message - optional.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -2601,6 +2909,14 @@
                 {
                   "kind": "Content",
                   "text": ", data?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "any"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", errorDetails?: "
                 },
                 {
                   "kind": "Content",
@@ -2644,6 +2960,14 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 7,
                     "endIndex": 8
+                  },
+                  "isOptional": true
+                },
+                {
+                  "parameterName": "errorDetails",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 9,
+                    "endIndex": 10
                   },
                   "isOptional": true
                 }
@@ -2793,6 +3117,36 @@
               "isOptional": false,
               "releaseTag": "Public",
               "name": "data",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@playkit-js/playkit-js!Error_2#errorDetails:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "errorDetails: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "any"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "errorDetails",
               "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
@@ -4045,6 +4399,32 @@
         },
         {
           "kind": "TypeAlias",
+          "canonicalReference": "@playkit-js/playkit-js!FontAlignmentOptions:type",
+          "docComment": "",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export type FontAlignmentOptions = "
+            },
+            {
+              "kind": "Content",
+              "text": "'default' | 'left' | 'center' | 'right'"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "fileUrlPath": "src/types/text-style.ts",
+          "releaseTag": "Public",
+          "name": "FontAlignmentOptions",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          }
+        },
+        {
+          "kind": "TypeAlias",
           "canonicalReference": "@playkit-js/playkit-js!FontScaleOptions:type",
           "docComment": "",
           "excerptTokens": [
@@ -4054,7 +4434,7 @@
             },
             {
               "kind": "Content",
-              "text": "-2 | -1 | 0 | 2 | 3 | 4"
+              "text": "-1 | 0 | 2"
             },
             {
               "kind": "Content",
@@ -4080,7 +4460,7 @@
             },
             {
               "kind": "Content",
-              "text": "'50%' | '75%' | '100%' | '200%' | '300%' | '400%'"
+              "text": "'100%' | '112.5%' | '125%'"
             },
             {
               "kind": "Content",
@@ -4214,6 +4594,67 @@
             }
           ],
           "name": "getLogLevel"
+        },
+        {
+          "kind": "Function",
+          "canonicalReference": "@playkit-js/playkit-js!getNativeLanguageName:function(1)",
+          "docComment": "/**\n * Returns the native language name for a given ISO language code using Intl.DisplayNames. Falls back to the provided fallback string if the code is absent or the API throws.\n *\n * @param langCode - ISO 639-1/2 language code (e.g. \"es\", \"ja\")\n *\n * @param fallback - Value to return when the code cannot be resolved\n *\n * @returns {string} - Native language name or fallback\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function getNativeLanguageName(langCode: "
+            },
+            {
+              "kind": "Content",
+              "text": "string | undefined | null"
+            },
+            {
+              "kind": "Content",
+              "text": ", fallback: "
+            },
+            {
+              "kind": "Content",
+              "text": "string"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Content",
+              "text": "string"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "fileUrlPath": "src/utils/locale.ts",
+          "returnTypeTokenRange": {
+            "startIndex": 5,
+            "endIndex": 6
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "langCode",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isOptional": false
+            },
+            {
+              "parameterName": "fallback",
+              "parameterTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "isOptional": false
+            }
+          ],
+          "name": "getNativeLanguageName"
         },
         {
           "kind": "Variable",
@@ -5731,6 +6172,38 @@
             },
             {
               "kind": "PropertySignature",
+              "canonicalReference": "@playkit-js/playkit-js!IEngine#mediaSourceAdapter:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "mediaSourceAdapter: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "IMediaSourceAdapter",
+                  "canonicalReference": "@playkit-js/playkit-js!IMediaSourceAdapter:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": " | null"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "mediaSourceAdapter",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              }
+            },
+            {
+              "kind": "PropertySignature",
               "canonicalReference": "@playkit-js/playkit-js!IEngine#muted:member",
               "docComment": "",
               "excerptTokens": [
@@ -6023,7 +6496,7 @@
                 },
                 {
                   "kind": "Content",
-                  "text": "\"none\" | \"metadata\" | \"auto\" | \"\""
+                  "text": "'none' | 'metadata' | 'auto' | ''"
                 },
                 {
                   "kind": "Content",
@@ -6451,6 +6924,79 @@
                 }
               ],
               "name": "selectVideoTrack"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "@playkit-js/playkit-js!IEngine#setCachedUrls:member(1)",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "setCachedUrls(cachedUrls: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string[]"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "any"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "cachedUrls",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "setCachedUrls"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "@playkit-js/playkit-js!IEngine#shouldAddTextTrack:member(1)",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "shouldAddTextTrack?(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": true,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [],
+              "name": "shouldAddTextTrack"
             },
             {
               "kind": "PropertySignature",
@@ -9155,6 +9701,101 @@
             },
             {
               "kind": "MethodSignature",
+              "canonicalReference": "@playkit-js/playkit-js!IMediaSourceAdapter#applyTextTrackStyles:member(1)",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "applyTextTrackStyles(sheet: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "CSSStyleSheet",
+                  "canonicalReference": "!CSSStyleSheet:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", styles: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "TextStyle",
+                  "canonicalReference": "@playkit-js/playkit-js!TextStyle:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", containerId: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", engineClassName?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 9,
+                "endIndex": 10
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "sheet",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "styles",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "containerId",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "engineClassName",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 7,
+                    "endIndex": 8
+                  },
+                  "isOptional": true
+                }
+              ],
+              "name": "applyTextTrackStyles"
+            },
+            {
+              "kind": "MethodSignature",
               "canonicalReference": "@playkit-js/playkit-js!IMediaSourceAdapter#attachMediaSource:member(1)",
               "docComment": "",
               "excerptTokens": [
@@ -9923,6 +10564,51 @@
             },
             {
               "kind": "MethodSignature",
+              "canonicalReference": "@playkit-js/playkit-js!IMediaSourceAdapter#setCachedUrls:member(1)",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "setCachedUrls(cachedUrls: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string[]"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "any"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "cachedUrls",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "setCachedUrls"
+            },
+            {
+              "kind": "MethodSignature",
               "canonicalReference": "@playkit-js/playkit-js!IMediaSourceAdapter#setMaxBitrate:member(1)",
               "docComment": "",
               "excerptTokens": [
@@ -10577,8 +11263,9 @@
               "text": "MediaType: "
             },
             {
-              "kind": "Content",
-              "text": "{\n    readonly VOD: \"Vod\";\n    readonly LIVE: \"Live\";\n    readonly AUDIO: \"Audio\";\n    readonly IMAGE: \"Image\";\n    readonly UNKNOWN: \"Unknown\";\n}"
+              "kind": "Reference",
+              "text": "PKMediaTypes",
+              "canonicalReference": "@playkit-js/playkit-js!~PKMediaTypes:type"
             }
           ],
           "fileUrlPath": "src/enums/media-type.ts",
@@ -11134,16 +11821,16 @@
             },
             {
               "kind": "Content",
-              "text": ";\n    tags?: "
+              "text": ";\n    tags?: string;\n    epgId?: string;\n    recordingId?: string;\n    audioFlavors?: "
             },
             {
               "kind": "Reference",
-              "text": "Object",
-              "canonicalReference": "!Object:interface"
+              "text": "Array",
+              "canonicalReference": "!Array:interface"
             },
             {
               "kind": "Content",
-              "text": ";\n    epgId?: string;\n    recordingId?: string;\n}"
+              "text": "<any>;\n    createdAt?: number;\n    updatedAt?: number;\n    endDate?: number;\n}"
             },
             {
               "kind": "Content",
@@ -11274,7 +11961,7 @@
             },
             {
               "kind": "Content",
-              "text": "{\n    audioLanguage: string;\n    textLanguage: string;\n    captionsDisplay: boolean;\n    additionalAudioLanguage: string;\n    additionalTextLanguage: string;\n    volume: number;\n    playsinline: boolean;\n    crossOrigin: string;\n    preload: string;\n    autoplay: "
+              "text": "{\n    audioLanguage: string;\n    textLanguage: string;\n    captionsDisplay: boolean;\n    additionalAudioLanguage: string | [string];\n    additionalTextLanguage: string | [string];\n    volume: number;\n    playsinline: boolean;\n    crossOrigin: string;\n    preload: string;\n    autoplay: "
             },
             {
               "kind": "Reference",
@@ -11283,7 +11970,7 @@
             },
             {
               "kind": "Content",
-              "text": ";\n    allowMutedAutoPlay: boolean;\n    muted: boolean;\n    pictureInPicture: boolean;\n    streamPriority: "
+              "text": ";\n    allowMutedAutoPlay: boolean;\n    updateAudioDescriptionLabels: boolean;\n    muted: boolean;\n    pictureInPicture: boolean;\n    streamPriority: "
             },
             {
               "kind": "Reference",
@@ -11336,25 +12023,7 @@
             },
             {
               "kind": "Content",
-              "text": "{\n    html5: {\n        hls: "
-            },
-            {
-              "kind": "Reference",
-              "text": "Object",
-              "canonicalReference": "!Object:interface"
-            },
-            {
-              "kind": "Content",
-              "text": ";\n        dash: "
-            },
-            {
-              "kind": "Reference",
-              "text": "Object",
-              "canonicalReference": "!Object:interface"
-            },
-            {
-              "kind": "Content",
-              "text": ";\n    };\n}"
+              "text": "{\n    html5: {\n        hls: any;\n        dash: any;\n    };\n}"
             },
             {
               "kind": "Content",
@@ -11366,7 +12035,7 @@
           "name": "PKPlaybackOptionsObject",
           "typeTokenRange": {
             "startIndex": 1,
-            "endIndex": 6
+            "endIndex": 2
           }
         },
         {
@@ -11670,6 +12339,24 @@
             },
             {
               "kind": "Content",
+              "text": ">;\n    document: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Array",
+              "canonicalReference": "!Array:interface"
+            },
+            {
+              "kind": "Content",
+              "text": "<"
+            },
+            {
+              "kind": "Reference",
+              "text": "PKMediaSourceObject",
+              "canonicalReference": "@playkit-js/playkit-js!PKMediaSourceObject:type"
+            },
+            {
+              "kind": "Content",
               "text": ">;\n    captions?: "
             },
             {
@@ -11715,7 +12402,7 @@
             },
             {
               "kind": "Content",
-              "text": ";\n    id?: string;\n    poster?: string;\n    duration?: number;\n    startTime?: number;\n    vr?: any;\n    imageSourceOptions?: "
+              "text": ";\n    id?: string;\n    poster?: string;\n    duration?: number;\n    startTime?: number;\n    endTime?: number;\n    vr?: any;\n    imageSourceOptions?: "
             },
             {
               "kind": "Reference",
@@ -11724,7 +12411,16 @@
             },
             {
               "kind": "Content",
-              "text": ";\n    seekFrom?: number;\n    clipTo?: number;\n}"
+              "text": ";\n    seekFrom?: number;\n    clipTo?: number;\n    mediaEntryType?: "
+            },
+            {
+              "kind": "Reference",
+              "text": "PKMediaTypes",
+              "canonicalReference": "@playkit-js/playkit-js!~PKMediaTypes:type"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n}"
             },
             {
               "kind": "Content",
@@ -11736,7 +12432,7 @@
           "name": "PKSourcesConfigObject",
           "typeTokenRange": {
             "startIndex": 1,
-            "endIndex": 30
+            "endIndex": 36
           }
         },
         {
@@ -11833,7 +12529,7 @@
             },
             {
               "kind": "Content",
-              "text": "<'DASH' | 'HLS' | 'PROGRESSIVE' | 'IMAGE', "
+              "text": "<'DASH' | 'HLS' | 'PROGRESSIVE' | 'IMAGE' | 'DOCUMENT', "
             },
             {
               "kind": "Reference",
@@ -12150,7 +12846,7 @@
         {
           "kind": "TypeAlias",
           "canonicalReference": "@playkit-js/playkit-js!PKTextStyleObject:type",
-          "docComment": "/**\n * @typedef {Object} PKTextStyleObject  @property {\"50%\" | \"75%\" | \"100%\" | \"200%\" | \"300%\" | \"400%\"} fontSize='100%' - Percentage unit relative to the parent element's font size.  @property {-2 | -1 | 0 | 2 | 3 | 4} fontScale=0 - - Integer number representing the scaling factor relative to the parent element's font size.  @property {string} fontFamily='sans-serif'  @property {[number, number, number]} fontColor=[255, 255, 255] - Color in RGB format.  @property {number} fontOpacity=1  @property {Array<[number, number, number, number, number, number]>} fontEdge=[]  @property {[number, number, number]} backgroundColor=[0, 0, 0] - Color in RGB format.  @property {number} backgroundOpacity=1\n */\n",
+          "docComment": "/**\n * @typedef {Object} PKTextStyleObject  @property {\"100%\" | \"112.5%\" | \"125%\"} fontSize='100%' - Percentage unit relative to the parent element's font size.  @property {-1 | 0 | 2} fontScale=0 - - Integer number representing the scaling factor relative to the parent element's font size.  @property {string} fontFamily='sans-serif'  @property {[number, number, number]} fontColor=[255, 255, 255] - Color in RGB format.  @property {number} fontOpacity=1  @property {Array<[number, number, number, number, number, number]>} fontEdge=[]  @property {[number, number, number]} backgroundColor=[0, 0, 0] - Color in RGB format.  @property {number} backgroundOpacity=1  @property {number} fontWeight=400\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -12164,6 +12860,15 @@
               "kind": "Reference",
               "text": "FontSizeOptions",
               "canonicalReference": "@playkit-js/playkit-js!FontSizeOptions:type"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n    textAlign: "
+            },
+            {
+              "kind": "Reference",
+              "text": "FontAlignmentOptions",
+              "canonicalReference": "@playkit-js/playkit-js!FontAlignmentOptions:type"
             },
             {
               "kind": "Content",
@@ -12185,7 +12890,7 @@
             },
             {
               "kind": "Content",
-              "text": "<[number, number, number, number, number, number]>;\n    backgroundColor: [number, number, number];\n    backgroundOpacity: number;\n}"
+              "text": "<[number, number, number, number, number, number]>;\n    backgroundColor: [number, number, number];\n    backgroundOpacity: number;\n    fontWeight: number;\n}"
             },
             {
               "kind": "Content",
@@ -12197,7 +12902,7 @@
           "name": "PKTextStyleObject",
           "typeTokenRange": {
             "startIndex": 1,
-            "endIndex": 8
+            "endIndex": 10
           }
         },
         {
@@ -12955,6 +13660,85 @@
               "isStatic": false,
               "isProtected": false,
               "isAbstract": false
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@playkit-js/playkit-js!Player#changeQuality:member(1)",
+              "docComment": "/**\n * change quality  @function changeQuality\n *\n * @param track - the track to change\n *\n * @returns {void}\n *\n * @public\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "changeQuality(track: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "any | string"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "track",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "changeQuality"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@playkit-js/playkit-js!Player#clearReset:member(1)",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "clearReset(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "clearReset"
             },
             {
               "kind": "Property",
@@ -15392,6 +16176,54 @@
             },
             {
               "kind": "Method",
+              "canonicalReference": "@playkit-js/playkit-js!Player#setCachedUrls:member(1)",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "setCachedUrls(cachedUrls: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string[]"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "cachedUrls",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "setCachedUrls"
+            },
+            {
+              "kind": "Method",
               "canonicalReference": "@playkit-js/playkit-js!Player.setCapabilities:member(1)",
               "docComment": "/**\n * Sets an engine capabilities.\n *\n * @param engineType - The engine type.\n *\n * @param capabilities - The engine capabilities.\n *\n * @returns {void}\n *\n * @static\n *\n * @public\n */\n",
               "excerptTokens": [
@@ -15453,6 +16285,54 @@
               "isOptional": false,
               "isAbstract": false,
               "name": "setCapabilities"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@playkit-js/playkit-js!Player#setClipTo:member(1)",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "setClipTo(clipTo: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "clipTo",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "setClipTo"
             },
             {
               "kind": "Method",
@@ -15518,6 +16398,54 @@
               "isOptional": false,
               "isAbstract": false,
               "name": "setLogLevel"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@playkit-js/playkit-js!Player#setSeekFrom:member(1)",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "setSeekFrom(seekFrom: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "seekFrom",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "setSeekFrom"
             },
             {
               "kind": "Method",
@@ -15665,6 +16593,37 @@
               "isOptional": false,
               "isAbstract": false,
               "name": "setTextDisplaySettings"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@playkit-js/playkit-js!Player#shouldAddTextTrack:member(1)",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "shouldAddTextTrack(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "shouldAddTextTrack"
             },
             {
               "kind": "Method",
@@ -16159,7 +17118,7 @@
             },
             {
               "kind": "Content",
-              "text": "'dash' | 'hls' | 'progressive' | 'image'"
+              "text": "'dash' | 'hls' | 'progressive' | 'image' | 'document'"
             },
             {
               "kind": "Content",
@@ -16603,7 +17562,7 @@
             },
             {
               "kind": "Content",
-              "text": "{\n    readonly DASH: \"dash\";\n    readonly HLS: \"hls\";\n    readonly PROGRESSIVE: \"progressive\";\n    readonly IMAGE: \"image\";\n}"
+              "text": "{\n    readonly DASH: \"dash\";\n    readonly HLS: \"hls\";\n    readonly PROGRESSIVE: \"progressive\";\n    readonly IMAGE: \"image\";\n    readonly DOCUMENT: \"document\";\n}"
             }
           ],
           "fileUrlPath": "src/engines/stream-type.ts",
@@ -16754,6 +17713,45 @@
               "isOptional": false,
               "releaseTag": "Public",
               "name": "EdgeStyles",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 4
+              },
+              "isStatic": true,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@playkit-js/playkit-js!TextStyle.FontAlignment:member",
+              "docComment": "/**\n * Possible font alignments are left, center, right\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "static FontAlignment: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "{\n        label: string;\n        value: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "FontAlignmentOptions",
+                  "canonicalReference": "@playkit-js/playkit-js!FontAlignmentOptions:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n    }[]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "FontAlignment",
               "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 4
@@ -16980,7 +17978,7 @@
             {
               "kind": "Property",
               "canonicalReference": "@playkit-js/playkit-js!TextStyle.FontSizes:member",
-              "docComment": "/**\n * Possible font sizes are 50%, 75%, 100%, 200%, 300%, 400%\n */\n",
+              "docComment": "/**\n * Possible font sizes are 100%, 115%, 125%\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
@@ -17006,7 +18004,7 @@
                 },
                 {
                   "kind": "Content",
-                  "text": ";\n    }[]"
+                  "text": ";\n        name?: string;\n    }[]"
                 },
                 {
                   "kind": "Content",
@@ -17022,6 +18020,36 @@
                 "endIndex": 6
               },
               "isStatic": true,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@playkit-js/playkit-js!TextStyle#fontWeight:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "set fontWeight(weight: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string | number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ");"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "fontWeight",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
               "isProtected": false,
               "isAbstract": false
             },
@@ -17217,6 +18245,36 @@
             },
             {
               "kind": "Property",
+              "canonicalReference": "@playkit-js/playkit-js!TextStyle.StandardFontWeights:member",
+              "docComment": "/**\n * Possible font weights are Light, Normal, SemiBold, Bold\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "static StandardFontWeights: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "{\n        label: string;\n        value: number;\n    }[]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "StandardFontWeights",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": true,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
               "canonicalReference": "@playkit-js/playkit-js!TextStyle.StandardOpacities:member",
               "docComment": "/**\n * Defined in {@link https://goo.gl/ZcqOOM FCC 12-9}, paragraph 111.  @enum {Object.<string, number>}}  @export\n */\n",
               "excerptTokens": [
@@ -17242,6 +18300,37 @@
                 "endIndex": 2
               },
               "isStatic": true,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@playkit-js/playkit-js!TextStyle#textAlign:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "textAlign: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "FontAlignmentOptions",
+                  "canonicalReference": "@playkit-js/playkit-js!FontAlignmentOptions:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "textAlign",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
               "isProtected": false,
               "isAbstract": false
             },
@@ -18774,7 +19863,7 @@
                 },
                 {
                   "kind": "Content",
-                  "text": "string"
+                  "text": "string | string[]"
                 },
                 {
                   "kind": "Content",
@@ -18858,10 +19947,10 @@
                 },
                 {
                   "kind": "Content",
-                  "text": ";"
+                  "text": ";\n\nset language(value: string);"
                 }
               ],
-              "isReadonly": true,
+              "isReadonly": false,
               "isOptional": false,
               "releaseTag": "Public",
               "name": "language",
@@ -19292,6 +20381,34 @@
               "variableTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
+              }
+            },
+            {
+              "kind": "Variable",
+              "canonicalReference": "@playkit-js/playkit-js!Utils.getSubtitleStyleSheet:var",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "getSubtitleStyleSheet: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "(playerId: string) => "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "CSSStyleSheet",
+                  "canonicalReference": "!CSSStyleSheet:interface"
+                }
+              ],
+              "fileUrlPath": "src/utils/styles.ts",
+              "isReadonly": true,
+              "releaseTag": "Public",
+              "name": "getSubtitleStyleSheet",
+              "variableTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
               }
             },
             {
@@ -19855,6 +20972,29 @@
               "variableTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 6
+              }
+            },
+            {
+              "kind": "Variable",
+              "canonicalReference": "@playkit-js/playkit-js!Utils.resetSubtitleStyleSheet:var",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "resetSubtitleStyleSheet: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "(playerId: string) => void"
+                }
+              ],
+              "fileUrlPath": "src/utils/styles.ts",
+              "isReadonly": true,
+              "releaseTag": "Public",
+              "name": "resetSubtitleStyleSheet",
+              "variableTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
               }
             },
             {
