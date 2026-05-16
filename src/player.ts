@@ -2851,9 +2851,13 @@ export default class Player extends FakeEventTarget {
   private _getLanguage<T extends PKTextTrack | AudioTrack>(tracks: T[], configuredLanguage: string, defaultTrack?: T): string {
     let language = configuredLanguage;
     if (language === AUTO) {
+      const uiLocale: string | undefined = this._config?.ui?.locale;
+      const uiLocaleTrack: T | undefined = uiLocale ? tracks.find((track) => Track.langComparer(uiLocale, track.language)) : undefined;
       const localeTrack: T | undefined = tracks.find((track) => Track.langComparer(Locale.language, track.language));
       if (defaultTrack && defaultTrack.language !== OFF) {
         language = defaultTrack.language;
+      } else if (uiLocaleTrack) {
+        language = uiLocaleTrack.language;
       } else if (localeTrack) {
         language = localeTrack.language;
       } else if (tracks && tracks.length > 0) {
