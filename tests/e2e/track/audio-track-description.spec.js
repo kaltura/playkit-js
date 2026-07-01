@@ -323,7 +323,7 @@ describe('Audio Track Description Handler', () => {
       tracks[1].label.should.equal('Track Label B - Audio Description');
     });
 
-    it('should prioritize flavorId matching over label matching', () => {
+    it('should prioritize label matching over flavorId matching', () => {
       const tracks = [
         new AudioTrack({
           label: 'English',
@@ -349,10 +349,10 @@ describe('Audio Track Description Handler', () => {
 
       audioDescriptionTrackHandler(tracks, audioFlavors);
 
-      // Track matches by flavorId (flavor789) which has audio_description tag
-      // Therefore, should be marked as audio description
-      tracks[0].language.should.equal('ad-en');
-      tracks[0].label.should.equal('English - Audio Description');
+      // Track should match by label (flavor123) not by flavorId (flavor789)
+      // Therefore, should NOT be marked as audio description
+      tracks[0].language.should.equal('en');
+      tracks[0].label.should.equal('English');
     });
 
     it('should not match when neither label nor flavorId match', () => {

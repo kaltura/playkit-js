@@ -84,12 +84,12 @@ export function audioDescriptionTrackHandler(tracks: Track[], audioFlavors: Arra
   function findMatchingFlavor(track: AudioTrack, audioFlavors: Array<any>): any {
     if (audioFlavors.length === 0) return null;
     let matchingFlavor: any = null;
-    if (track.flavorId) {
-      matchingFlavor = audioFlavors.find((flavor) => flavor.id === track.flavorId);
-    }
-    // if no match found by id, try matching by label
-    if (!matchingFlavor && track.label) {
+    if (track.label) {
       matchingFlavor = audioFlavors.find((flavor) => flavor.label === track.label);
+    }
+    // if no match found by label, try matching by flavorId
+    if (!matchingFlavor && track.flavorId) {
+      matchingFlavor = audioFlavors.find((flavor) => flavor.id === track.flavorId);
     }
     return matchingFlavor;
   }
