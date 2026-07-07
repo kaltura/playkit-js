@@ -111,8 +111,8 @@ export function audioDescriptionTrackHandler(tracks: Track[], audioFlavors: Arra
         const isAudioDescription = (matchingFlavor && matchingFlavor.tags?.includes(FlavorAssetTags.AUDIO_DESCRIPTION)) || track.kind.includes(AudioTrackKind.DESCRIPTION);
         if (isAudioDescription) {
           track.language = `ad-${track.language}`;
-          if (matchingFlavor && !/audio.?desc/i.test(track.label)) {
-            track.label = `${track.label} - Audio Description`;
+          if (matchingFlavor && !/audio.?desc/i.test(track.label ?? '')) {
+            track.label = `${track.label ?? ''} - Audio Description`;
           }
         }
       }
@@ -124,10 +124,10 @@ export function audioDescriptionTrackHandler(tracks: Track[], audioFlavors: Arra
     const audioTracks = tracks.filter((t): t is AudioTrack => t instanceof AudioTrack);
     const labelCount = new Map<string, number>();
     for (const t of audioTracks) {
-      labelCount.set(t.label, (labelCount.get(t.label) || 0) + 1);
+      labelCount.set(t.label ?? '', (labelCount.get(t.label ?? '') || 0) + 1);
     }
     for (const t of audioTracks) {
-      if ((labelCount.get(t.label) || 0) > 1 && t.manifestName && t.manifestName !== t.label) {
+      if ((labelCount.get(t.label ?? '') || 0) > 1 && t.manifestName && t.manifestName !== t.label) {
         t.label = t.manifestName;
       }
     }
