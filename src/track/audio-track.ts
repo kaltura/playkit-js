@@ -32,6 +32,12 @@ class AudioTrack extends Track {
    * @private
    */
   private _flavorId: string | undefined;
+  /**
+   * Raw manifest NAME attribute — preserved for label deduplication.
+   * @member
+   * @type {string}
+   */
+  public manifestName: string;
 
   /**
    * Getter for the kind value of the track.
@@ -77,6 +83,7 @@ class AudioTrack extends Track {
     super(settings);
     this._kind = settings.kind || AudioTrackKind.MAIN;
     this._flavorId = settings.flavorId;
+    this.manifestName = settings.manifestName || '';
   }
 }
 
@@ -95,6 +102,7 @@ export function audioDescriptionTrackHandler(tracks: Track[], audioFlavors: Arra
   }
 
   if (tracks?.length) {
+    const hasAudioFlavors = audioFlavors.length > 0;
     // iterate over the audio tracks and set the isAudioDescription flag based on the audioFlavors tags
     tracks.forEach((track) => {
       if (track instanceof AudioTrack) {
@@ -102,15 +110,27 @@ export function audioDescriptionTrackHandler(tracks: Track[], audioFlavors: Arra
 
         const isAudioDescription = (matchingFlavor && matchingFlavor.tags?.includes(FlavorAssetTags.AUDIO_DESCRIPTION)) || track.kind.includes(AudioTrackKind.DESCRIPTION);
         if (isAudioDescription) {
-          // set the language to ad-<language> for audio description tracks
           track.language = `ad-${track.language}`;
-          if (matchingFlavor) {
-            // add "Audio Description" to the label if custom label is not provided
+          if (matchingFlavor && !/audio.?desc/i.test(track.label)) {
             track.label = `${track.label} - Audio Description`;
           }
         }
       }
     });
+
+    // Dedup labels: when two tracks produce the same display label (e.g. both "English"
+    // because Intl.DisplayNames ignores the manifest NAME), fall back to the raw manifest
+    // NAME stored in manifestName. Affects only the label string — no language/kind change.
+    const audioTracks = tracks.filter((t): t is AudioTrack => t instanceof AudioTrack);
+    const labelCount = new Map<string, number>();
+    for (const t of audioTracks) {
+      labelCount.set(t.label, (labelCount.get(t.label) || 0) + 1);
+    }
+    for (const t of audioTracks) {
+      if ((labelCount.get(t.label) || 0) > 1 && t.manifestName && t.manifestName !== t.label) {
+        t.label = t.manifestName;
+      }
+    }
   }
 }
 

@@ -807,7 +807,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           language: audioTracks[i].language,
           index: i,
           kind: audioTracks[i].kind,
-          flavorId: this._hlsManifestHandler.extractFlavorId(i)
+          flavorId: this._hlsManifestHandler.extractFlavorId(i),
+          // Safari exposes the raw manifest NAME in audioTracks[i].label — preserve it for
+          // the dedup pass in audioDescriptionTrackHandler.
+          manifestName: audioTracks[i].label || ''
         };
         parsedTracks.push(new AudioTrack(settings));
       }
