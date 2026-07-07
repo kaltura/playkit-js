@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.46 (2026-07-02)
+
+### 0.84.45 (2026-05-20)
+
+
+### Bug Fixes
+
+* **audio-tracks:** use Intl.DisplayNames for native language labels (SUP-52289) ([#879](https://github.com/kaltura/playkit-js/issues/879)) ([8cf2a7b](https://github.com/kaltura/playkit-js/commit/8cf2a7bd91347ed90328207aa18ceb5de3c5e9e1))
+
+### 0.84.44 (2026-05-07)
+
+
+### Bug Fixes
+
+* **SUP-52119:** embedded video stuck on loading at end of video in Firefox on macOS ([#876](https://github.com/kaltura/playkit-js/issues/876)) ([315659d](https://github.com/kaltura/playkit-js/commit/315659d03b81c6f16c7397e2316295072c349b80))
+
 ### 0.84.43 (2026-03-31)
 
 ### 0.84.42 (2026-03-26)

@@ -1186,7 +1186,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     setTimeout(() => {
       // prevent sending waiting event for too short buffering
       if (!playing) {
-        this.dispatchEvent(new FakeEvent(Html5EventType.WAITING));
+        if ( Env.isFirefox && this._el.duration === this._el.currentTime) {
+          this.dispatchEvent(new FakeEvent(Html5EventType.ENDED));
+        } else {
+          this.dispatchEvent(new FakeEvent(Html5EventType.WAITING));
+        }
       }
     }, SHORT_BUFFERING_TIMEOUT);
   }

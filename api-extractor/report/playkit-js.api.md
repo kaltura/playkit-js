@@ -59,6 +59,19 @@ export const AdTagType: {
 
 // @public
 export class AudioTrack extends Track {
+    constructor(settings?: any);
+    get flavorId(): string | undefined;
+    set flavorId(value: string | undefined);
+    get kind(): AudioTrackKind;
+    set kind(value: AudioTrackKind);
+}
+
+// @public (undocumented)
+export enum AudioTrackKind {
+    // (undocumented)
+    DESCRIPTION = "description",
+    // (undocumented)
+    MAIN = "main"
 }
 
 // Warning: (ae-forgotten-export) The symbol "PKAutoPlayTypes" needs to be exported by the entry point playkit.d.ts
@@ -71,6 +84,8 @@ export class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSou
     constructor(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config?: any);
     // (undocumented)
     applyABRRestriction(restrictions: PKABRRestrictionObject): void;
+    // (undocumented)
+    applyTextTrackStyles(sheet: CSSStyleSheet, styles: TextStyle, containerId: string, engineClassName?: string): void;
     // (undocumented)
     attachMediaSource(): void;
     static canPlayType(mimeType: string, preferNative: boolean): boolean;
@@ -129,6 +144,8 @@ export class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSou
     selectTextTrack(textTrack: TextTrack_2): void;
     // (undocumented)
     selectVideoTrack(videoTrack: VideoTrack): void;
+    // (undocumented)
+    setCachedUrls(cachedUrls: string[]): void;
     // (undocumented)
     setMaxBitrate(bitrate: number): void;
     protected _sourceObj?: PKMediaSourceObject;
@@ -208,6 +225,15 @@ export const CustomEventType: {
     readonly USER_GESTURE: "usergesture";
     readonly DRM_LICENSE_LOADED: "drmlicenseloaded";
     readonly SOURCE_URL_SWITCHED: "sourceurlswitched";
+    readonly TIMELINE_REGION_ADDED: "timelineregionadded";
+    readonly TIMELINE_REGION_ENTER: "timelineregionenter";
+    readonly TIMELINE_REGION_EXIT: "timelineregionexit";
+    readonly PLAY_REACHED_25_PERCENT: "playreached25percent";
+    readonly PLAY_REACHED_50_PERCENT: "playreached50percent";
+    readonly PLAY_REACHED_75_PERCENT: "playreached75percent";
+    readonly PLAY_REACHED_90_PERCENT: "playreached90percent";
+    readonly PLAY_REACHED_100_PERCENT: "playreached100percent";
+    readonly THUMBNAIL_KS_UPDATED: "thumbnailksupdated";
 };
 
 // @public (undocumented)
@@ -262,6 +288,7 @@ export const EngineType: {
     readonly CAST: "cast";
     readonly YOUTUBE: "youtube";
     readonly IMAGE: "image";
+    readonly DOCUMENT: "document";
 };
 
 // Warning: (ae-forgotten-export) The symbol "IEnv" needs to be exported by the entry point playkit.d.ts
@@ -271,7 +298,7 @@ export const Env: IEnv;
 
 // @public
 class Error_2 {
-    constructor(severity: number, category: number, code: number, data?: any);
+    constructor(severity: number, category: number, code: number, data?: any, errorDetails?: any);
     // Warning: (ae-forgotten-export) The symbol "CategoryType" needs to be exported by the entry point playkit.d.ts
     static Category: CategoryType;
     // (undocumented)
@@ -282,6 +309,8 @@ class Error_2 {
     code: number;
     // (undocumented)
     data: any;
+    // (undocumented)
+    errorDetails: any;
     // Warning: (ae-forgotten-export) The symbol "SeverityType" needs to be exported by the entry point playkit.d.ts
     static Severity: SeverityType;
     // (undocumented)
@@ -343,10 +372,13 @@ export class FakeEventTarget {
 export function filterTracksByRestriction(videoTracks: VideoTrack[], restriction: PKABRRestrictionObject): VideoTrack[];
 
 // @public (undocumented)
-export type FontScaleOptions = -2 | -1 | 0 | 2 | 3 | 4;
+export type FontAlignmentOptions = 'default' | 'left' | 'center' | 'right';
 
 // @public (undocumented)
-export type FontSizeOptions = '50%' | '75%' | '100%' | '200%' | '300%' | '400%';
+export type FontScaleOptions = -1 | 0 | 2;
+
+// @public (undocumented)
+export type FontSizeOptions = '100%' | '112.5%' | '125%';
 
 // @public (undocumented)
 const _Generator: {
@@ -362,6 +394,12 @@ export function getLogger(name?: string): ILogger;
 
 // @public
 export function getLogLevel(name?: string): ILogLevel;
+
+// @public
+export function getNativeLanguageName(langCode: string | undefined | null, fallback: string): string;
+
+// @public (undocumented)
+const getSubtitleStyleSheet: (playerId: string) => CSSStyleSheet;
 
 // @public (undocumented)
 export const Html5EventType: {
@@ -501,6 +539,8 @@ export interface IEngine extends FakeEventTarget {
     // (undocumented)
     loop: boolean;
     // (undocumented)
+    mediaSourceAdapter: IMediaSourceAdapter | null;
+    // (undocumented)
     muted: boolean;
     // (undocumented)
     networkState: number;
@@ -521,7 +561,7 @@ export interface IEngine extends FakeEventTarget {
     // (undocumented)
     poster: string;
     // (undocumented)
-    preload: "none" | "metadata" | "auto" | "";
+    preload: 'none' | 'metadata' | 'auto' | '';
     // (undocumented)
     readyState: number;
     // (undocumented)
@@ -544,6 +584,10 @@ export interface IEngine extends FakeEventTarget {
     selectTextTrack(textTrack: TextTrack_2): void;
     // (undocumented)
     selectVideoTrack(videoTrack: VideoTrack): void;
+    // (undocumented)
+    setCachedUrls(cachedUrls: string[]): any;
+    // (undocumented)
+    shouldAddTextTrack?(): void;
     // (undocumented)
     src: string;
     // (undocumented)
@@ -750,6 +794,8 @@ export interface IMediaSourceAdapter extends FakeEventTarget {
     // (undocumented)
     applyABRRestriction(restriction: PKABRRestrictionObject): void;
     // (undocumented)
+    applyTextTrackStyles(sheet: CSSStyleSheet, styles: TextStyle, containerId: string, engineClassName?: string): void;
+    // (undocumented)
     attachMediaSource(): void;
     // (undocumented)
     capabilities: PKMediaSourceCapabilities;
@@ -795,6 +841,8 @@ export interface IMediaSourceAdapter extends FakeEventTarget {
     selectTextTrack(textTrack: TextTrack_2): void;
     // (undocumented)
     selectVideoTrack(videoTrack: VideoTrack): void;
+    // (undocumented)
+    setCachedUrls(cachedUrls: string[]): any;
     // (undocumented)
     setMaxBitrate(bitrate: number): void;
     // (undocumented)
@@ -844,14 +892,10 @@ export const LogLevelType: Record<keyof LoggerLevels, keyof LoggerLevels>;
 // @public (undocumented)
 export type MaybeState = State | null;
 
+// Warning: (ae-forgotten-export) The symbol "PKMediaTypes" needs to be exported by the entry point playkit.d.ts
+//
 // @public (undocumented)
-export const MediaType: {
-    readonly VOD: "Vod";
-    readonly LIVE: "Live";
-    readonly AUDIO: "Audio";
-    readonly IMAGE: "Image";
-    readonly UNKNOWN: "Unknown";
-};
+export const MediaType: PKMediaTypes;
 
 // @public (undocumented)
 const MimeType_2: PKMimeTypes;
@@ -1013,9 +1057,13 @@ export type PKMetadataConfigObject = {
     description?: string;
     mediaType?: string;
     metas?: Object;
-    tags?: Object;
+    tags?: string;
     epgId?: string;
     recordingId?: string;
+    audioFlavors?: Array<any>;
+    createdAt?: number;
+    updatedAt?: number;
+    endDate?: number;
 };
 
 // @public (undocumented)
@@ -1040,14 +1088,15 @@ export type PKPlaybackConfigObject = {
     audioLanguage: string;
     textLanguage: string;
     captionsDisplay: boolean;
-    additionalAudioLanguage: string;
-    additionalTextLanguage: string;
+    additionalAudioLanguage: string | [string];
+    additionalTextLanguage: string | [string];
     volume: number;
     playsinline: boolean;
     crossOrigin: string;
     preload: string;
     autoplay: PKAutoPlayTypes;
     allowMutedAutoPlay: boolean;
+    updateAudioDescriptionLabels: boolean;
     muted: boolean;
     pictureInPicture: boolean;
     streamPriority: Array<PKStreamPriorityObject>;
@@ -1060,8 +1109,8 @@ export type PKPlaybackConfigObject = {
 // @public (undocumented)
 export type PKPlaybackOptionsObject = {
     html5: {
-        hls: Object;
-        dash: Object;
+        hls: any;
+        dash: any;
     };
 };
 
@@ -1121,6 +1170,7 @@ export type PKSourcesConfigObject = {
     dash: Array<PKMediaSourceObject>;
     progressive: Array<PKMediaSourceObject>;
     image: Array<PKMediaSourceObject>;
+    document: Array<PKMediaSourceObject>;
     captions?: Array<PKExternalCaptionObject>;
     thumbnails?: PKExternalThumbnailsConfig;
     options: PKMediaSourceOptionsObject;
@@ -1131,10 +1181,12 @@ export type PKSourcesConfigObject = {
     poster?: string;
     duration?: number;
     startTime?: number;
+    endTime?: number;
     vr?: any;
     imageSourceOptions?: ImageSourceOptions;
     seekFrom?: number;
     clipTo?: number;
+    mediaEntryType?: PKMediaTypes;
 };
 
 // @public (undocumented)
@@ -1158,7 +1210,7 @@ export type PKStreamPriorityObject = {
 };
 
 // @public (undocumented)
-export type PKStreamTypes = Record<'DASH' | 'HLS' | 'PROGRESSIVE' | 'IMAGE', PlayerStreamTypes>;
+export type PKStreamTypes = Record<'DASH' | 'HLS' | 'PROGRESSIVE' | 'IMAGE' | 'DOCUMENT', PlayerStreamTypes>;
 
 // @public (undocumented)
 export interface PKTextConfigObject {
@@ -1187,6 +1239,7 @@ export interface PKTextConfigObject {
 // @public
 export type PKTextStyleObject = {
     fontSize: FontSizeOptions;
+    textAlign: FontAlignmentOptions;
     fontScale: FontScaleOptions;
     fontFamily: string;
     fontColor: [number, number, number];
@@ -1194,6 +1247,7 @@ export type PKTextStyleObject = {
     fontEdge: Array<[number, number, number, number, number, number]>;
     backgroundColor: [number, number, number];
     backgroundOpacity: number;
+    fontWeight: number;
 };
 
 // @public (undocumented)
@@ -1259,6 +1313,9 @@ export class Player extends FakeEventTarget {
     get AdTagType(): typeof AdTagType;
     attachMediaSource(): void;
     get buffered(): TimeRanges | null;
+    changeQuality(track: any | string): void;
+    // (undocumented)
+    clearReset(): void;
     get config(): any;
     configure(config?: any): void;
     get CorsType(): typeof CorsType;
@@ -1349,13 +1406,21 @@ export class Player extends FakeEventTarget {
     get seeking(): boolean | null;
     seekToLiveEdge(): void;
     selectTrack(track?: Track): void;
+    // (undocumented)
+    setCachedUrls(cachedUrls: string[]): void;
     static setCapabilities(engineType: string, capabilities: {
         [name: string]: any;
     }): void;
+    // (undocumented)
+    setClipTo(clipTo: number): void;
     setLogLevel(level: ILogLevel, name?: string): void;
+    // (undocumented)
+    setSeekFrom(seekFrom: number): void;
     setSources(sources: PKSourcesConfigObject): void;
     setSourcesMetadata(sourcesMetadata: PKMetadataConfigObject): void;
     setTextDisplaySettings(settings: PKTextTrackDisplaySettingObject): void;
+    // (undocumented)
+    shouldAddTextTrack(): boolean;
     showBlackCover(): void;
     showTextTrack(): void;
     get sources(): PKSourcesConfigObject;
@@ -1379,7 +1444,7 @@ export class Player extends FakeEventTarget {
 }
 
 // @public (undocumented)
-export type PlayerStreamTypes = 'dash' | 'hls' | 'progressive' | 'image';
+export type PlayerStreamTypes = 'dash' | 'hls' | 'progressive' | 'image' | 'document';
 
 // Warning: (ae-forgotten-export) The symbol "EngineProvider" needs to be exported by the entry point playkit.d.ts
 //
@@ -1393,6 +1458,9 @@ export const registerMediaSourceAdapter: typeof MediaSourceProvider.register;
 
 // @public (undocumented)
 export const RequestType: PKRequestType;
+
+// @public (undocumented)
+const resetSubtitleStyleSheet: (playerId: string) => void;
 
 // @public
 class ResizeWatcher extends FakeEventTarget {
@@ -1442,6 +1510,7 @@ export const StreamType: {
     readonly HLS: "hls";
     readonly PROGRESSIVE: "progressive";
     readonly IMAGE: "image";
+    readonly DOCUMENT: "document";
 };
 
 // @public (undocumented)
@@ -1458,6 +1527,10 @@ export class TextStyle {
     static EdgeStyles: {
         [edgeStyle: string]: Array<[number, number, number, number, number, number]>;
     };
+    static FontAlignment: {
+        label: string;
+        value: FontAlignmentOptions;
+    }[];
     fontColor: [number, number, number];
     fontEdge: Array<[number, number, number, number, number, number]>;
     static FontFamily: {
@@ -1472,7 +1545,11 @@ export class TextStyle {
     static FontSizes: {
         label: FontSizeOptions;
         value: FontScaleOptions;
+        name?: string;
     }[];
+    set fontWeight(weight: string | number);
+    // (undocumented)
+    get fontWeight(): number;
     // (undocumented)
     static fromJson(setting: PKTextStyleObject): TextStyle;
     // (undocumented)
@@ -1483,9 +1560,15 @@ export class TextStyle {
     static StandardColors: {
         [coloer: string]: [number, number, number];
     };
+    static StandardFontWeights: {
+        label: string;
+        value: number;
+    }[];
     static StandardOpacities: {
         [opacityLevel: string]: number;
     };
+    // (undocumented)
+    textAlign: FontAlignmentOptions;
     toCSS(): string;
     // (undocumented)
     static toJson(text: TextStyle): PKTextStyleObject;
@@ -1582,8 +1665,9 @@ export class Track {
     get label(): string | undefined;
     set label(value: string);
     protected _label: string | undefined;
-    static langComparer(inputLang: string, trackLang: string, additionalLanguage?: string, equal?: boolean): boolean;
+    static langComparer(inputLang: string, trackLang: string, additionalLanguage?: string | string[], equal?: boolean): boolean;
     get language(): string;
+    set language(value: string);
 }
 
 // @public (undocumented)
@@ -1618,7 +1702,9 @@ declare namespace Utils {
         _Generator as Generator,
         _Dom as Dom,
         _Http as Http,
-        _VERSION as VERSION
+        _VERSION as VERSION,
+        getSubtitleStyleSheet,
+        resetSubtitleStyleSheet
     }
 }
 export { Utils }
@@ -1648,8 +1734,8 @@ export * from "js-logger";
 
 // Warnings were encountered during analysis:
 //
-// src/types/sources-config.ts:13:3 - (ae-forgotten-export) The symbol "PKExternalCaptionObject" needs to be exported by the entry point playkit.d.ts
-// src/utils/util.ts:504:4 - (ae-forgotten-export) The symbol "jsonp" needs to be exported by the entry point playkit.d.ts
+// src/types/sources-config.ts:15:3 - (ae-forgotten-export) The symbol "PKExternalCaptionObject" needs to be exported by the entry point playkit.d.ts
+// src/utils/util.ts:503:4 - (ae-forgotten-export) The symbol "jsonp" needs to be exported by the entry point playkit.d.ts
 
 // (No @packageDocumentation comment for this package)
 

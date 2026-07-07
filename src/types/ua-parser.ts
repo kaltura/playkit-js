@@ -208,4 +208,5 @@ export interface IEnv extends IResult {
   isMacOS: boolean;
   isChrome: boolean;
   isEdge: boolean;
+  isFirefox: boolean;
 }
