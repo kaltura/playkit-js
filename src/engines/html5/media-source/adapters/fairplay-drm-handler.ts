@@ -112,8 +112,10 @@ class FairPlayDrmHandler {
 
   public destroy(): void {
     this._eventManager.destroy();
-    this._keySession.close();
-    this._keySession = null;
+    if (this._keySession) {
+      this._keySession.close();
+      this._keySession = null;
+    }
   }
 
   private _onWebkitKeyMessage(event: any): void {
