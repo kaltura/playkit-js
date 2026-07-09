@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.47 (2026-07-09)
+
+
+### Bug Fixes
+
+* **SUP-52558:** Safari - Playback is not Working After navigating to Next Episode. Player is on Pause State & Unable to Play ([#887](https://github.com/kaltura/playkit-js/issues/887)) ([627c453](https://github.com/kaltura/playkit-js/commit/627c453ab0ef10f8a87130889aa702ab6d76eb65))
+
 ### 0.84.46 (2026-07-02)
 
 ### 0.84.45 (2026-05-20)
