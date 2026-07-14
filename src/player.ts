@@ -1833,7 +1833,6 @@ export default class Player extends FakeEventTarget {
     const el = (this._el = Utils.Dom.createElement('div'));
     Utils.Dom.addClassName(el, CONTAINER_CLASS_NAME);
     Utils.Dom.setAttribute(el, 'id', this._playerId);
-    Utils.Dom.setAttribute(el, 'tabindex', '-1');
   }
 
   /**
