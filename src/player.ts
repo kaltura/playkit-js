@@ -1370,9 +1370,11 @@ export default class Player extends FakeEventTarget {
         } else if (track.external) {
           this._engine.hideTextTrack();
           this._externalCaptionsHandler.selectTextTrack(track);
+          this._playbackAttributesState.captionsDisplay = true;
         } else {
           this._externalCaptionsHandler.hideTextTrack();
           this._engine.selectTextTrack(track);
+          this._playbackAttributesState.captionsDisplay = true;
         }
       } else if (track instanceof ImageTrack) {
         this._engine.selectImageTrack(track);
@@ -2821,7 +2823,11 @@ export default class Player extends FakeEventTarget {
 
     const currentOrConfiguredAudioLang = getAudioLanguage();
 
-    if (!playbackConfig.captionsDisplay) {
+    // Use user preference (runtime state) if explicitly set, otherwise fall back to config value.
+    // This ensures that when a user manually toggles captions ON, that preference is respected
+    // even if track changes occur (e.g., during EP live events with live captions).
+    const captionsDisplay = this._playbackAttributesState.captionsDisplay ?? playbackConfig.captionsDisplay;
+    if (!captionsDisplay) {
       this._playbackAttributesState.textLanguage = defaultLanguage;
       this._setDefaultTrack<PKTextTrack>(this._getTextTracks(), OFF, offTextTrack);
     } else {
