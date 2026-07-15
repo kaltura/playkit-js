@@ -59,7 +59,6 @@ class PosterManager {
     if (!this._el) {
       const el = (this._el = Utils.Dom.createElement('div'));
       Utils.Dom.setAttribute(el, 'id', Utils.Generator.uniqueId(5));
-      Utils.Dom.setAttribute(el, 'tabindex', '-1');
     }
   }
 
