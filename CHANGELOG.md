@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.48 (2026-07-16)
+
+
+### Bug Fixes
+
+* **ADA-3093:** Remove Talkback stop ([#888](https://github.com/kaltura/playkit-js/issues/888)) ([09d95a1](https://github.com/kaltura/playkit-js/commit/09d95a19e1663ffa628daa34a9bc4c53e480bc7c))
+
 ### 0.84.47 (2026-07-09)
 
 
