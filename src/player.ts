@@ -2952,6 +2952,18 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Gets the live stream type.
+   * @returns {string} - Live stream type -  primary / backup
+   * @public
+   */
+  public getLiveEntryStValue(): string {
+    if (this._engine && typeof this._engine.getLiveEntryStValue === 'function') {
+      return this._engine.getLiveEntryStValue();
+    }
+    return '';
+  }
+
+  /**
    * Gets the player event types.
    * @returns {PKEventTypes} - The event types of the player.
    * @public
