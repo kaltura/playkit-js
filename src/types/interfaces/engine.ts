@@ -56,7 +56,7 @@ export interface IEngine extends FakeEventTarget {
   getDrmInfo(): PKDrmDataObject | null;
   setCachedUrls(cachedUrls: string[]);
   shouldAddTextTrack?(): void;
-  getLiveEntryStValue(): string;
+  getLiveEntryStValue?(): string;
   id: string;
   currentTime: number;
   duration: number;
