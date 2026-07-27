@@ -381,4 +381,86 @@ describe('Audio Track Description Handler', () => {
       tracks[0].label.should.equal('Unmatched Label');
     });
   });
+
+  describe('manifestName-based AD detection (SUP-52923)', () => {
+    it('should detect AD via manifestName when CHARACTERISTICS is absent', () => {
+      // Reproduces SUP-52923: manifest has NAME="Engl - Audio Description"
+      // but no CHARACTERISTICS attribute, so kind=MAIN. No flavor metadata.
+      const tracks = [
+        new AudioTrack({
+          label: 'English',
+          language: 'en',
+          index: 0,
+          kind: AudioTrackKind.MAIN,
+          manifestName: 'English'
+        }),
+        new AudioTrack({
+          label: 'English',
+          language: 'en',
+          index: 1,
+          kind: AudioTrackKind.MAIN,
+          manifestName: 'Engl - Audio Description'
+        })
+      ];
+
+      audioDescriptionTrackHandler(tracks, []);
+
+      // Main track unchanged
+      tracks[0].language.should.equal('en');
+      tracks[0].label.should.equal('English');
+
+      // EAD track detected via manifestName → ad- prefix + label from manifestName via dedup
+      tracks[1].language.should.equal('ad-en');
+      tracks[1].label.should.equal('Engl - Audio Description');
+    });
+
+    it('should not double-append "Audio Description" when manifestName already contains it', () => {
+      const tracks = [
+        new AudioTrack({
+          label: 'English',
+          language: 'en',
+          index: 0,
+          kind: AudioTrackKind.MAIN,
+          manifestName: 'English'
+        }),
+        new AudioTrack({
+          label: 'English - Audio Description',
+          language: 'en',
+          index: 1,
+          kind: AudioTrackKind.MAIN,
+          manifestName: 'English - Audio Description'
+        })
+      ];
+
+      audioDescriptionTrackHandler(tracks, []);
+
+      // Label should NOT become "English - Audio Description - Audio Description"
+      tracks[1].language.should.equal('ad-en');
+      tracks[1].label.should.equal('English - Audio Description');
+    });
+
+    it('should not flag a non-AD track with an unrelated manifestName', () => {
+      const tracks = [
+        new AudioTrack({
+          label: 'English',
+          language: 'en',
+          index: 0,
+          kind: AudioTrackKind.MAIN,
+          manifestName: 'English'
+        }),
+        new AudioTrack({
+          label: 'Spanish',
+          language: 'es',
+          index: 1,
+          kind: AudioTrackKind.MAIN,
+          manifestName: 'Spanish'
+        })
+      ];
+
+      audioDescriptionTrackHandler(tracks, []);
+
+      tracks[0].language.should.equal('en');
+      tracks[1].language.should.equal('es');
+    });
+  });
 });

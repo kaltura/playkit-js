@@ -107,7 +107,10 @@ export function audioDescriptionTrackHandler(tracks: Track[], audioFlavors: Arra
       if (track instanceof AudioTrack) {
         const matchingFlavor: any = findMatchingFlavor(track, audioFlavors);
 
-        const isAudioDescription = (matchingFlavor && matchingFlavor.tags?.includes(FlavorAssetTags.AUDIO_DESCRIPTION)) || track.kind.includes(AudioTrackKind.DESCRIPTION);
+        const isAudioDescription =
+          (matchingFlavor && matchingFlavor.tags?.includes(FlavorAssetTags.AUDIO_DESCRIPTION)) ||
+          track.kind.includes(AudioTrackKind.DESCRIPTION) ||
+          /audio.?desc/i.test(track.manifestName);
         if (isAudioDescription) {
           track.language = `ad-${track.language}`;
           if (matchingFlavor && !/audio.?desc/i.test(track.label ?? '')) {
