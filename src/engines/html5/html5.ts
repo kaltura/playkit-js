@@ -500,6 +500,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return false;
   }
 
+  public getLiveEntryStValue(): string {
+    if (this._mediaSourceAdapter && typeof this._mediaSourceAdapter.getLiveEntryStValue === 'function') {
+      return this._mediaSourceAdapter.getLiveEntryStValue();
+    }
+    return '';
+  }
+
   /**
    * Get the start time of DVR window in live playback in seconds.
    * @returns {Number} - start time of DVR window.
