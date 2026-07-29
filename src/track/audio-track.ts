@@ -107,10 +107,13 @@ export function audioDescriptionTrackHandler(tracks: Track[], audioFlavors: Arra
       if (track instanceof AudioTrack) {
         const matchingFlavor: any = findMatchingFlavor(track, audioFlavors);
 
-        const isAudioDescription = (matchingFlavor && matchingFlavor.tags?.includes(FlavorAssetTags.AUDIO_DESCRIPTION)) || track.kind.includes(AudioTrackKind.DESCRIPTION);
+        const isAdByFlavor = Boolean(matchingFlavor && matchingFlavor.tags?.includes(FlavorAssetTags.AUDIO_DESCRIPTION));
+        const isAdByKind = track.kind.includes(AudioTrackKind.DESCRIPTION);
+        const isAdByManifestName = /audio.?desc/i.test(track.manifestName);
+        const isAudioDescription = isAdByFlavor || isAdByKind || isAdByManifestName;
         if (isAudioDescription) {
           track.language = `ad-${track.language}`;
-          if (matchingFlavor && !/audio.?desc/i.test(track.label ?? '')) {
+          if ((isAdByFlavor || isAdByManifestName) && !/audio.?desc/i.test(track.label ?? '')) {
             track.label = `${track.label ?? ''} - Audio Description`;
           }
         }
