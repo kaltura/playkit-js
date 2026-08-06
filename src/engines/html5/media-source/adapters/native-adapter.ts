@@ -814,8 +814,41 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         };
         parsedTracks.push(new AudioTrack(settings));
       }
+      // If Intl.DisplayNames resolved two tracks to the same label (e.g. both "English"
+      // for standard and Audio Description tracks sharing language code "en"), fall back
+      // to the raw browser label which is typically populated from the manifest NAME
+      // attribute (e.g. "English - Audio Description").
+      this._resolveDuplicateAudioLabels(parsedTracks, audioTracks);
     }
     return parsedTracks;
+  }
+
+  /**
+   * Resolve duplicate audio track labels by falling back to the raw browser label.
+   * This handles the case where two tracks share the same ISO language code
+   * (e.g. "en" for both standard English and English Audio Description),
+   * causing Intl.DisplayNames to return identical labels for both.
+   * @param {Array<AudioTrack>} parsedTracks - The parsed audio tracks.
+   * @param {any} rawAudioTracks - The raw HTMLMediaElement audioTracks list.
+   * @private
+   */
+  private _resolveDuplicateAudioLabels(parsedTracks: AudioTrack[], rawAudioTracks: any): void {
+    const labelCounts = new Map<string, number>();
+    for (const track of parsedTracks) {
+      if (track.label) {
+        labelCounts.set(track.label, (labelCounts.get(track.label) || 0) + 1);
+      }
+    }
+    for (let i = 0; i < parsedTracks.length; i++) {
+      if ((labelCounts.get(parsedTracks[i].label!) || 0) > 1) {
+        // Fall back to the raw browser label (sourced from manifest NAME attribute)
+        // only when it differs from the Intl-translated name and is non-empty.
+        const rawLabel = rawAudioTracks[i].label;
+        if (rawLabel && rawLabel !== parsedTracks[i].label) {
+          parsedTracks[i].label = rawLabel;
+        }
+      }
+    }
   }
 
   /**
