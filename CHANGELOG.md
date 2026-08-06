@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.50 (2026-08-06)
+
+
+### Bug Fixes
+
+* **SUP-52923:** detect AD tracks via manifest NAME when CHARACTERISTICS absent ([#891](https://github.com/kaltura/playkit-js/issues/891)) ([0ee01f1](https://github.com/kaltura/playkit-js/commit/0ee01f17663d16fd7d1d25066a9c100b65c50159)), closes [#884](https://github.com/kaltura/playkit-js/issues/884)
+
 ### 0.84.49 (2026-07-30)
 
 
