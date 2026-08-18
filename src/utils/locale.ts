@@ -2,6 +2,15 @@
 // Older browsers will fall back to the provided fallback value.
 const _displayNamesCache = new Map<string, Intl.DisplayNames>();
 
+// Matches BCP47/ISO language tags like "id", "id-ID", "zh-Hans", "zh-Hans-CN".
+// Avoids passing arbitrary human-readable labels ("Main", "CC1") to Intl.DisplayNames.
+const _bcp47Re = /^[a-zA-Z]{2,3}(-[a-zA-Z0-9]{2,8})*$/;
+
+export function asLangCode(value: string | undefined | null): string | undefined {
+  if (!value) return undefined;
+  return _bcp47Re.test(value) ? value : undefined;
+}
+
 /**
  * Returns the native language name for a given ISO language code using Intl.DisplayNames.
  * Falls back to the provided fallback string if the code is absent or the API throws.
