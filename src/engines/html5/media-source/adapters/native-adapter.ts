@@ -835,7 +835,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           const settings = {
             kind: textTracks[i].kind,
             active: textTracks[i].mode === PKTextTrack.MODE.SHOWING,
-            label: textTracks[i].label,
+            label: getNativeLanguageName(textTracks[i].language || textTracks[i].label, textTracks[i].label),
             language: textTracks[i].language,
             available: true
           };
