@@ -11,6 +11,7 @@ const _displayNamesCache = new Map<string, Intl.DisplayNames>();
  * @returns {string} - Native language name or fallback
  */
 export function getNativeLanguageName(langCode: string | undefined | null, fallback: string): string {
+  // Matches BCP47/ISO tags (e.g. "id", "id-ID") — avoids passing arbitrary labels like "Main" or "CC1" to Intl.DisplayNames.
   const bcp47Re = /^[a-zA-Z]{2,3}(-[a-zA-Z0-9]{2,8})*$/;
   if (!langCode || !bcp47Re.test(langCode)) return fallback;
   try {
