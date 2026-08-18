@@ -6,20 +6,16 @@ const _displayNamesCache = new Map<string, Intl.DisplayNames>();
 // Avoids passing arbitrary human-readable labels ("Main", "CC1") to Intl.DisplayNames.
 const _bcp47Re = /^[a-zA-Z]{2,3}(-[a-zA-Z0-9]{2,8})*$/;
 
-export function asLangCode(value: string | undefined | null): string | undefined {
-  if (!value) return undefined;
-  return _bcp47Re.test(value) ? value : undefined;
-}
-
 /**
  * Returns the native language name for a given ISO language code using Intl.DisplayNames.
- * Falls back to the provided fallback string if the code is absent or the API throws.
+ * Falls back to the provided fallback string if the code is absent, not a valid BCP47 tag,
+ * or the API throws.
  * @param {string | undefined | null} langCode - ISO 639-1/2 language code (e.g. "es", "ja")
  * @param {string} fallback - Value to return when the code cannot be resolved
  * @returns {string} - Native language name or fallback
  */
 export function getNativeLanguageName(langCode: string | undefined | null, fallback: string): string {
-  if (!langCode) return fallback;
+  if (!langCode || !_bcp47Re.test(langCode)) return fallback;
   try {
     let dn = _displayNamesCache.get(langCode);
     if (!dn) {
