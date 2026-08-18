@@ -2,6 +2,7 @@ import NativeAdapter from '../../../../../../src/engines/html5/media-source/adap
 import VideoTrack from '../../../../../../src/track/video-track';
 import AudioTrack from '../../../../../../src/track/audio-track';
 import TextTrack from '../../../../../../src/track/text-track';
+import {getNativeLanguageName} from '../../../../../../src/utils/locale';
 import {RequestType} from '../../../../../../src/enums/request-type';
 import {removeVideoElementsFromTestPage} from '../../../../../utils/test-utils';
 import sourcesConfig from '../../../../../configs/sources.json';
@@ -385,12 +386,10 @@ describe('NativeAdapter: _getParsedTracks', function () {
         if (track instanceof TextTrack) {
           track.kind.should.equal(video.textTracks[track.index].kind);
           track.active.should.equal(video.textTracks[track.index].mode === 'showing');
-          if (video.textTracks[track.index].label) {
-            track.label.should.equal(video.textTracks[track.index].label);
-          } else {
-            track.label.should.equal(video.textTracks[track.index].language);
-          }
-          track.language.should.equal(video.textTracks[track.index].language);
+          const rawLang = video.textTracks[track.index].language;
+          const rawLabel = video.textTracks[track.index].label;
+          track.label.should.equal(getNativeLanguageName(rawLang || rawLabel, rawLabel));
+          track.language.should.equal(rawLang);
         }
       });
       done();
