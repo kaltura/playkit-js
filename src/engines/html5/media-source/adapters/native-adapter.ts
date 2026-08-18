@@ -17,7 +17,7 @@ import { FairPlayDrmHandler } from './fairplay-drm-handler';
 import { IDrmProtocol, IMediaSourceAdapter, PKABRRestrictionObject, PKDrmConfigObject, PKDrmDataObject, PKMediaSourceObject, PKRequestObject, PKVideoDimensionsObject } from '../../../../types';
 import { FairPlayDrmHandlerV2 } from './fairplay-drm-handler-v2';
 import { ManifestHandler } from './manifest-handler';
-import { getNativeLanguageName, asLangCode } from '../../../../utils/locale';
+import { getNativeLanguageName } from '../../../../utils/locale';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
@@ -835,7 +835,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           const settings = {
             kind: textTracks[i].kind,
             active: textTracks[i].mode === PKTextTrack.MODE.SHOWING,
-            label: getNativeLanguageName(textTracks[i].language || asLangCode(textTracks[i].label), textTracks[i].label),
+            label: getNativeLanguageName(textTracks[i].language || textTracks[i].label, textTracks[i].label),
             language: textTracks[i].language,
             available: true
           };
