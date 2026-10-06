@@ -412,13 +412,27 @@ describe('Fairplay Drm Handler', function () {
       const updated = [];
       const session1 = {update: () => updated.push('session1')};
       const session2 = {update: () => updated.push('session2')};
+      const requests = [];
+      sandbox.stub(XMLHttpRequest.prototype, 'open').callsFake(function () {
+        requests.push(this);
+      });
+      sandbox.stub(XMLHttpRequest.prototype, 'send');
       fp._keySession = session2;
-      fp._licenseRequestLoaded({target: new XMLHttpRequest()}, session1);
-      fp._licenseRequestLoaded({target: new XMLHttpRequest()}, session2);
+      fp._onWebkitKeyMessage({target: session1, message: new Uint8Array(new ArrayBuffer(1))});
+      fp._onWebkitKeyMessage({target: session2, message: new Uint8Array(new ArrayBuffer(1))});
       setTimeout(() => {
         try {
-          updated.should.deep.equal(['session1', 'session2']);
-          done();
+          requests.should.have.length(2);
+          requests[1].dispatchEvent(new Event('load'));
+          requests[0].dispatchEvent(new Event('load'));
+          setTimeout(() => {
+            try {
+              updated.should.deep.equal(['session2', 'session1']);
+              done();
+            } catch (e) {
+              done(e);
+            }
+          }, 0);
         } catch (e) {
           done(e);
         }
