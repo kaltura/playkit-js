@@ -399,5 +399,30 @@ describe('Fairplay Drm Handler', function () {
         target: new XMLHttpRequest()
       });
     });
+
+    it('should update the session that sent the request when several sessions overlap', done => {
+      Utils.Object.mergeDeep(fpsDrmData, {
+        network: {
+          responseFilter: function (type, response) {
+            return Promise.resolve(response);
+          }
+        }
+      });
+      const fp = new FairPlayDrmHandler(videoElement, fpsDrmData, () => {});
+      const updated = [];
+      const session1 = {update: () => updated.push('session1')};
+      const session2 = {update: () => updated.push('session2')};
+      fp._keySession = session2;
+      fp._licenseRequestLoaded({target: new XMLHttpRequest()}, session1);
+      fp._licenseRequestLoaded({target: new XMLHttpRequest()}, session2);
+      setTimeout(() => {
+        try {
+          updated.should.deep.equal(['session1', 'session2']);
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 0);
+    });
   });
 });

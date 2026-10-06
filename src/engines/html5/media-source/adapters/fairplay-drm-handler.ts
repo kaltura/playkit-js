@@ -128,7 +128,7 @@ class FairPlayDrmHandler {
 
     const request = new XMLHttpRequest();
     request.responseType = 'arraybuffer';
-    this._eventManager.listenOnce(request, 'load', (e: Event) => this._licenseRequestLoaded(e));
+    this._eventManager.listenOnce(request, 'load', (e: Event) => this._licenseRequestLoaded(e, session));
     const pkRequest: PKRequestObject = {
       url: this._config.licenseUrl,
       body: FairPlayDrmHandler._base64EncodeUint8Array(message),
@@ -194,7 +194,7 @@ class FairPlayDrmHandler {
     this._retryLicenseRequest--;
   }
 
-  private _licenseRequestLoaded(event: any): void {
+  private _licenseRequestLoaded(event: any, session: any = this._keySession): void {
     this._logger.debug('License request loaded');
     const request = event.target;
     if (request.status > 299) {
@@ -223,7 +223,7 @@ class FairPlayDrmHandler {
     responseFilterPromise = responseFilterPromise || Promise.resolve(pkResponse);
     responseFilterPromise
       .then(updatedResponse => {
-        this._keySession.update(updatedResponse.data);
+        session.update(updatedResponse.data);
       })
       .catch(error => {
         this._errorCallback(
