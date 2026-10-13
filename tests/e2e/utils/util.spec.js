@@ -88,6 +88,35 @@ describe('util', () => {
         Utils.Object.mergeDeep({y: 1}, {x: 2}).should.deep.equals({y: 1, x: 2});
         Utils.Object.mergeDeep({}, {x: 2}).should.deep.equals({x: 2});
       });
+
+      it('should not pollute Object.prototype via __proto__, constructor or prototype keys', function () {
+        Utils.Object.mergeDeep({}, JSON.parse('{"__proto__": {"polluted": true}}'));
+        Utils.Object.mergeDeep({}, JSON.parse('{"constructor": {"prototype": {"polluted": true}}}'));
+        Utils.Object.mergeDeep({}, JSON.parse('{"a": {"__proto__": {"polluted": true}}}'));
+        ({}).should.not.have.property('polluted');
+        const res = Utils.Object.mergeDeep({}, JSON.parse('{"__proto__": {"polluted": true}, "x": 1}'));
+        res.should.deep.equals({x: 1});
+      });
+    });
+
+    describe('mergeDeep inherited keys', function () {
+      it('should ignore inherited (non-own) keys of the source', function () {
+        const source = Object.create({inherited: 1});
+        source.own = 2;
+        Utils.Object.mergeDeep({}, source).should.deep.equals({own: 2});
+      });
+    });
+
+    describe('createPropertyPath', function () {
+      it('should create a nested path', function () {
+        Utils.Object.createPropertyPath({}, 'a.b.c', 1).should.deep.equals({a: {b: {c: 1}}});
+      });
+
+      it('should not pollute Object.prototype', function () {
+        Utils.Object.createPropertyPath({}, '__proto__.polluted', true);
+        Utils.Object.createPropertyPath({}, 'constructor.prototype.polluted', true);
+        ({}).should.not.have.property('polluted');
+      });
     });
 
     describe('copyDeep', function () {
@@ -99,6 +128,22 @@ describe('util', () => {
         resObject.y = 1;
         myObj.should.deep.equals({x: 1, y: 2});
         resObject.should.deep.equals({x: 2, y: 1});
+      });
+
+      it('should not pollute Object.prototype and should preserve the prototype of the copy', function () {
+        class Foo {}
+        const foo = new Foo();
+        Object.getPrototypeOf(Utils.Object.copyDeep(foo)).should.equal(Foo.prototype);
+        Utils.Object.copyDeep(JSON.parse('{"__proto__": {"polluted": true}}'));
+        ({}).should.not.have.property('polluted');
+      });
+
+      it('should drop __proto__, constructor and prototype keys from the copy', function () {
+        const res = Utils.Object.copyDeep(JSON.parse('{"x": 1, "__proto__": {"polluted": true}, "constructor": {"a": 1}, "prototype": {"b": 1}, "n": {"__proto__": {"p": 1}, "y": 2}}'));
+        res.should.deep.equals({x: 1, n: {y: 2}});
+        Object.getPrototypeOf(res).should.equal(Object.prototype);
+        Object.getPrototypeOf(res.n).should.equal(Object.prototype);
+        res.should.not.have.property('polluted');
       });
     });
 
