@@ -57,6 +57,8 @@ const _String = {
   }
 };
 
+const UNSAFE_KEYS = ['__proto__', 'constructor', 'prototype'];
+
 const _Object = {
   /**
    * @param {Array<Object>} objects - The objects to merge
@@ -98,6 +100,9 @@ const _Object = {
     const source = sources.shift();
     if (this.isObject(target) && this.isObject(source)) {
       for (const key in source) {
+        if (!Object.prototype.hasOwnProperty.call(source, key) || UNSAFE_KEYS.includes(key)){
+          continue;
+        }
         if (this.isObject(source[key]) && !this.isClassInstance(source[key])) {
           if (!target[key]) Object.assign(target, { [key]: {} });
           this.mergeDeep(target[key], source[key]);
@@ -126,8 +131,17 @@ const _Object = {
       if (data.clone && typeof data.clone === 'function') {
         node = data.clone();
       } else {
-        node = Object.assign({ __proto__: data.__proto__ }, data);
-        Object.keys(node).forEach((key) => {
+        node = Object.create(Object.getPrototypeOf(data));
+        Object.getOwnPropertySymbols(data).forEach((symbol) => {
+          if (Object.prototype.propertyIsEnumerable.call(data, symbol)) {
+            node[symbol] = data[symbol];
+          }
+        });
+        Object.keys(data).forEach((key) => {
+          if (UNSAFE_KEYS.includes(key)) {
+            return;
+          }
+          node[key] = data[key];
           if (typeof node[key] === 'object' || (Array.isArray(node[key]) && node[key].length > 0)) {
             node[key] = this.copyDeep(node[key]);
           }
@@ -195,6 +209,9 @@ const _Object = {
    */
   createPropertyPath: function (obj: object, path: string, value: any = null): any {
     let pathArray = path.split('.');
+    if (pathArray.some((key) => UNSAFE_KEYS.includes(key))) {
+      return obj;
+    }
     let current = obj;
     while (pathArray.length > 1) {
       const [head, ...tail] = pathArray;
