@@ -132,6 +132,11 @@ const _Object = {
         node = data.clone();
       } else {
         node = Object.create(Object.getPrototypeOf(data));
+        Object.getOwnPropertySymbols(data).forEach((symbol) => {
+          if (Object.prototype.propertyIsEnumerable.call(data, symbol)) {
+            node[symbol] = data[symbol];
+          }
+        });
         Object.keys(data).forEach((key) => {
           if (UNSAFE_KEYS.includes(key)) {
             return;

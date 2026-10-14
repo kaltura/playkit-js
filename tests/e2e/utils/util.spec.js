@@ -138,6 +138,16 @@ describe('util', () => {
         ({}).should.not.have.property('polluted');
       });
 
+      it('should copy enumerable symbol keys and skip non-enumerable ones', function () {
+        const sym = Symbol('meta');
+        const hidden = Symbol('hidden');
+        const src = {a: {b: 1}, [sym]: {c: 2}};
+        Object.defineProperty(src, hidden, {value: 1, enumerable: false});
+        const res = Utils.Object.copyDeep(src);
+        res[sym].should.equal(src[sym]);
+        (res[hidden] === undefined).should.be.true;
+      });
+
       it('should drop __proto__, constructor and prototype keys from the copy', function () {
         const res = Utils.Object.copyDeep(JSON.parse('{"x": 1, "__proto__": {"polluted": true}, "constructor": {"a": 1}, "prototype": {"b": 1}, "n": {"__proto__": {"p": 1}, "y": 2}}'));
         res.should.deep.equals({x: 1, n: {y: 2}});
