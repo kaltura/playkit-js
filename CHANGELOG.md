@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.51 (2026-10-18)
+
+
+### Bug Fixes
+
+* **SECF-30914:** [Player] Unsafe mergeDeep/copyDeep lack __proto__ guard (prototype-pollution gadget) ([#895](https://github.com/kaltura/playkit-js/issues/895)) ([f839067](https://github.com/kaltura/playkit-js/commit/f839067e7ea859f6437fbd82fb99c925546b34c5))
+
 ### 0.84.50 (2026-08-06)
 
 
