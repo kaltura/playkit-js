@@ -19,8 +19,11 @@ const SAMSUNGBrowserParser = [
   ]
 ];
 
-//recognize os of smartTV devices
-const OSParser = [[LGTVRegex], [UAParser.OS.NAME], [HISENSETVRegex], [UAParser.OS.NAME]];
+//recognize "iOS/<version>" of custom in-app user agents, e.g. "App/1.0 (iOS/17.0; iPhone)"
+const IOSAppRegex = /\b(ios)\/([\w.]+)/i;
+
+//recognize os of smartTV devices and custom in-app user agents
+const OSParser = [[LGTVRegex], [UAParser.OS.NAME], [HISENSETVRegex], [UAParser.OS.NAME], [IOSAppRegex], [UAParser.OS.NAME, UAParser.OS.VERSION]];
 
 //add smart tv as smart tv devices
 const DeviceParser = [
@@ -48,6 +51,16 @@ const EdgeChromiumParser = [[/(edg)\/((\d+)?[\w.]+)/i], [[UAParser.BROWSER.NAME,
 const BrowserParser = [...EdgeChromiumParser, ...SAMSUNGBrowserParser];
 
 const Env: IEnv = new UAParser(undefined, { browser: BrowserParser, device: DeviceParser, os: OSParser }).getResult() as IEnv;
+
+// Custom in-app user agents carry no browser token, so the parser leaves browser.name empty.
+// On mobile, infer it from the OS using the same names the parser gives standard webview user agents.
+if (!Env.browser.name && Env.device.type === UAParser.DEVICE.MOBILE) {
+  if (Env.os.name === 'iOS') {
+    Env.browser.name = 'WebKit';
+  } else if (Env.os.name === 'Android') {
+    Env.browser.name = 'Chrome WebView';
+  }
+}
 
 Env['isConsole'] = Env.device.type === UAParser.DEVICE.CONSOLE;
 Env['isSmartTV'] = Env.device.type === UAParser.DEVICE.SMARTTV;
