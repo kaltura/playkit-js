@@ -9,6 +9,10 @@ const SAMSUNGTVRegex = /^.*(smart-tv).*(tizen).*$/i;
 
 const HISENSETVRegex = /^.*(vidaa).*(smarttv).*$/i;
 
+//recognize "iOS/<version>" and "Android/<version>" of custom in-app user agents, e.g. "App/1.0 (Android/16; Pixel)"
+const IOSAppRegex = /\b(ios)\/([\w.]+)/i;
+const AndroidAppRegex = /\bandroid\/[\w.]+/i;
+
 //recognize as safari
 const SAMSUNGBrowserParser = [
   [SAMSUNGTVRegex],
@@ -18,9 +22,6 @@ const SAMSUNGBrowserParser = [
     [UAParser.BROWSER.VERSION, '']
   ]
 ];
-
-//recognize "iOS/<version>" of custom in-app user agents, e.g. "App/1.0 (iOS/17.0; iPhone)"
-const IOSAppRegex = /\b(ios)\/([\w.]+)/i;
 
 //recognize os of smartTV devices and custom in-app user agents
 const OSParser = [[LGTVRegex], [UAParser.OS.NAME], [HISENSETVRegex], [UAParser.OS.NAME], [IOSAppRegex], [UAParser.OS.NAME, UAParser.OS.VERSION]];
@@ -47,20 +48,13 @@ const DeviceParser = [
 ];
 
 const EdgeChromiumParser = [[/(edg)\/((\d+)?[\w.]+)/i], [[UAParser.BROWSER.NAME, 'Edge'], UAParser.BROWSER.VERSION, UAParser.BROWSER.MAJOR]];
+const IOSCustomParser = [[IOSAppRegex], [[UAParser.BROWSER.NAME, 'WebKit']]];
+const androidCustomParser = [[AndroidAppRegex], [[UAParser.BROWSER.NAME, 'Chrome WebView']]];
 
-const BrowserParser = [...EdgeChromiumParser, ...SAMSUNGBrowserParser];
+const BrowserParser = [...EdgeChromiumParser, ...SAMSUNGBrowserParser, ...IOSCustomParser, ...androidCustomParser];
+
 
 const Env: IEnv = new UAParser(undefined, { browser: BrowserParser, device: DeviceParser, os: OSParser }).getResult() as IEnv;
-
-// Custom in-app user agents carry no browser token, so the parser leaves browser.name empty.
-// On mobile, infer it from the OS using the same names the parser gives standard webview user agents.
-if (!Env.browser.name && Env.device.type === UAParser.DEVICE.MOBILE) {
-  if (Env.os.name === 'iOS') {
-    Env.browser.name = 'WebKit';
-  } else if (Env.os.name === 'Android') {
-    Env.browser.name = 'Chrome WebView';
-  }
-}
 
 Env['isConsole'] = Env.device.type === UAParser.DEVICE.CONSOLE;
 Env['isSmartTV'] = Env.device.type === UAParser.DEVICE.SMARTTV;
