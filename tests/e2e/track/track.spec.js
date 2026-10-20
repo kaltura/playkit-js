@@ -26,6 +26,15 @@ describe('Track', () => {
       Track.langComparer('zh_tw', 'zh', undefined, false).should.be.true;
     });
 
+    it('should treat case and the - _ separators and camelCase region codes as equal', () => {
+      Track.langComparer('pt_br', 'pt_br', undefined, true).should.be.true;
+      Track.langComparer('pt-BR', 'pt_br', undefined, true).should.be.true;
+      Track.langComparer('pt_BR', 'pt_br', undefined, true).should.be.true;
+      Track.langComparer('ptBr', 'pt_br', undefined, true).should.be.true;
+      Track.langComparer('pt', 'pt_br', undefined, true).should.be.false;
+      Track.langComparer('ptBr', 'pt', undefined, true).should.be.false;
+    });
+
     it('should compare languages also with the additionalLanguage from the configuration', () => {
       Track.langComparer('zh', 'chi', 'chi', true).should.be.true;
       Track.langComparer('es', 'spa', 'spa', true).should.be.true;

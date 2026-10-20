@@ -43,8 +43,11 @@ export default class Track {
     return false;
   }
 
+  private static _normalizeLang(lang: string): string {
+    return lang.toLowerCase().replace(/[-_]/g, '');
+  }
   private static _isLangEqual(src,dst) : boolean {
-    return src.toLowerCase() === dst.toLowerCase();
+    return Track._normalizeLang(src) === Track._normalizeLang(dst);
   }
   private static _isLangPrefixEqual(src,dst) : boolean {
     return src.toLowerCase().startsWith(dst.toLowerCase()) || dst.toLowerCase().startsWith(src.toLowerCase());
