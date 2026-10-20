@@ -51,10 +51,16 @@ const EdgeChromiumParser = [[/(edg)\/((\d+)?[\w.]+)/i], [[UAParser.BROWSER.NAME,
 const IOSCustomParser = [[IOSAppRegex], [[UAParser.BROWSER.NAME, 'WebKit']]];
 const androidCustomParser = [[AndroidAppRegex], [[UAParser.BROWSER.NAME, 'Chrome WebView']]];
 
-const BrowserParser = [...EdgeChromiumParser, ...SAMSUNGBrowserParser, ...IOSCustomParser, ...androidCustomParser];
+let BrowserParser = [...EdgeChromiumParser, ...SAMSUNGBrowserParser];
 
 
-const Env: IEnv = new UAParser(undefined, { browser: BrowserParser, device: DeviceParser, os: OSParser }).getResult() as IEnv;
+let Env: IEnv = new UAParser(undefined, { browser: BrowserParser, device: DeviceParser, os: OSParser }).getResult() as IEnv;
+
+if (!Env.browser.name && Env.device.type === UAParser.DEVICE.MOBILE) {
+  BrowserParser = [...IOSCustomParser, ...androidCustomParser];
+  Env= new UAParser(undefined, { browser: BrowserParser, device: DeviceParser, os: OSParser }).getResult() as IEnv;
+
+}
 
 Env['isConsole'] = Env.device.type === UAParser.DEVICE.CONSOLE;
 Env['isSmartTV'] = Env.device.type === UAParser.DEVICE.SMARTTV;
