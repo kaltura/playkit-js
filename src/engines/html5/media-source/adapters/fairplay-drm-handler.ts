@@ -23,14 +23,13 @@ class FairPlayDrmHandler {
 
   private _logger = getLogger('FairPlayDrmHandler');
   private _eventManager: EventManager;
-  private _keySession: any;
+  private _keySessions: any[] = [];
   private _config: FairPlayDrmConfigType;
   private _onWebkitNeedKeyHandler: ListenerType;
   private _errorCallback: (...args: any[]) => any;
   private _drmResponseCallback: (...args: any[]) => any;
   private _videoElement: HTMLVideoElement;
   private _retryLicenseRequest: number = 4;
-  private _licenseRequestTime: number | undefined;
   private _defaultConfig: FairPlayDrmConfigType = {
     licenseUrl: '',
     certificate: '',
@@ -95,14 +94,15 @@ class FairPlayDrmHandler {
       this._onError(Error.Code.COULD_NOT_CREATE_MEDIA_KEYS);
     }
     this._logger.debug('Creates session');
-    this._keySession = videoElement.webkitKeys.createSession('video/mp4', initData);
-    if (!this._keySession) {
+    const keySession = videoElement.webkitKeys.createSession('video/mp4', initData);
+    if (!keySession) {
       this._onError(Error.Code.COULD_NOT_CREATE_KEY_SESSION);
     }
-    this._keySession.contentId = contentId;
-    this._eventManager.listen(this._keySession, WebkitEvents.KEY_MESSAGE, (e: Event) => this._onWebkitKeyMessage(e));
-    this._eventManager.listen(this._keySession, WebkitEvents.KEY_ADDED, () => this._onWebkitKeyAdded());
-    this._eventManager.listen(this._keySession, WebkitEvents.KEY_ERROR, (e: Event) => this._onWebkitKeyError(e));
+    keySession.contentId = contentId;
+    this._keySessions.push(keySession);
+    this._eventManager.listen(keySession, WebkitEvents.KEY_MESSAGE, (e: Event) => this._onWebkitKeyMessage(e));
+    this._eventManager.listen(keySession, WebkitEvents.KEY_ADDED, () => this._onWebkitKeyAdded());
+    this._eventManager.listen(keySession, WebkitEvents.KEY_ERROR, (e: Event) => this._onWebkitKeyError(e));
   }
 
   public getDrmInfo(): PKDrmDataObject {
@@ -112,10 +112,8 @@ class FairPlayDrmHandler {
 
   public destroy(): void {
     this._eventManager.destroy();
-    if (this._keySession) {
-      this._keySession.close();
-      this._keySession = null;
-    }
+    this._keySessions.forEach(keySession => keySession.close());
+    this._keySessions = [];
   }
 
   private _onWebkitKeyMessage(event: any): void {
@@ -128,7 +126,8 @@ class FairPlayDrmHandler {
 
     const request = new XMLHttpRequest();
     request.responseType = 'arraybuffer';
-    this._eventManager.listenOnce(request, 'load', (e: Event) => this._licenseRequestLoaded(e));
+    let licenseRequestTime: number | undefined;
+    this._eventManager.listenOnce(request, 'load', (e: Event) => this._licenseRequestLoaded(e, session, licenseRequestTime));
     const pkRequest: PKRequestObject = {
       url: this._config.licenseUrl,
       body: FairPlayDrmHandler._base64EncodeUint8Array(message),
@@ -166,7 +165,7 @@ class FairPlayDrmHandler {
             responseText: request.responseText
           });
         };
-        this._licenseRequestTime = Date.now();
+        licenseRequestTime = Date.now();
         request.send(updatedRequest.body);
       })
       .catch(error => {
@@ -194,7 +193,7 @@ class FairPlayDrmHandler {
     this._retryLicenseRequest--;
   }
 
-  private _licenseRequestLoaded(event: any): void {
+  private _licenseRequestLoaded(event: any, session: any, licenseRequestTime?: number): void {
     this._logger.debug('License request loaded');
     const request = event.target;
     if (request.status > 299) {
@@ -205,7 +204,7 @@ class FairPlayDrmHandler {
       return;
     }
     if (this._drmResponseCallback) {
-      const licenseTime = Date.now() - this._licenseRequestTime!;
+      const licenseTime = Date.now() - licenseRequestTime!;
       this._drmResponseCallback({licenseTime: licenseTime / 1000, scheme: DrmScheme.FAIRPLAY});
     }
     const {responseURL: url, response: data} = request;
@@ -223,7 +222,7 @@ class FairPlayDrmHandler {
     responseFilterPromise = responseFilterPromise || Promise.resolve(pkResponse);
     responseFilterPromise
       .then(updatedResponse => {
-        this._keySession.update(updatedResponse.data);
+        session.update(updatedResponse.data);
       })
       .catch(error => {
         this._errorCallback(
