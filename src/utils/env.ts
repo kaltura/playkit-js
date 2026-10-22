@@ -9,6 +9,10 @@ const SAMSUNGTVRegex = /^.*(smart-tv).*(tizen).*$/i;
 
 const HISENSETVRegex = /^.*(vidaa).*(smarttv).*$/i;
 
+//recognize "iOS/<version>" and "Android/<version>" of custom in-app user agents, e.g. "App/1.0 (Android/16; Pixel)"
+const IOSAppRegex = /\b(ios)\/([\w.]+)/i;
+const AndroidAppRegex = /\bandroid\/[\w.]+/i;
+
 //recognize as safari
 const SAMSUNGBrowserParser = [
   [SAMSUNGTVRegex],
@@ -19,8 +23,8 @@ const SAMSUNGBrowserParser = [
   ]
 ];
 
-//recognize os of smartTV devices
-const OSParser = [[LGTVRegex], [UAParser.OS.NAME], [HISENSETVRegex], [UAParser.OS.NAME]];
+//recognize os of smartTV devices and custom in-app user agents
+const OSParser = [[LGTVRegex], [UAParser.OS.NAME], [HISENSETVRegex], [UAParser.OS.NAME], [IOSAppRegex], [UAParser.OS.NAME, UAParser.OS.VERSION]];
 
 //add smart tv as smart tv devices
 const DeviceParser = [
@@ -44,10 +48,19 @@ const DeviceParser = [
 ];
 
 const EdgeChromiumParser = [[/(edg)\/((\d+)?[\w.]+)/i], [[UAParser.BROWSER.NAME, 'Edge'], UAParser.BROWSER.VERSION, UAParser.BROWSER.MAJOR]];
+const IOSCustomParser = [[IOSAppRegex], [[UAParser.BROWSER.NAME, 'WebKit']]];
+const androidCustomParser = [[AndroidAppRegex], [[UAParser.BROWSER.NAME, 'Chrome WebView']]];
 
-const BrowserParser = [...EdgeChromiumParser, ...SAMSUNGBrowserParser];
+let BrowserParser = [...EdgeChromiumParser, ...SAMSUNGBrowserParser];
 
-const Env: IEnv = new UAParser(undefined, { browser: BrowserParser, device: DeviceParser, os: OSParser }).getResult() as IEnv;
+
+let Env: IEnv = new UAParser(undefined, { browser: BrowserParser, device: DeviceParser, os: OSParser }).getResult() as IEnv;
+
+if (!Env.browser.name && Env.device.type === UAParser.DEVICE.MOBILE) {
+  BrowserParser = [...IOSCustomParser, ...androidCustomParser];
+  Env= new UAParser(undefined, { browser: BrowserParser, device: DeviceParser, os: OSParser }).getResult() as IEnv;
+
+}
 
 Env['isConsole'] = Env.device.type === UAParser.DEVICE.CONSOLE;
 Env['isSmartTV'] = Env.device.type === UAParser.DEVICE.SMARTTV;
