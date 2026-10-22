@@ -104,15 +104,18 @@ describe('Fairplay Drm Handler', function () {
       videoElement = document.getElementById('myVideoElement');
       sessions = [];
       requests = [];
-      videoElement.webkitKeys = {
-        createSession: () => {
-          const session = new EventTarget();
-          session.update = sandbox.spy();
-          session.close = sandbox.spy();
-          sessions.push(session);
-          return session;
+      Object.defineProperty(videoElement, 'webkitKeys', {
+        configurable: true,
+        value: {
+          createSession: () => {
+            const session = new EventTarget();
+            session.update = sandbox.spy();
+            session.close = sandbox.spy();
+            sessions.push(session);
+            return session;
+          }
         }
-      };
+      });
       sandbox.stub(XMLHttpRequest.prototype, 'open');
       sandbox.stub(XMLHttpRequest.prototype, 'setRequestHeader');
       sandbox.stub(XMLHttpRequest.prototype, 'send').callsFake(function () {
