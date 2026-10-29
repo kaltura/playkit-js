@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.52 (2026-10-29)
+
+
+### Bug Fixes
+
+* **SUP-53571:** Kaltura Player UI crashes with TypeError when browser UA cannot be parsed ([#896](https://github.com/kaltura/playkit-js/issues/896)) ([7f436f5](https://github.com/kaltura/playkit-js/commit/7f436f54833ecf51b94fb3149a6696265664b5fb))
+
 ### 0.84.51 (2026-10-18)
 
 
