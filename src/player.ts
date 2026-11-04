@@ -2459,9 +2459,10 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   private _checkTimeUpdate(): void {
-    // don't pause if playback already started past the endTime
+    // do not pause if playback already started past the endTime
     const initialEndTime = this._sources.endTime;
     this._endTimeHandled = !!initialEndTime && typeof this.currentTime === 'number' && this.currentTime >= initialEndTime;
+
     const onTimeUpdate = (): void => {
       const percent = parseFloat((this.currentTime! / this.duration!).toFixed(2));
       const endTime = this._sources.endTime;
