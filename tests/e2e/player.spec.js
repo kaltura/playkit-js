@@ -168,6 +168,80 @@ describe('Player', function () {
     });
   });
 
+  describe('endTime', function () {
+    let config, player, playerContainer;
+
+    before(() => {
+      playerContainer = createElement('DIV', targetId);
+      config = getConfigStructure();
+    });
+
+    beforeEach(() => {
+      player = new Player(config);
+      playerContainer.appendChild(player.getView());
+    });
+
+    afterEach(() => {
+      player.destroy();
+    });
+
+    after(() => {
+      removeVideoElementsFromTestPage();
+      removeElement(targetId);
+    });
+
+    it('should pause when reaching the endTime', done => {
+      player.setSources({...sourcesConfig.Mp4, endTime: 2});
+      player.addEventListener(Html5EventType.PAUSE, () => {
+        try {
+          Math.floor(player.currentTime).should.equal(2);
+          done();
+        } catch (e) {
+          done(e);
+        }
+      });
+      player.play();
+    });
+
+    it('should pause when reaching a fractional endTime', done => {
+      player.setSources({...sourcesConfig.Mp4, endTime: 2.5});
+      player.addEventListener(Html5EventType.PAUSE, () => {
+        try {
+          Math.floor(player.currentTime).should.equal(2);
+          done();
+        } catch (e) {
+          done(e);
+        }
+      });
+      player.play();
+    });
+
+    it('should pause only once and keep firing time percent events after resuming', done => {
+      let pausesBeforeEnd = 0;
+      let reached75 = false;
+      player.setSources({...sourcesConfig.Mp4, endTime: 2});
+      player.addEventListener(Html5EventType.PAUSE, () => {
+        if (player.currentTime < player.duration - 0.5) {
+          pausesBeforeEnd++;
+          player.play();
+        }
+      });
+      player.addEventListener(CustomEventType.PLAY_REACHED_75_PERCENT, () => {
+        reached75 = true;
+      });
+      player.addEventListener(Html5EventType.ENDED, () => {
+        try {
+          pausesBeforeEnd.should.equal(1);
+          reached75.should.be.true;
+          done();
+        } catch (e) {
+          done(e);
+        }
+      });
+      player.play();
+    });
+  });
+
   describe('ready', function () {
     let playerContainer;
 

@@ -451,6 +451,8 @@ export default class Player extends FakeEventTarget {
     PLAY_REACHED_100_PERCENT: false
   }
 
+  private _endTimeHandled: boolean = false;
+
   /**
    * @param {Object} config - The configuration for the player instance.
    * @constructor
@@ -707,6 +709,7 @@ export default class Player extends FakeEventTarget {
       PLAY_REACHED_90_PERCENT: false,
       PLAY_REACHED_100_PERCENT: false
     };
+    this._endTimeHandled = false;
   }
 
   /**
@@ -2456,6 +2459,9 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   private _checkTimeUpdate(): void {
+    // don't pause if playback already started past the endTime
+    const initialEndTime = this._sources.endTime;
+    this._endTimeHandled = !!initialEndTime && typeof this.currentTime === 'number' && this.currentTime >= initialEndTime;
     const onTimeUpdate = (): void => {
       const percent = parseFloat((this.currentTime! / this.duration!).toFixed(2));
       const endTime = this._sources.endTime;
@@ -2479,11 +2485,9 @@ export default class Player extends FakeEventTarget {
         this._timePercentEvent.PLAY_REACHED_100 = true;
         this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_REACHED_100_PERCENT));
       }
-      if (endTime && typeof this.currentTime === 'number' && this.currentTime < endTime) {
-        if (Math.floor(this.currentTime!) === endTime!) {
-          this.pause();
-          this._eventManager.unlisten(this._engine, Html5EventType.TIME_UPDATE, onTimeUpdate);
-        }
+      if (!this._endTimeHandled && endTime && Math.floor(this.currentTime!) === Math.floor(endTime)) {
+        this._endTimeHandled = true;
+        this.pause();
       }
     };
     this._eventManager.listen(this._engine, Html5EventType.TIME_UPDATE, onTimeUpdate);
